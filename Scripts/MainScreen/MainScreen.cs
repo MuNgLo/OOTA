@@ -105,6 +105,9 @@ namespace Munglo.DungeonGenerator.UI
             await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame);
             dunVis.ClearLevel();
             dunVis.ClearLevelDebug();
+
+            // WORKAROUND! TODO make this better??
+            if(selection is null){ selection = new Selection.Manager(addon, this, dunVis); }
             selection.ClearSelection();
             RaiseNotification("CLEARED");
         }

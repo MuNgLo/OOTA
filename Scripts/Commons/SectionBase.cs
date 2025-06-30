@@ -277,9 +277,8 @@ namespace Munglo.DungeonGenerator
                 count += candidates.RemoveAll(p => p.HasWestWall && p.HasNorthWall);
             }
             int breaker = 20;
-            while (breaker > 0)
+            while (breaker > 0 && candidates.Count > 0)
             {
-
                 int idx = RNG.Next(candidates.Count);
                 neighbour = candidates[idx].Neighbour(candidates[idx].OutsideWallDirection(), true);
                 if (neighbour.isEmpty) { dir = candidates[idx].OutsideWallDirection(); return true; }

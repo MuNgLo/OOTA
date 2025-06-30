@@ -269,7 +269,7 @@ namespace Munglo.DungeonGenerator
         private void WhenMSProfilePressed()
         {
             EditorInterface.Singleton.InspectObject(Profile);
-            (screen.FindChild("Build") as TextureButton).ReleaseFocus();
+            //(screen.FindChild("Build") as TextureButton).ReleaseFocus();
         }
 
 
