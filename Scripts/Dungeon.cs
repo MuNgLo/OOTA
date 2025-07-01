@@ -8,6 +8,7 @@ namespace Munglo.DungeonGenerator
     /// </summary>
     static internal class Dungeon
     {
+        public static Vector3 globalOffset = Vector3.Zero;
         static public MapCoordinate[] NeighbourCoordinates(MapCoordinate coord)
         {
             return new MapCoordinate[] {
@@ -62,7 +63,7 @@ namespace Munglo.DungeonGenerator
         }
         internal static Vector3 GlobalPosition(MapCoordinate Coord)
         {
-            return new Vector3(Coord.x * 6, Coord.y * 6, Coord.z * 6);
+            return new Vector3(Coord.x * 6, Coord.y * 6, Coord.z * 6) + globalOffset;
         }
 
         internal static Vector3 GlobalSnapPosition(Vector3 pos)
