@@ -70,31 +70,31 @@ namespace Munglo.DungeonGenerator
                             ISection nextSection = map.Sections[nextStep.SectionIndex];
                             // WORKZ
                             int c1 = section.AddConnection(Last.Orientation, nextSection, Last.Coord, nextStep.Coord, true);
-                            int c2 = nextSection.AddConnection(Dungeon.Flip(Last.Orientation), section, nextStep.Coord, Last.Coord, true);
+                            int c2 = nextSection.AddConnection(DungeonUtils.Flip(Last.Orientation), section, nextStep.Coord, Last.Coord, true);
                             map.Connections[c1].connectedToConnectionID = c2;
                             map.Connections[c2].connectedToConnectionID = c1;
 
                             // Rightside special connection
-                            MapPiece nextStepRightNB = nextStep.Neighbour(Dungeon.TwistRight(Last.Orientation), false);
-                            if (nextStepRightNB is not null && nextStepRightNB.SectionIndex == nextSection.SectionIndex && !nextStepRightNB.HasWall(Dungeon.TwistLeft(Last.Orientation)))
+                            MapPiece nextStepRightNB = nextStep.Neighbour(DungeonUtils.TwistRight(Last.Orientation), false);
+                            if (nextStepRightNB is not null && nextStepRightNB.SectionIndex == nextSection.SectionIndex && !nextStepRightNB.HasWall(DungeonUtils.TwistLeft(Last.Orientation)))
                             {
-                                int cR1 = section.AddConnection(Dungeon.TwistRight(Last.Orientation), map.Sections[nextStepRightNB.SectionIndex], nextStep.Coord, nextStepRightNB.Coord, true);
-                                int cR2 = map.Sections[nextStepRightNB.SectionIndex].AddConnection(Dungeon.TwistLeft(Last.Orientation), section, nextStepRightNB.Coord, nextStep.Coord, true);
+                                int cR1 = section.AddConnection(DungeonUtils.TwistRight(Last.Orientation), map.Sections[nextStepRightNB.SectionIndex], nextStep.Coord, nextStepRightNB.Coord, true);
+                                int cR2 = map.Sections[nextStepRightNB.SectionIndex].AddConnection(DungeonUtils.TwistLeft(Last.Orientation), section, nextStepRightNB.Coord, nextStep.Coord, true);
                                 map.Connections[cR1].connectedToConnectionID = cR2;
                                 map.Connections[cR2].connectedToConnectionID = cR1;
                             }
 
                             // Leftside special connection
-                            MapPiece nextStepLeftNB = nextStep.Neighbour(Dungeon.TwistLeft(Last.Orientation), false);
-                            if (nextStepLeftNB is not null && nextStepLeftNB.SectionIndex == nextSection.SectionIndex && !nextStepLeftNB.HasWall(Dungeon.TwistRight(Last.Orientation)))
+                            MapPiece nextStepLeftNB = nextStep.Neighbour(DungeonUtils.TwistLeft(Last.Orientation), false);
+                            if (nextStepLeftNB is not null && nextStepLeftNB.SectionIndex == nextSection.SectionIndex && !nextStepLeftNB.HasWall(DungeonUtils.TwistRight(Last.Orientation)))
                             {
                                 int cL1 = section.AddConnection(
-                                    Dungeon.TwistLeft(Last.Orientation),
+                                    DungeonUtils.TwistLeft(Last.Orientation),
                                     map.Sections[nextStepLeftNB.SectionIndex],
                                     nextStep.Coord,
                                     nextStepLeftNB.Coord,
                                     false);
-                                int cL2 = map.Sections[nextStepLeftNB.SectionIndex].AddConnection(Dungeon.TwistRight(Last.Orientation), section, nextStepLeftNB.Coord, nextStep.Coord, true);
+                                int cL2 = map.Sections[nextStepLeftNB.SectionIndex].AddConnection(DungeonUtils.TwistRight(Last.Orientation), section, nextStepLeftNB.Coord, nextStep.Coord, true);
                                 map.Connections[cL1].connectedToConnectionID = cL2;
                                 map.Connections[cL2].connectedToConnectionID = cL1;
                             }
@@ -132,7 +132,7 @@ namespace Munglo.DungeonGenerator
                 int nextSectionIndex = nextStep.SectionIndex;
                 if (nextSectionIndex < 0) { nextSectionIndex = SectionIndex; }
                 // WORKZ
-                int c1b = section.AddConnection(Dungeon.Flip(Last.Orientation), map.Sections[Last.SectionIndex], nextStep.Coord, Last.Coord, true);
+                int c1b = section.AddConnection(DungeonUtils.Flip(Last.Orientation), map.Sections[Last.SectionIndex], nextStep.Coord, Last.Coord, true);
                 int c2b = map.Sections[Last.SectionIndex].AddConnection(Last.Orientation, section, Last.Coord, nextStep.Coord, true);
                 map.Connections[c1b].connectedToConnectionID = c2b;
                 map.Connections[c2b].connectedToConnectionID = c1b;
@@ -227,10 +227,10 @@ namespace Munglo.DungeonGenerator
                 int pickIndex = rng.Next(Count * 2);
                 if (pickIndex < Count)
                 {
-                    dir = Dungeon.TwistLeft(steps[pickIndex].Orientation);
+                    dir = DungeonUtils.TwistLeft(steps[pickIndex].Orientation);
                     return steps[pickIndex].Neighbour(dir, true);
                 }
-                dir = Dungeon.TwistRight(steps[pickIndex - Count].Orientation);
+                dir = DungeonUtils.TwistRight(steps[pickIndex - Count].Orientation);
                 return steps[pickIndex - Count].Neighbour(dir, true);
             }
 
@@ -238,14 +238,14 @@ namespace Munglo.DungeonGenerator
             {
                 int pickIndex = rng.Next(Count);
 
-                dir = Dungeon.TwistLeft(steps[pickIndex].Orientation);
+                dir = DungeonUtils.TwistLeft(steps[pickIndex].Orientation);
                 return steps[pickIndex].Neighbour(dir, true);
             }
 
             if (!leftside && rightside)
             {
                 int pickIndex = rng.Next(Count);
-                dir = Dungeon.TwistRight(steps[pickIndex].Orientation);
+                dir = DungeonUtils.TwistRight(steps[pickIndex].Orientation);
                 return steps[pickIndex].Neighbour(dir, true);
             }
 

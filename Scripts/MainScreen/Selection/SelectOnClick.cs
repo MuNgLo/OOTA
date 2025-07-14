@@ -1,3 +1,4 @@
+using System;
 using Godot;
 namespace Munglo.DungeonGenerator.UI
 {
@@ -9,7 +10,24 @@ namespace Munglo.DungeonGenerator.UI
         private SubViewport subV;
         private Node3D cube;
 
-
+        /// Testing
+        private bool delayedRay = false;
+        public override void _Process(double delta)
+        {
+            if (delayedRay)
+            {
+                GD.Print("SelectOnClick::_Process()  DELAYED RAY!!");
+                delayedRay = false;
+            }
+        }
+        public override void _PhysicsProcess(double delta)
+        {
+            if (delayedRay)
+            {
+                GD.Print("SelectOnClick::_PhysicsProcess()  DELAYED RAY!!");
+                delayedRay = false;
+            }
+        }
         public override void _EnterTree()
         {
             MS = GetParent<MainScreen>();
@@ -17,41 +35,47 @@ namespace Munglo.DungeonGenerator.UI
             subV = GetNode<SubViewport>("SubViewport");
             cube = FindChild("Dungeon") as Node3D;
         }
-    
-        public bool RayCastToMapPiece(out MapPiece mp)
+
+        public void RayCastToMapPiece(Action<MapPiece> act)
         {
-            mp = null;
+            actionToCall = act;
             Vector2 position2D = subV.GetMousePosition();
-            //Plane dropPlane = new Plane(new Vector3(0, 0, 1), z);
             Vector3 cursorWorldPos = cam.ProjectRayOrigin(position2D);
             Vector3 rayDir = cam.ProjectRayNormal(position2D);
             World3D world = cube.GetWorld3D();
-            if (TryToHit(cursorWorldPos, rayDir, world, out Node3D hit, out Vector3 point))
-            {
-                (subV.FindChild("Target") as Node3D).GlobalPosition = point;
-                ScreenDungeonVisualizer vis = FindChild("Dungeon") as ScreenDungeonVisualizer;
-                mp = vis.GetMapPiece(Dungeon.GlobalSnapCoordinate((Vector3I)point));
-            }
-            return mp is not null;
+            TryToHit(cursorWorldPos, rayDir, world);
         }
-        public bool TryToHit(Vector3 startPoint, Vector3 dir, World3D world, out Node3D hit, out Vector3 point)
+
+        Action<MapPiece> actionToCall;
+        Node3D hit;
+        Vector3 point;
+
+        public void TryToHit(Vector3 startPoint, Vector3 dir, World3D world)
         {
-            Vector3 endPos = startPoint + dir * 1000.0f;
             point = Vector3.Zero;
-            PhysicsDirectSpaceState3D spaceState = PhysicsServer3D.SpaceGetDirectState(world.Space);
+            hit = null;
+            Vector3 endPos = startPoint + dir * 1000.0f;
             Godot.Collections.Array<Rid> excluding = new Godot.Collections.Array<Rid> { };
             PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(startPoint, endPos, exclude: excluding);
+            //PhysicsDirectSpaceState3D spaceState = PhysicsServer3D.SpaceGetDirectState(world.Space);
+            Godot.Collections.Dictionary results = (Godot.Collections.Dictionary)CallDeferredThreadGroup("CastDefferedRay", query, world);
+        }
+        private void CastDefferedRay(PhysicsRayQueryParameters3D query, World3D world)
+        {
+
+            PhysicsDirectSpaceState3D spaceState = PhysicsServer3D.SpaceGetDirectState(world.Space);
             Godot.Collections.Dictionary results = spaceState.IntersectRay(query);
             if (results.Keys.Count > 0)
             {
+                GD.Print($"SelectOnClick::CastDefferedRay() results.Keys.Count[{results.Keys.Count}]");
                 hit = (results["collider"].AsGodotObject() as Node3D).GetParent<Node3D>();
-
                 point = results["position"].AsVector3();
 
-                return true;
+                (subV.FindChild("Target") as Node3D).GlobalPosition = point;
+                ScreenDungeonVisualizer vis = FindChild("Dungeon") as ScreenDungeonVisualizer;
+                MapPiece mp = vis.GetMapPiece(DungeonUtils.GlobalSnapCoordinate((Vector3I)point));
+                actionToCall.Invoke(mp);
             }
-            hit = null;
-            return false;
         }
     }// EOF
 }

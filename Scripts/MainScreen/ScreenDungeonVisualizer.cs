@@ -64,7 +64,7 @@ namespace Munglo.DungeonGenerator.UI
             //await map.GenerateMap(callback, screen.addon.MasterConfig.pathingPass);
             await map.GenerateFloor(settings.floorDef, callback, screen.addon.MasterConfig.pathingPass);
         }
-   
+
         /// <summary>
         /// Updates the visuals
         /// Obeying the floor start and floor end
@@ -209,8 +209,8 @@ namespace Munglo.DungeonGenerator.UI
             }
             return debugContainer.GetChild(y) as Node3D;
         }
-      
-     
+
+
 
 
         private void VisualizeFloor(int floor)
@@ -221,7 +221,7 @@ namespace Munglo.DungeonGenerator.UI
             {
                 if (section.Coord.y == floor || section.SectionIndex == 0)
                 {
-                        VisualizeSection(section);
+                    VisualizeSection(section);
                 }
             }
         }
@@ -246,33 +246,17 @@ namespace Munglo.DungeonGenerator.UI
                 {
                     visualNode.Name = $"S{string.Format("0:000", section.SectionIndex)}-T{index}";
                     tileContainer.AddChild(visualNode, true);
-                    visualNode.Position = Dungeon.GlobalPosition(piece);
+                    visualNode.Position = DungeonUtils.GlobalPosition(piece);
                     visualNode.Show();
                     index++;
                 }
             }
-
-            // Run the section prop placers
-            /*if (section.Placers is not null)
+            // Add water
+            if (section.WaterMaterial is not null)
             {
-                foreach (PlacerEntryResource entry in section.Placers)
-                {
-                    if(entry is null || !entry.active  || entry.placer is null) { continue; }
-                    IPlacer placer = entry.placer;
-
-                    if (placer is not null)
-                    {
-                        if (screen.addon.Mode == VIEWERMODE.SECTION)
-                        {
-                            GD.Print($"ScreenDungeonVisualizer::VisualizeSection() Place on [{placer.ResourceName}]");
-                        }
-                        placer.Place(section);
-                    }
-                }
-            }*/
-
-
-      
+                GD.Print("ScreenDungeonVisualizer::VisualizeSection() Trying to add water!");
+                DungeonUtils.BuildWaterPlane(section);
+            }
         }
         /// <summary>
         /// Decodes and instantiates the nodes needed for the map piece data
@@ -289,12 +273,20 @@ namespace Munglo.DungeonGenerator.UI
             if (screen.addon.MasterConfig.showFloors)
             {
                 if (piece.keyFloor.key != PIECEKEYS.NONE && piece.keyFloor.key != PIECEKEYS.OCCUPIED &&
-                    GetByKey(piece.keyFloor, biome, out Node3D floor, makeCollider)) { visualNode.AddChild(floor, true); };
+                    GetByKey(piece.keyFloor, biome, out Node3D floor, makeCollider))
+                {
+                    DungeonUtils.ApplyMaterialOverrides(floor, biome.floorMaterials);
+                    visualNode.AddChild(floor, true);
+                }
             }
             // generate ceiling
             if (screen.addon.MasterConfig.showCeilings)
             {
-                if (piece.keyCeiling.key != PIECEKEYS.NONE && GetByKey(piece.keyCeiling, biome, out Node3D ceiling, makeCollider)) { visualNode.AddChild(ceiling, true); };
+                if (piece.keyCeiling.key != PIECEKEYS.NONE && GetByKey(piece.keyCeiling, biome, out Node3D ceiling, makeCollider))
+                {
+                    DungeonUtils.ApplyMaterialOverrides(ceiling, biome.ceilingMaterials);
+                    visualNode.AddChild(ceiling, true);
+                }
             }
             // generate walls
             if (screen.addon.MasterConfig.showWalls)
@@ -305,8 +297,9 @@ namespace Munglo.DungeonGenerator.UI
                     {
                         if (GetByKey(piece.WallKey((MAPDIRECTION)Math.Log2(i) + 1), biome, out Node3D wall, makeCollider))
                         {
+                            DungeonUtils.ApplyMaterialOverrides(wall, biome.wallMaterials);
                             visualNode.AddChild(wall, true);
-                        };
+                        }
                     }
                 }
                 SpecialCaseRoundedCorners(piece, visualNode, biome, makeCollider);
@@ -316,12 +309,16 @@ namespace Munglo.DungeonGenerator.UI
             {
                 foreach (KeyData extra in piece.Extras)
                 {
-                    if (GetByKey(extra, biome, out Node3D ext, makeCollider)) { visualNode.AddChild(ext, true); };
+                    if (GetByKey(extra, biome, out Node3D ext, makeCollider))
+                    {
+                        DungeonUtils.ApplyMaterialOverrides(ext, biome.wallMaterials);
+                        visualNode.AddChild(ext, true);
+                    }
                 }
             }
             return true;
         }
-    
+
         /// <summary>
         /// Not flagged as wall but check for rounded corner keys
         /// </summary>
@@ -333,19 +330,36 @@ namespace Munglo.DungeonGenerator.UI
         {
             if (piece.WallKeyNorth.key == PIECEKEYS.WCI)
             {
-                if (GetByKey(piece.WallKeyNorth, biome, out Node3D wall, makeCollider)) { visualNode.AddChild(wall, true); };
+                if (GetByKey(piece.WallKeyNorth, biome, out Node3D wall, makeCollider))
+                {
+                    DungeonUtils.ApplyMaterialOverrides(wall, biome.wallMaterials);
+
+                    visualNode.AddChild(wall, true);
+                }
             }
             if (piece.WallKeyEast.key == PIECEKEYS.WCI)
             {
-                if (GetByKey(piece.WallKeyEast, biome, out Node3D wall, makeCollider)) { visualNode.AddChild(wall, true); };
+                if (GetByKey(piece.WallKeyEast, biome, out Node3D wall, makeCollider))
+                {
+                    DungeonUtils.ApplyMaterialOverrides(wall, biome.wallMaterials);
+                    visualNode.AddChild(wall, true);
+                }
             }
             if (piece.WallKeySouth.key == PIECEKEYS.WCI)
             {
-                if (GetByKey(piece.WallKeySouth, biome, out Node3D wall, makeCollider)) { visualNode.AddChild(wall, true); };
+                if (GetByKey(piece.WallKeySouth, biome, out Node3D wall, makeCollider))
+                {
+                    DungeonUtils.ApplyMaterialOverrides(wall, biome.wallMaterials);
+                    visualNode.AddChild(wall, true);
+                }
             }
             if (piece.WallKeyWest.key == PIECEKEYS.WCI)
             {
-                if (GetByKey(piece.WallKeyWest, biome, out Node3D wall, makeCollider)) { visualNode.AddChild(wall, true); };
+                if (GetByKey(piece.WallKeyWest, biome, out Node3D wall, makeCollider))
+                {
+                    DungeonUtils.ApplyMaterialOverrides(wall, biome.wallMaterials);
+                    visualNode.AddChild(wall, true);
+                }
             }
         }
         /// <summary>
@@ -379,12 +393,12 @@ namespace Munglo.DungeonGenerator.UI
                 }
             }
             obj.Name = data.key.ToString() + "-" + data.dir.ToString();
-            if (data.dir != MAPDIRECTION.ANY) { obj.RotationDegrees = Dungeon.ResolveRotation(data.dir); } else { obj.RotationDegrees = Vector3.Up * 45.0f; }
+            if (data.dir != MAPDIRECTION.ANY) { obj.RotationDegrees = DungeonUtils.ResolveRotation(data.dir); } else { obj.RotationDegrees = Vector3.Up * 45.0f; }
             return true;
         }
         private Resource ResolveAndCache(KeyData data, BiomeResource biome)
         {
-            if(biome is null){GD.PushError("ScreenDungeonVisualizer::ResolveAndCache() BIOME GIVEN AS NULL!!"); return null; }
+            if (biome is null) { GD.PushError("ScreenDungeonVisualizer::ResolveAndCache() BIOME GIVEN AS NULL!!"); return null; }
 
             if (cacheKeyedPieces == null) { cacheKeyedPieces = new System.Collections.Generic.Dictionary<PIECEKEYS, System.Collections.Generic.Dictionary<int, Resource>>(); }
 
@@ -462,7 +476,7 @@ namespace Munglo.DungeonGenerator.UI
         /// <returns></returns>
         public MapPiece GetMapPiece(MapCoordinate coord)
         {
-            if(map is null || map.Pieces.Count == 0)
+            if (map is null || map.Pieces.Count == 0)
             {
                 GD.PushError("Mapdata needs to be rebuilt");
                 return null;

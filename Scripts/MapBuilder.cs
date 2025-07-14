@@ -93,7 +93,7 @@ internal class MapBuilder
 
         ISection section = instance as SectionBase;
 
-        GD.Print($"MapBuilder::ResolveSectionInstance() [{section.GetType().Name}]");
+        //GD.Print($"MapBuilder::ResolveSectionInstance() [{section.GetType().Name}]");
         return section;
     }
     private MAPDIRECTION ResolveDirectionRule(MAPDIRECTION direction)
@@ -291,7 +291,7 @@ internal class MapBuilder
 
         ISection section = instance as SectionBase;
 
-        GD.Print($"MapBuilder::BuildSection() [{section.GetType().Name}]");
+        //GD.Print($"MapBuilder::BuildSection() [{section.GetType().Name}]");
 
         section.Build();
         map.Sections.Add(section);
@@ -395,7 +395,7 @@ internal class MapBuilder
         if (NE)
         {
             piece.AssignWall(new KeyData() { key = PIECEKEYS.WCI, dir = MAPDIRECTION.NORTH }, true);
-            if (piece.hasCieling)
+            if (piece.hasCieling && piece.Section.PlaceArches)
             {
                 piece.AddExtra(new KeyData() { key = PIECEKEYS.ARCH, dir = MAPDIRECTION.NORTH, variantID = 1 });
             }
@@ -403,7 +403,7 @@ internal class MapBuilder
         if (SE)
         {
             piece.AssignWall(new KeyData() { key = PIECEKEYS.WCI, dir = MAPDIRECTION.EAST }, true);
-            if (piece.hasCieling)
+            if (piece.hasCieling && piece.Section.PlaceArches)
             {
                 piece.AddExtra(new KeyData() { key = PIECEKEYS.ARCH, dir = MAPDIRECTION.EAST, variantID = 1 });
             }
@@ -411,7 +411,7 @@ internal class MapBuilder
         if (SW)
         {
             piece.AssignWall(new KeyData() { key = PIECEKEYS.WCI, dir = MAPDIRECTION.SOUTH }, true);
-            if (piece.hasCieling)
+            if (piece.hasCieling && piece.Section.PlaceArches)
             {
                 piece.AddExtra(new KeyData() { key = PIECEKEYS.ARCH, dir = MAPDIRECTION.SOUTH, variantID = 1 });
             }
@@ -421,7 +421,7 @@ internal class MapBuilder
             if (adjacentN.HasWestWall && adjacentW.HasNorthWall)
             {
                 piece.AssignWall(new KeyData() { key = PIECEKEYS.WCI, dir = MAPDIRECTION.WEST }, true);
-                if (piece.hasCieling)
+                if (piece.hasCieling && piece.Section.PlaceArches)
                 {
                     piece.AddExtra(new KeyData() { key = PIECEKEYS.ARCH, dir = MAPDIRECTION.WEST, variantID = 1 });
                 }

@@ -71,14 +71,14 @@ internal class Manager
         {
             Node3D d = gizmoDiamond.Instantiate() as Node3D;
             MS.Gizmos.AddChild(d);
-            d.Position = Dungeon.GlobalPosition(selectedMapPiece);
+            d.Position = DungeonUtils.GlobalPosition(selectedMapPiece);
         }
         // Insert Diamond on path target mappiece
         if (selectedMapPiece2nd is not null)
         {
             Node3D d = gizmoDiamond.Instantiate() as Node3D;
             MS.Gizmos.AddChild(d);
-            d.Position = Dungeon.GlobalPosition(selectedMapPiece2nd);
+            d.Position = DungeonUtils.GlobalPosition(selectedMapPiece2nd);
         }
         // Insert connection gizmos
         if (selectedConnection is not null)
@@ -121,8 +121,8 @@ internal class Manager
 
 
                     MS.Gizmos.AddChild(d);
-                    d.Position = Dungeon.GlobalPosition(piece.Coord);
-                    d.GlobalRotationDegrees = Dungeon.ResolveRotation(piece.Orientation);
+                    d.Position = DungeonUtils.GlobalPosition(piece.Coord);
+                    d.GlobalRotationDegrees = DungeonUtils.ResolveRotation(piece.Orientation);
                 }
             }
             AddGizmoForSectionConnections(selectedSection);
@@ -305,15 +305,15 @@ internal class Manager
             // Parent side
             Node3D d = gizmoConnParent.Instantiate() as Node3D;
             MS.Gizmos.AddChild(d);
-            d.Position = Dungeon.GlobalPosition(connection.coord);
-            d.GlobalRotationDegrees = Dungeon.ResolveRotation(Dungeon.Flip(connection.Dir));
+            d.Position = DungeonUtils.GlobalPosition(connection.coord);
+            d.GlobalRotationDegrees = DungeonUtils.ResolveRotation(DungeonUtils.Flip(connection.Dir));
         }
     }
     private void AddGizmoMapPieceBox(MapCoordinate coord)
     {
         Node3D segmented = gizmoSegmented.Instantiate() as Node3D;
         MS.Gizmos.AddChild(segmented);
-        segmented.Position = Dungeon.GlobalPosition(coord);
+        segmented.Position = DungeonUtils.GlobalPosition(coord);
         Vector3[] mapPieceBox = BuildMapPieceBox();
         (segmented as SegmentedGizmo).ClearSegments();
         (segmented as SegmentedGizmo).AddSegments(mapPieceBox);
@@ -332,7 +332,7 @@ internal class Manager
         }
         Node3D segmented = gizmoSegmented.Instantiate() as Node3D;
         MS.Gizmos.AddChild(segmented);
-        segmented.Position = Dungeon.GlobalPosition(section.MinCoord);
+        segmented.Position = DungeonUtils.GlobalPosition(section.MinCoord);
         Vector3[] mapPieceBox = BuildMapPieceBox(section.MaxCoord - section.MinCoord);
         (segmented as SegmentedGizmo).ClearSegments();
         (segmented as SegmentedGizmo).AddSegments(mapPieceBox);

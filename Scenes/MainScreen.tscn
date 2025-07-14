@@ -1,24 +1,24 @@
 [gd_scene load_steps=28 format=3 uid="uid://66fkglptwkl1"]
 
-[ext_resource type="Script" uid="uid://crwstsnd8xenj" path="res://addons/MDunGen/Scripts/MainScreen/MainScreen.cs" id="1_t5mpj"]
-[ext_resource type="Script" uid="uid://bj5stgdmwkvsh" path="res://addons/MDunGen/Scripts/MainScreen/CameraControls.cs" id="1_tt5em"]
-[ext_resource type="Script" uid="uid://cw7lkdu2uwnge" path="res://addons/MDunGen/Scripts/MainScreen/DungeonViewerToolbar.cs" id="2_btfr4"]
-[ext_resource type="Script" uid="uid://hd6g6vi1tpoo" path="res://addons/MDunGen/Scripts/MainScreen/Selection/SelectOnClick.cs" id="2_tq51n"]
-[ext_resource type="Script" uid="uid://b0rxdxr06txap" path="res://addons/MDunGen/Scripts/MainScreen/SectionTypeListButton.cs" id="3_bakif"]
+[ext_resource type="Script" uid="uid://cdqlvg2bhmmmw" path="res://addons/MDunGen/Scripts/MainScreen/MainScreen.cs" id="1_t5mpj"]
+[ext_resource type="Script" uid="uid://djfl6fdn25yvr" path="res://addons/MDunGen/Scripts/MainScreen/CameraControls.cs" id="1_tt5em"]
+[ext_resource type="Script" uid="uid://b50i4pel860r8" path="res://addons/MDunGen/Scripts/MainScreen/DungeonViewerToolbar.cs" id="2_btfr4"]
+[ext_resource type="Script" uid="uid://dskib7cxw71ql" path="res://addons/MDunGen/Scripts/MainScreen/Selection/SelectOnClick.cs" id="2_tq51n"]
+[ext_resource type="Script" uid="uid://drk4k84yut460" path="res://addons/MDunGen/Scripts/MainScreen/SectionTypeListButton.cs" id="3_bakif"]
 [ext_resource type="Environment" uid="uid://bn1cwyorljhq2" path="res://addons/MDunGen/ViewerEnv.tres" id="3_ubg15"]
-[ext_resource type="Script" uid="uid://fudbo7gbfkfa" path="res://addons/MDunGen/Scripts/MainScreen/ScreenDungeonVisualizer.cs" id="4_ey6f7"]
-[ext_resource type="Script" uid="uid://bce4rdsgnamhm" path="res://addons/MDunGen/Scripts/MainScreen/Notifications.cs" id="7_cfcxe"]
-[ext_resource type="Texture2D" uid="uid://dqom6co5i5auq" path="res://addons/MDunGen/Icons/Plus.png" id="16_nrt1g"]
-[ext_resource type="Texture2D" uid="uid://drbaqvmw7qnmm" path="res://addons/MDunGen/Icons/AddonIcon_big.png" id="17_kon6s"]
-[ext_resource type="Script" uid="uid://we7xqatdxgt1" path="res://addons/MDunGen/Scripts/MainScreen/FloorOptions.cs" id="17_usypf"]
-[ext_resource type="Texture2D" uid="uid://cl43lpb8cl1n7" path="res://addons/MDunGen/Icons/Minus.png" id="17_wfx1p"]
-[ext_resource type="Script" uid="uid://cmuh0v3s1hkh7" path="res://addons/MDunGen/Scripts/MainScreen/SectionSelector.cs" id="21_siix3"]
+[ext_resource type="Script" uid="uid://ba55it0enoyqt" path="res://addons/MDunGen/Scripts/MainScreen/ScreenDungeonVisualizer.cs" id="4_ey6f7"]
+[ext_resource type="Script" uid="uid://ch8xadpnaqmp7" path="res://addons/MDunGen/Scripts/MainScreen/Notifications.cs" id="7_cfcxe"]
+[ext_resource type="Texture2D" uid="uid://cs6tql22jx52e" path="res://addons/MDunGen/Icons/Plus.png" id="16_nrt1g"]
+[ext_resource type="Texture2D" uid="uid://b1i3jrr3errsd" path="res://addons/MDunGen/Icons/AddonIcon_big.png" id="17_kon6s"]
+[ext_resource type="Script" uid="uid://bov36sr6lc874" path="res://addons/MDunGen/Scripts/MainScreen/FloorOptions.cs" id="17_usypf"]
+[ext_resource type="Texture2D" uid="uid://bsth3cg3wgmx8" path="res://addons/MDunGen/Icons/Minus.png" id="17_wfx1p"]
+[ext_resource type="Script" uid="uid://bf18ypw6pbxwb" path="res://addons/MDunGen/Scripts/MainScreen/SectionSelector.cs" id="21_siix3"]
 [ext_resource type="Theme" uid="uid://c0br7ijjnpfqo" path="res://addons/MDunGen/Config/MainScreenTheme.tres" id="29_j2fmg"]
-[ext_resource type="Texture2D" uid="uid://bsn6uow47b2ci" path="res://addons/MDunGen/Icons/Floorbox.png" id="29_le75x"]
-[ext_resource type="Texture2D" uid="uid://cbecvcylsxhlu" path="res://addons/MDunGen/Icons/ProfileIcon.png" id="31_7xw7w"]
-[ext_resource type="Texture2D" uid="uid://cn6vae705o7yx" path="res://addons/MDunGen/Icons/CogIcon.png" id="32_m0fwq"]
-[ext_resource type="Texture2D" uid="uid://ykjfgg0dni0m" path="res://addons/MDunGen/Icons/BiomeIcon.png" id="33_ck4ds"]
-[ext_resource type="Texture2D" uid="uid://boabesdk8juy8" path="res://addons/MDunGen/Icons/ExportIcon.png" id="34_3dg3h"]
+[ext_resource type="Texture2D" uid="uid://dolibvvapd3g3" path="res://addons/MDunGen/Icons/Floorbox.png" id="29_le75x"]
+[ext_resource type="Texture2D" uid="uid://3f7srs8k2l4m" path="res://addons/MDunGen/Icons/ProfileIcon.png" id="31_7xw7w"]
+[ext_resource type="Texture2D" uid="uid://m5b3d5n3bmp4" path="res://addons/MDunGen/Icons/CogIcon.png" id="32_m0fwq"]
+[ext_resource type="Texture2D" uid="uid://bpo2mgmoodysf" path="res://addons/MDunGen/Icons/BiomeIcon.png" id="33_ck4ds"]
+[ext_resource type="Texture2D" uid="uid://c1dnvaudb0tbt" path="res://addons/MDunGen/Icons/ExportIcon.png" id="34_3dg3h"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xqdge"]
 
@@ -66,8 +66,9 @@ layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
 offset_top = 1.0
-offset_bottom = 25.0
+offset_bottom = 41.0
 grow_horizontal = 2
+alignment = 1
 script = ExtResource("2_btfr4")
 btnModeToggle = NodePath("btnMode")
 btnClear = NodePath("btnClear")
@@ -77,48 +78,77 @@ btnView = NodePath("btnView")
 btnSectionTypeList = NodePath("btnSectionTypeList")
 btnSectionSelector = NodePath("SectionResourceSelector")
 
-[node name="btnMode" type="Button" parent="DungeonViewerToolbar"]
-layout_mode = 2
-theme_type_variation = &"FlatButton"
-theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBoxEmpty_xqdge")
-text = "DungeonMode"
-
 [node name="VSeparator" type="VSeparator" parent="DungeonViewerToolbar"]
 layout_mode = 2
 
-[node name="btnClear" type="Button" parent="DungeonViewerToolbar"]
+[node name="btnMode" type="Button" parent="DungeonViewerToolbar"]
+custom_minimum_size = Vector2(134.715, 40)
 layout_mode = 2
+tooltip_text = "Toggle between generating a full dungeon or a single section."
 theme_type_variation = &"FlatButton"
-theme_override_font_sizes/font_size = 11
 theme_override_styles/normal = SubResource("StyleBoxEmpty_xqdge")
-text = "Clear"
+text = "DungeonMode"
 
 [node name="VSeparator2" type="VSeparator" parent="DungeonViewerToolbar"]
 layout_mode = 2
 
-[node name="btnBuild" type="Button" parent="DungeonViewerToolbar"]
+[node name="btnSectionTypeList" type="OptionButton" parent="DungeonViewerToolbar"]
 layout_mode = 2
-theme_type_variation = &"FlatButton"
-theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBoxEmpty_xqdge")
-text = "Build"
+tooltip_text = "If a Section Type is selected above. All resources of that Type stored in correct paths will be listed."
+selected = 0
+item_count = 4
+popup/item_0/text = "HallwaySection"
+popup/item_0/id = 0
+popup/item_1/text = "PathSection"
+popup/item_1/id = 1
+popup/item_2/text = "RoomSection"
+popup/item_2/id = 2
+popup/item_3/text = "DiverStartRoom"
+popup/item_3/id = 3
+script = ExtResource("3_bakif")
 
-[node name="btnRandom" type="Button" parent="DungeonViewerToolbar"]
+[node name="SectionResourceSelector" type="OptionButton" parent="DungeonViewerToolbar"]
 layout_mode = 2
-theme_type_variation = &"FlatButton"
-theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBoxEmpty_xqdge")
-text = "Random"
+tooltip_text = "Lists the section resources for the selected Type"
+script = ExtResource("21_siix3")
 
 [node name="VSeparator3" type="VSeparator" parent="DungeonViewerToolbar"]
 layout_mode = 2
 
+[node name="btnBuild" type="Button" parent="DungeonViewerToolbar"]
+custom_minimum_size = Vector2(54, 0)
+layout_mode = 2
+theme_type_variation = &"FlatButton"
+theme_override_styles/normal = SubResource("StyleBoxEmpty_xqdge")
+text = "Build"
+
+[node name="btnClear" type="Button" parent="DungeonViewerToolbar"]
+custom_minimum_size = Vector2(64, 0)
+layout_mode = 2
+tooltip_text = "Clears all generated data including the visuals."
+theme_type_variation = &"FlatButton"
+theme_override_styles/normal = SubResource("StyleBoxEmpty_xqdge")
+text = "Clear"
+
+[node name="VSeparator4" type="VSeparator" parent="DungeonViewerToolbar"]
+layout_mode = 2
+
+[node name="btnRandom" type="Button" parent="DungeonViewerToolbar"]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme = ExtResource("29_j2fmg")
+theme_type_variation = &"FlatButton"
+theme_override_styles/normal = SubResource("StyleBoxEmpty_xqdge")
+text = "Random"
+
+[node name="VSeparator5" type="VSeparator" parent="DungeonViewerToolbar"]
+layout_mode = 2
+
 [node name="btnView" type="MenuButton" parent="DungeonViewerToolbar"]
+custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
 tooltip_text = "Check the things you want to show after a build"
-theme_type_variation = &"FlatMenuButton"
-theme_override_font_sizes/font_size = 11
+theme = ExtResource("29_j2fmg")
 toggle_mode = false
 shortcut_feedback = false
 shortcut_in_tooltip = false
@@ -127,6 +157,7 @@ item_count = 5
 popup/item_0/text = "Floors"
 popup/item_0/checkable = 1
 popup/item_0/checked = true
+popup/item_0/id = 0
 popup/item_1/text = "Walls"
 popup/item_1/checkable = 1
 popup/item_1/checked = true
@@ -144,33 +175,20 @@ popup/item_4/checkable = 1
 popup/item_4/checked = true
 popup/item_4/id = 4
 
-[node name="VSeparator4" type="VSeparator" parent="DungeonViewerToolbar"]
+[node name="VSeparator6" type="VSeparator" parent="DungeonViewerToolbar"]
 layout_mode = 2
-
-[node name="btnSectionTypeList" type="OptionButton" parent="DungeonViewerToolbar"]
-layout_mode = 2
-tooltip_text = "If a Section Type is selected above this will show all resources of that Type stored in correct paths."
-selected = 0
-item_count = 3
-popup/item_0/text = "HallwaySection"
-popup/item_1/text = "PathSection"
-popup/item_1/id = 1
-popup/item_2/text = "RoomSection"
-popup/item_2/id = 2
-script = ExtResource("3_bakif")
-
-[node name="SectionResourceSelector" type="OptionButton" parent="DungeonViewerToolbar"]
-layout_mode = 2
-tooltip_text = "If a Section Type is selected above this will show all resources of that Type stored in correct paths."
-script = ExtResource("21_siix3")
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+process_mode = 3
+process_thread_group = 1
+process_thread_group_order = 0
+process_thread_messages = 0
 custom_minimum_size = Vector2(300, 100)
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 27.0
+offset_top = 41.0
 offset_bottom = 7.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -178,11 +196,13 @@ stretch = true
 script = ExtResource("2_tq51n")
 
 [node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
-process_mode = 3
 own_world_3d = true
 world_3d = SubResource("World3D_qk8pl")
 handle_input_locally = false
-size = Vector2i(1152, 628)
+physics_object_picking = true
+physics_object_picking_sort = true
+physics_object_picking_first_only = true
+size = Vector2i(1152, 614)
 render_target_clear_mode = 2
 render_target_update_mode = 4
 
@@ -238,10 +258,10 @@ layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -65.0
-offset_top = 26.0
-offset_right = 65.0
-offset_bottom = 43.0
+offset_left = -68.0
+offset_top = 47.0
+offset_right = 69.0
+offset_bottom = 64.0
 grow_horizontal = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4

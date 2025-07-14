@@ -48,8 +48,8 @@ namespace Munglo.DungeonGenerator
             wide = parentPiece.WallKey(dir).key == PIECEKEYS.WDW;
 
             //if (TestFit(ogOrientation)) { canFit = true; return; }
-            if (TestFit(Dungeon.TwistRight(ogOrientation))) { canFit = true; variationID = 0; return; }
-            if (TestFit(Dungeon.TwistLeft(ogOrientation))) { canFit = true; variationID = 1; return; }
+            if (TestFit(DungeonUtils.TwistRight(ogOrientation))) { canFit = true; variationID = 0; return; }
+            if (TestFit(DungeonUtils.TwistLeft(ogOrientation))) { canFit = true; variationID = 1; return; }
             //if (TestFit(Dungeon.Flip(ogOrientation))) { canFit = true; return; }
             canFit = false;
         }
@@ -66,22 +66,22 @@ namespace Munglo.DungeonGenerator
 
 
             // Fail if there is anytthing other ethen W or None to the left
-            if ((r1.WallKey(Dungeon.TwistLeft(dir)).key != PIECEKEYS.W)
+            if ((r1.WallKey(DungeonUtils.TwistLeft(dir)).key != PIECEKEYS.W)
                     &&
-                ((r1.WallKey(Dungeon.TwistLeft(dir)).key != PIECEKEYS.NONE)))
+                ((r1.WallKey(DungeonUtils.TwistLeft(dir)).key != PIECEKEYS.NONE)))
             { return false; }
             // Fail if there is anytthing other ethen W or None to the right
             if (
-                (r1.WallKey(Dungeon.TwistRight(dir)).key != PIECEKEYS.W)
+                (r1.WallKey(DungeonUtils.TwistRight(dir)).key != PIECEKEYS.W)
                 &&
-                ((r1.WallKey(Dungeon.TwistRight(dir)).key != PIECEKEYS.NONE))
+                ((r1.WallKey(DungeonUtils.TwistRight(dir)).key != PIECEKEYS.NONE))
                 )
             { return false; }
             
 
 
 
-            orientation = Dungeon.Flip(dir);
+            orientation = DungeonUtils.Flip(dir);
             locationPiece = r1;
             //GD.Print($"StairCase::TestFit() Stair Fit!");
             return true;
@@ -132,10 +132,10 @@ namespace Munglo.DungeonGenerator
             r2.hasStairs = true;
             
 
-            section.AddProp(new SectionProp(PIECEKEYS.STAIR, Dungeon.GlobalPosition(r1) +  offset, orientation, variationID));
+            section.AddProp(new SectionProp(PIECEKEYS.STAIR, DungeonUtils.GlobalPosition(r1) +  offset, orientation, variationID));
             if (!r2.hasFloor)
             {
-                section.AddProp(new SectionProp(PIECEKEYS.STAIR, Dungeon.GlobalPosition(r2) + offset, Dungeon.Flip(orientation), variationID));
+                section.AddProp(new SectionProp(PIECEKEYS.STAIR, DungeonUtils.GlobalPosition(r2) + offset, DungeonUtils.Flip(orientation), variationID));
             }
 
 
@@ -147,7 +147,7 @@ namespace Munglo.DungeonGenerator
 
 
 
-            section.AddProp(new SectionProp(PIECEKEYS.BRIDGE, Dungeon.GlobalPosition(parentPiece) + offset2, ogOrientation, 6));
+            section.AddProp(new SectionProp(PIECEKEYS.BRIDGE, DungeonUtils.GlobalPosition(parentPiece) + offset2, ogOrientation, 6));
             parentPiece.Save();
         }
 

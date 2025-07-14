@@ -20,6 +20,12 @@ namespace Munglo.DungeonGenerator
         [Export] public int nbFloorsMin = 1;
         [Export] public int nbFloorsMax = 2;
 
+        [ExportGroup("Extras")]
+        [Export] public bool arches = true;
+        [ExportGroup("Water")]
+        [Export] public float waterLevel = -1.0f;
+        [Export] public float waterDepth = 1.0f;
+        [Export] public Material waterMaterial;
         [ExportGroup("Debug")]
         [Export] public bool debug = false;
         [Export] public int nbDoorsPerFloorMin = 0;

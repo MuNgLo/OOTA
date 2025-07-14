@@ -15,7 +15,7 @@ public class HallwaySection : SectionBase
     }
     public override void Build()
     {
-        SetMinMaxCoord(coord + Dungeon.TwistRight(orientation) + MapCoordinate.Down);
+        SetMinMaxCoord(coord + DungeonUtils.TwistRight(orientation) + MapCoordinate.Down);
 
         BuildHallwayStart(coord, orientation);
         MapCoordinate stepLocation = coord + orientation;
@@ -45,10 +45,10 @@ public class HallwaySection : SectionBase
      private void BuildHallwayEnd(MapCoordinate endCoord, MAPDIRECTION dir)
     {
         ClaimSlice(endCoord, dir);
-        MapPiece end = map.GetPiece(endCoord + Dungeon.TwistRight(dir) + Dungeon.TwistRight(dir) + Dungeon.TwistRight(dir));
-        end.AddExtra(new KeyData() { key = PIECEKEYS.ARCH, dir = Dungeon.Flip(dir), variantID = 2 });
+        MapPiece end = map.GetPiece(endCoord + DungeonUtils.TwistRight(dir) + DungeonUtils.TwistRight(dir) + DungeonUtils.TwistRight(dir));
+        end.AddExtra(new KeyData() { key = PIECEKEYS.ARCH, dir = DungeonUtils.Flip(dir), variantID = 2 });
         end.State = MAPPIECESTATE.PENDING;
-        end.keyFloor = new KeyData() { key = PIECEKEYS.F, dir = Dungeon.Flip(dir), variantID = 3 };
+        end.keyFloor = new KeyData() { key = PIECEKEYS.F, dir = DungeonUtils.Flip(dir), variantID = 3 };
         pieces.Add(end);
         end.Save();
     }
@@ -62,16 +62,16 @@ public class HallwaySection : SectionBase
         stepLeft.keyFloor = new KeyData() { key = PIECEKEYS.F, dir = dir, variantID = 4 };
         pieces.Add(stepLeft);
         stepLeft.Save();
-        MapPiece stepRight = map.GetPiece(stepCoord + Dungeon.TwistRight(dir) + Dungeon.TwistRight(dir) + Dungeon.TwistRight(dir));
+        MapPiece stepRight = map.GetPiece(stepCoord + DungeonUtils.TwistRight(dir) + DungeonUtils.TwistRight(dir) + DungeonUtils.TwistRight(dir));
         stepRight.State = MAPPIECESTATE.PENDING;
-        stepRight.keyFloor = new KeyData() { key = PIECEKEYS.F, dir = Dungeon.Flip(dir), variantID = 4 };
+        stepRight.keyFloor = new KeyData() { key = PIECEKEYS.F, dir = DungeonUtils.Flip(dir), variantID = 4 };
         pieces.Add(stepRight);
         stepRight.Save();
     }
 
     private void ClaimSlice(MapCoordinate stepCoord, MAPDIRECTION dir)
     {
-        MAPDIRECTION r = Dungeon.TwistRight(dir);
+        MAPDIRECTION r = DungeonUtils.TwistRight(dir);
         MapCoordinate startCoord = stepCoord + MapCoordinate.Down;
         // do it by row
         for (int i = 0; i < 3; i++)

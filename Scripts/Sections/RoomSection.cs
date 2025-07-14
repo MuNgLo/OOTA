@@ -18,13 +18,13 @@ namespace Munglo.DungeonGenerator.Sections
             pieces.Add(start);
             start.Save();
 
-            MapPiece parent = map.GetExistingPiece(coord + Dungeon.Flip(orientation));
+            MapPiece parent = map.GetExistingPiece(coord + DungeonUtils.Flip(orientation));
             if (parent is not null)
             {
                 //AddConnection(Dungeon.Flip(orientation), map.Sections[parent.SectionIndex], start.Coord, parent.Coord, true);
 
                 ISection parentSection = map.Sections[parent.SectionIndex];
-                int c1 = AddConnection(Dungeon.Flip(orientation), parentSection, start.Coord, parent.Coord, true);
+                int c1 = AddConnection(DungeonUtils.Flip(orientation), parentSection, start.Coord, parent.Coord, true);
                 int c2 = parentSection.AddConnection(orientation, this, parent.Coord, start.Coord, true);
                 map.Connections[c1].connectedToConnectionID = c2;
                 map.Connections[c2].connectedToConnectionID = c1;
@@ -51,10 +51,10 @@ namespace Munglo.DungeonGenerator.Sections
 
             if (sectionDefinition.firstPieceDoor)
             {
-                pieces.First().AssignWall(new KeyData() { key = PIECEKEYS.WD, dir = Dungeon.Flip(pieces.First().Orientation) }, true);
-                pieces.First().Neighbour(Dungeon.Flip(pieces.First().Orientation), true).AssignWall(new KeyData() { key = PIECEKEYS.WD, dir = pieces.First().Orientation }, true);
+                pieces.First().AssignWall(new KeyData() { key = PIECEKEYS.WD, dir = DungeonUtils.Flip(pieces.First().Orientation) }, true);
+                pieces.First().Neighbour(DungeonUtils.Flip(pieces.First().Orientation), true).AssignWall(new KeyData() { key = PIECEKEYS.WD, dir = pieces.First().Orientation }, true);
             }
-            FitSmallArches();
+            if (sectionDefinition.arches) { FitSmallArches(); }
         }
 
         private void ProcessPiece(MapPiece rp)
@@ -150,7 +150,7 @@ namespace Munglo.DungeonGenerator.Sections
             int breaker = 20;
 
             List<MapPiece> candidates = GetWallPieces(0, true);
-            candidates.RemoveAll(p => p.HasWall(Dungeon.Flip(orientation)));
+            candidates.RemoveAll(p => p.HasWall(DungeonUtils.Flip(orientation)));
 
             while (breaker > 0 && candidates.Count > 2)
             {
@@ -162,7 +162,7 @@ namespace Munglo.DungeonGenerator.Sections
                 if (pick.WallKey(dir).key != PIECEKEYS.W) { continue; }
                 MapPiece nb = pick.Neighbour(dir, true);
                 if (nb.isEmpty) { continue; }
-                if (nb.WallKey(Dungeon.Flip(dir)).key != PIECEKEYS.W) { continue; }
+                if (nb.WallKey(DungeonUtils.Flip(dir)).key != PIECEKEYS.W) { continue; }
 
                 pick.SetFaulty(true);
                 nb.SetFaulty(true);

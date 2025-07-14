@@ -26,7 +26,7 @@ namespace Munglo.DungeonGenerator
         /// Total count of all map pieces in the section (include empty?)
         /// </summary>
         public int TileCount { get; }
-        
+
         /// <summary>
         /// TODO decide if this is all props or just the section inner props
         /// </summary>
@@ -81,6 +81,8 @@ namespace Munglo.DungeonGenerator
         public ROOMCONNECTIONRESPONCE defaultConnectionResponses { get; }
         public bool BridgeAllowed { get; }
         public bool DoorAllowed { get; }
+
+        public bool PlaceArches { get; }
         public List<MapPiece> GetWallPieces(int floor, bool includeCorners = false);
 
 
@@ -93,7 +95,7 @@ namespace Munglo.DungeonGenerator
         public void AddConnection(int connectionIndex);
         public int AddConnection(MAPDIRECTION dir, ISection otherSection, MapCoordinate location, MapCoordinate otherLocation, bool overrideLocked);
         public int AddInverseConnection(MAPDIRECTION dir, ISection otherSection, MapCoordinate location, MapCoordinate otherLocation, bool overrideLocked);
-        
+
         /// <summary>
         /// Assign placers to the section. If placersOverride is valid it will override the SectionResource placers collection
         /// </summary>
@@ -112,7 +114,7 @@ namespace Munglo.DungeonGenerator
         /// <param name="parentCoord"></param>
         /// <returns></returns>
         bool ContainsPiece(MapCoordinate parentCoord);
-        bool GetOuterWallFreeNeighbour(out MapPiece neighbour, out MAPDIRECTION dir, bool includeCorners = false);
+        bool GetOuterWallFreeNeighbour(out MapPiece neighbour, out MAPDIRECTION dir, bool includeCorners = false, bool onlysSectionGroundFloor = true);
 
 
         public int ConnectionCount { get; }
@@ -122,5 +124,9 @@ namespace Munglo.DungeonGenerator
         public MapCoordinate MinCoord { get; }
         public PRNGMarsenneTwister RNG { get; }
         public Array<PlacerEntryResource> Placers { get; }
+        
+        public float WaterLevel { get; }
+        public float WaterDepth { get; }
+        public Material WaterMaterial { get; }
     }// EOF INTERFACE
 }

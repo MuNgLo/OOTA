@@ -12,10 +12,13 @@ namespace Munglo.DungeonGenerator
         [ExportCategory("Debug")]
         [Export] public BiomeEntry[] debug;
         [ExportCategory("Walls")]
+        [Export] public Material[] wallMaterials;
         [Export] public BiomeEntry[] walls;
         [ExportCategory("Floors")]
+        [Export] public Material[] floorMaterials;
         [Export] public BiomeEntry[] floors;
         [ExportCategory("Ceilings")]
+        [Export] public Material[] ceilingMaterials;
         [Export] public BiomeEntry[] ceilings;
         [ExportCategory("Extras")]
         [Export] public BiomeEntry[] extras;

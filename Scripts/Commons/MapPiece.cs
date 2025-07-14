@@ -192,7 +192,7 @@ namespace Munglo.DungeonGenerator
         internal bool IsCorner(MAPDIRECTION dir)
         {
             if (!HasWall(dir)) { return false; }
-            if (HasWall(Dungeon.TwistLeft(dir)) || HasWall(Dungeon.TwistRight(dir))) { return true; }
+            if (HasWall(DungeonUtils.TwistLeft(dir)) || HasWall(DungeonUtils.TwistRight(dir))) { return true; }
             return false;
         }
 
@@ -283,24 +283,24 @@ namespace Munglo.DungeonGenerator
         /// Returns the neighbouring piece to the right relative to the orientation
         /// </summary>
         /// <returns></returns>
-        public MapPiece NeighbourRight(bool createIfNeeded)
+        public MapPiece NeighbourRight(bool createIfNeeded = false)
         {
-            return Neighbour(Dungeon.TwistRight(orientation), createIfNeeded);
+            return Neighbour(DungeonUtils.TwistRight(orientation), createIfNeeded);
         }
         /// <summary>
         /// Returns the neighbouring piece to the left relative to the orientation
         /// </summary>
         /// <returns></returns>
-        public MapPiece NeighbourLeft(bool createIfNeeded)
+        public MapPiece NeighbourLeft(bool createIfNeeded = false)
         {
-            return Neighbour(Dungeon.TwistLeft(orientation), createIfNeeded);
+            return Neighbour(DungeonUtils.TwistLeft(orientation), createIfNeeded);
         }
         /// <summary>
         /// Returns the neighbouring piece in direction
         /// </summary>
         /// <param name="dir"></param>
         /// <returns></returns>
-        public MapPiece Neighbour(MAPDIRECTION dir, bool createIfNeeded)
+        public MapPiece Neighbour(MAPDIRECTION dir, bool createIfNeeded = false)
         {
             if(createIfNeeded){ return map.GetPiece(Coord + dir);}
             return map.GetExistingPiece(Coord + dir);

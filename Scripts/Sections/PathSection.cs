@@ -38,7 +38,7 @@ namespace Munglo.DungeonGenerator.Sections
             MAPDIRECTION startDir = step.Orientation;
             if (map.Sections.Count > 0)
             {
-                BuildStartConnection(step, Dungeon.Flip(step.Orientation));
+                BuildStartConnection(step, DungeonUtils.Flip(step.Orientation));
             }
             //VerifyWidth(step);
             SetupLines(step);
@@ -53,7 +53,9 @@ namespace Munglo.DungeonGenerator.Sections
                 {
                     if (nextTurnIsRight) { TurnRight(); } else { TurnLeft(); }
                     turntimer = RollTurn();
-                }else{
+                }
+                else
+                {
                     AddStep(corMaxTotal);
                 }
                 if (PathBlocked()) { TrimLines(); isFinished = true; }
@@ -85,7 +87,7 @@ namespace Munglo.DungeonGenerator.Sections
 
             SealSection();
             BuildEndCap();
-            FitSmallArches();
+            if (sectionDefinition.arches) { FitSmallArches(); }
             IsValid = true;
         }
 
@@ -185,7 +187,7 @@ namespace Munglo.DungeonGenerator.Sections
                     startpieceConnection.Coord,
                     true
                     );
-                int conn2 = otherSection.AddConnection(Dungeon.Flip(dir), this, startpieceConnection.Coord, startpiece.Coord, true);
+                int conn2 = otherSection.AddConnection(DungeonUtils.Flip(dir), this, startpieceConnection.Coord, startpiece.Coord, true);
                 map.Connections[conn1].connectedToConnectionID = conn2;
                 map.Connections[conn2].connectedToConnectionID = conn1;
             }
@@ -226,17 +228,17 @@ namespace Munglo.DungeonGenerator.Sections
                     }
                     if (!RightSide.Last.isEmpty)
                     {
-                        RightSide.Last.AssignWall(new KeyData() { key = PIECEKEYS.NONE, dir = Dungeon.Flip(RightSide.Last.Orientation) }, true);
+                        RightSide.Last.AssignWall(new KeyData() { key = PIECEKEYS.NONE, dir = DungeonUtils.Flip(RightSide.Last.Orientation) }, true);
                     }
                 }
                 if (LeftSide.Last.isBridge)
                 {
-                    LeftSide.Last.Neighbour(LeftSide.Last.Orientation, true).AssignWall(new KeyData() { key = PIECEKEYS.WD, dir = Dungeon.Flip(LeftSide.Last.Orientation) }, true);
+                    LeftSide.Last.Neighbour(LeftSide.Last.Orientation, true).AssignWall(new KeyData() { key = PIECEKEYS.WD, dir = DungeonUtils.Flip(LeftSide.Last.Orientation) }, true);
                 }
                 else
                 {
-                    LeftSide.Last.Neighbour(LeftSide.Last.Orientation, true).AssignWall(new KeyData() { key = PIECEKEYS.NONE, dir = Dungeon.Flip(LeftSide.Last.Orientation) }, true);
-                    RightSide.Last.Neighbour(LeftSide.Last.Orientation, true).AssignWall(new KeyData() { key = PIECEKEYS.NONE, dir = Dungeon.Flip(RightSide.Last.Orientation) }, true);
+                    LeftSide.Last.Neighbour(LeftSide.Last.Orientation, true).AssignWall(new KeyData() { key = PIECEKEYS.NONE, dir = DungeonUtils.Flip(LeftSide.Last.Orientation) }, true);
+                    RightSide.Last.Neighbour(LeftSide.Last.Orientation, true).AssignWall(new KeyData() { key = PIECEKEYS.NONE, dir = DungeonUtils.Flip(RightSide.Last.Orientation) }, true);
                 }
             }
             else
@@ -264,7 +266,7 @@ namespace Munglo.DungeonGenerator.Sections
                 {
                     lines[i].Last.AssignWall(new KeyData() { key = PIECEKEYS.W, dir = lines[i].Last.Orientation }, true);
                 }
-                if (next.HasWall(Dungeon.Flip(dir)))
+                if (next.HasWall(DungeonUtils.Flip(dir)))
                 {
                     lines[i].Last.AssignWall(new KeyData() { key = PIECEKEYS.W, dir = lines[i].Last.Orientation }, true);
                 }
@@ -290,7 +292,7 @@ namespace Munglo.DungeonGenerator.Sections
         }
         private void TurnRight()
         {
-            MAPDIRECTION newDir = Dungeon.TwistRight(lines[0].Last.Orientation);
+            MAPDIRECTION newDir = DungeonUtils.TwistRight(lines[0].Last.Orientation);
             MapPiece[] turners = RightSide.GetTurners(sizeX, newDir);
             //ProcGenMKIII.Log("Path", "TurnRight", $"turners.Length[{turners.Length}]");
             if (TurnNotBlocked(turners))
@@ -307,7 +309,7 @@ namespace Munglo.DungeonGenerator.Sections
         }
         private void TurnLeft()
         {
-            MAPDIRECTION newDir = Dungeon.TwistLeft(lines[0].Last.Orientation);
+            MAPDIRECTION newDir = DungeonUtils.TwistLeft(lines[0].Last.Orientation);
             MapPiece[] turners = LeftSide.GetTurners(sizeX, newDir, true);
             //ProcGenMKIII.Log("Path", "TurnLeft", $"turners.Length[{turners.Length}]");
 
@@ -362,7 +364,7 @@ namespace Munglo.DungeonGenerator.Sections
             lines[0] = new Line(map, this, step, rng);
             if (lines.Length > 1)
             {
-                MAPDIRECTION expandTo = Dungeon.TwistRight(step.Orientation);
+                MAPDIRECTION expandTo = DungeonUtils.TwistRight(step.Orientation);
                 for (int i = 1; i < lines.Length; i++)
                 {
                     lines[i] = new Line(map, this, lines[i - 1].Last.Neighbour(expandTo, true), rng);
@@ -374,7 +376,7 @@ namespace Munglo.DungeonGenerator.Sections
         private void VerifyWidth(MapPiece step)
         {
             int cleared = 0;
-            MAPDIRECTION dir = Dungeon.TwistRight(step.Orientation);
+            MAPDIRECTION dir = DungeonUtils.TwistRight(step.Orientation);
             for (int i = 0; i < sizeX; i++)
             {
                 if (step.State != MAPPIECESTATE.UNUSED)

@@ -94,7 +94,7 @@ namespace Munglo.DungeonGenerator.UI
                 Profile.settings.seed4 = GD.RandRange(1111, 9999);
             }
 
-            Dungeon.globalOffset = Profile.globalOffset;
+            DungeonUtils.globalOffset = Profile.globalOffset;
 
             switch (screen.addon.Mode)
             {

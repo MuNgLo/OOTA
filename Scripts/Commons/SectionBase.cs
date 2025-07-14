@@ -72,6 +72,7 @@ namespace Munglo.DungeonGenerator
 
         public bool BridgeAllowed => defaultConnectionResponses.HasFlag(ROOMCONNECTIONRESPONCE.BRIDGE);
         public bool DoorAllowed => defaultConnectionResponses.HasFlag(ROOMCONNECTIONRESPONCE.DOOR);
+        public bool PlaceArches => sectionDefinition.arches;
 
         private protected int sizeZ;
         private protected int sizeX;
@@ -83,6 +84,11 @@ namespace Munglo.DungeonGenerator
         private protected int maxY = 0;
         private protected int minZ = 0;
         private protected int maxZ = 0;
+
+        private float waterLevel = -1.0f;
+        private Material waterMaterial;
+        private float waterDepth = 1.0f;
+
         #endregion
 
         #region Properties
@@ -96,6 +102,9 @@ namespace Munglo.DungeonGenerator
         public virtual int TileCount => Pieces.Count;
         public virtual List<MapPiece> Pieces => pieces;
         public virtual List<MapCoordinate> ExtraPieces => extraPieces;
+        public float WaterLevel => waterLevel;
+        public Material WaterMaterial => waterMaterial;
+        public float WaterDepth => waterDepth;
 
         public int PropCount => Props.Count;
 
@@ -106,6 +115,57 @@ namespace Munglo.DungeonGenerator
         public Node3D sectionContainer;
 
         public Node3D SectionContainer { get => sectionContainer; set => sectionContainer = value; }
+
+        /// <summary>
+        /// size overrides are in order of depth[max/min], width[max/min] and floor[max/min]. Use 0 to not override.
+        /// </summary>
+        /// <param name="args"></param>
+        /// <param name="sizeOverrides"></param>
+        /// <param name="adjustWidthDepth"></param>
+        /// <exception cref="ArgumentException"></exception>
+        public SectionBase(SectionbBuildArguments args, int[] sizeOverrides, bool adjustWidthDepth = true)
+        {
+            if (args.sectionDefinition is null) { GD.PushError("Section definition was NULL"); return; }
+            if (sizeOverrides.Length != 6)
+            {
+                throw new ArgumentException("SectionBase::Constructor() SizeOverride Array has to be length of 4. Use 0 as a non override");
+            }
+            pieces = new List<MapPiece>();
+            extraPieces = new List<MapCoordinate>();
+            connections = new List<int>();
+            rng = new PRNGMarsenneTwister(args.Seed);
+            props = new SectionProps(this, args.Seed);
+
+            if (args.sectionDefinition.waterMaterial is not null)
+            {
+                waterMaterial = args.sectionDefinition.waterMaterial;
+                waterLevel = args.sectionDefinition.waterLevel;
+                waterDepth = args.sectionDefinition.waterDepth;
+            }
+
+            map = args.map;
+
+            sectionDefinition = args.sectionDefinition;
+            sectionIndex = args.sectionID;
+            sectionStyle = sectionDefinition.sectionStyle;
+            sectionName = sectionDefinition.sectionName;
+            coord = args.piece.Coord;
+            defaultConnectionResponses = sectionDefinition.defaultResponses;
+
+            orientation = args.piece.Orientation;
+            if (orientation == MAPDIRECTION.ANY) { orientation = (MAPDIRECTION)rng.Next(1, 5); }
+
+            sizeX = rng.Next(sizeOverrides[1] == 0 ? sectionDefinition.sizeWidthMin : sizeOverrides[1], sizeOverrides[0] == 0 ? sectionDefinition.sizeWidthMax + 1:sizeOverrides[0] + 1);
+            sizeZ = rng.Next(sizeOverrides[3] == 0 ? sectionDefinition.sizeDepthMin : sizeOverrides[3], sizeOverrides[2] == 0 ? sectionDefinition.sizeDepthMax + 1:sizeOverrides[2] + 1);
+            sizeY = rng.Next(sizeOverrides[5] == 0 ? sectionDefinition.nbFloorsMin : sizeOverrides[5], sizeOverrides[4] == 0 ? sectionDefinition.nbFloorsMax + 1:sizeOverrides[4] + 1);
+
+
+            sectionDefinition.VerifyValues();
+
+
+            if (adjustWidthDepth) { ResolveWidthDepth(); }
+            SetMinMaxCoord(coord);
+        }
 
 
         public SectionBase(SectionbBuildArguments args, bool adjustWidthDepth = true)
@@ -131,7 +191,6 @@ namespace Munglo.DungeonGenerator
             if (orientation == MAPDIRECTION.ANY) { orientation = (MAPDIRECTION)rng.Next(1, 5); }
 
             sectionDefinition.VerifyValues();
-
             sizeX = rng.Next(sectionDefinition.sizeWidthMin, sectionDefinition.sizeWidthMax + 1);
             sizeZ = rng.Next(sectionDefinition.sizeDepthMin, sectionDefinition.sizeDepthMax + 1);
             sizeY = rng.Next(sectionDefinition.nbFloorsMin, sectionDefinition.nbFloorsMax + 1);
@@ -164,7 +223,7 @@ namespace Munglo.DungeonGenerator
             if (wide)
             {
                 piece.AssignWall(new KeyData() { key = PIECEKEYS.WDW, dir = dir }, overrideLocked);
-                MapPiece nb = piece.Neighbour(Dungeon.TwistRight(dir), true);
+                MapPiece nb = piece.Neighbour(DungeonUtils.TwistRight(dir), true);
                 nb.AssignWall(new KeyData() { key = PIECEKEYS.OCCUPIED, dir = dir }, overrideLocked);
                 if (!piece.hasFloor)
                 {
@@ -232,7 +291,7 @@ namespace Munglo.DungeonGenerator
                         {
                             MapPiece nb = map.GetExistingPiece(piece.Coord + (MAPDIRECTION)i);
                             // Wall if the piece in that direction has a wall towards this piece
-                            if (nb is null || nb.isEmpty || nb.HasWall(Dungeon.Flip((MAPDIRECTION)i)))
+                            if (nb is null || nb.isEmpty || nb.HasWall(DungeonUtils.Flip((MAPDIRECTION)i)))
                             {
                                 piece.AssignWall(new KeyData() { key = PIECEKEYS.W, dir = (MAPDIRECTION)i, variantID = wallVariant }, true);
                             }
@@ -259,12 +318,9 @@ namespace Munglo.DungeonGenerator
             }
             return candidates;
         }
-        public bool GetOuterWallFreeNeighbour(out MapPiece neighbour, out MAPDIRECTION dir, bool includeCorners = false)
+        public List<MapPiece> GetOutsideWalls(bool includeCorners = false)
         {
-            // Confirmed
             List<MapPiece> candidates = Pieces.FindAll(p => p.HasNorthWall);
-            dir = MAPDIRECTION.ANY;
-
             candidates.AddRange(Pieces.FindAll(p => p.HasEastWall && !p.HasNorthWall));
             candidates.AddRange(Pieces.FindAll(p => p.HasSouthWall && !p.HasNorthWall && !p.HasEastWall));
             candidates.AddRange(Pieces.FindAll(p => p.HasWestWall && !p.HasNorthWall && !p.HasEastWall && !p.HasSouthWall));
@@ -276,6 +332,20 @@ namespace Munglo.DungeonGenerator
                 count += candidates.RemoveAll(p => p.HasSouthWall && p.HasWestWall);
                 count += candidates.RemoveAll(p => p.HasWestWall && p.HasNorthWall);
             }
+            return candidates;
+        }
+        public List<MapPiece> GetOutsideWallsOnFloor(int floor, bool includeCorners = false)
+        {
+            List<MapPiece> candidates = GetOutsideWalls(includeCorners);
+            candidates.RemoveAll(p => p.Coord.y != floor);
+            return candidates;
+        }
+
+        public bool GetOuterWallFreeNeighbour(out MapPiece neighbour, out MAPDIRECTION dir, bool includeCorners = false, bool onlysSectionGroundFloor = true)
+        {
+            // Confirmed
+            List<MapPiece> candidates = onlysSectionGroundFloor ? GetOutsideWallsOnFloor(Coord.y) : GetOutsideWalls(includeCorners);
+            dir = MAPDIRECTION.ANY;
             int breaker = 20;
             while (breaker > 0 && candidates.Count > 0)
             {
@@ -333,7 +403,7 @@ namespace Munglo.DungeonGenerator
         private protected MapPiece GetCenterPiece()
         {
             MapPiece centerOfStartLine = GetCenterOfRow(Pieces[0], orientation);
-            MapPiece centerOfRoom = GetCenterOfRow(centerOfStartLine, Dungeon.TwistLeft(orientation));
+            MapPiece centerOfRoom = GetCenterOfRow(centerOfStartLine, DungeonUtils.TwistLeft(orientation));
             return centerOfRoom;
         }
         private protected MapPiece GetCenterOfRow(MapPiece piece, MAPDIRECTION dir)
@@ -352,7 +422,7 @@ namespace Munglo.DungeonGenerator
             }
 
             breaker = 100;
-            dir = Dungeon.Flip(dir);
+            dir = DungeonUtils.Flip(dir);
             piece = posP.First();
             while (Pieces.Exists(p => p.Coord == piece.Coord + dir))
             {
@@ -412,7 +482,7 @@ namespace Munglo.DungeonGenerator
 
         public virtual bool IsInside(Vector3 worldPosition)
         {
-            MapCoordinate coord = Dungeon.GlobalSnapCoordinate((Vector3I)worldPosition);
+            MapCoordinate coord = DungeonUtils.GlobalSnapCoordinate((Vector3I)worldPosition);
             if (Pieces.Exists(p => p.Coord == coord))
             {
                 if (Pieces.Find(p => p.Coord == coord).isEmpty)
@@ -452,7 +522,7 @@ namespace Munglo.DungeonGenerator
         public int AddInverseConnection(MAPDIRECTION dir, ISection otherSection, MapCoordinate location, MapCoordinate otherLocation, bool overrideLocked)
         {
             // Create a new connection
-            if (map.AddNewConnection(otherSection, this, otherLocation, location, Dungeon.Flip(dir), out int cID))
+            if (map.AddNewConnection(otherSection, this, otherLocation, location, DungeonUtils.Flip(dir), out int cID))
             {
                 AddConnection(cID);
                 return cID;
@@ -485,6 +555,9 @@ namespace Munglo.DungeonGenerator
             this.placers = placers;
         }
 
+        /// <summary>
+        /// Make depth and width consistent relative to section orientation
+        /// </summary>
         private void ResolveWidthDepth()
         {
             if (orientation != MAPDIRECTION.NORTH && orientation != MAPDIRECTION.SOUTH)

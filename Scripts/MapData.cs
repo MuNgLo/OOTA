@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Munglo.DungeonGenerator;
 /// <summary>
-/// On instantiation this sets itself up to be used. Call GenerateMap() togenerate dungeon data. Use its callback to
+/// On instantiation this sets itself up to be used. Call GenerateMap() to generate dungeon data. Use its callback to
 /// do what you want with it.
 /// </summary>
 public class MapData
@@ -65,10 +65,7 @@ public class MapData
         rng = new PRNGMarsenneTwister(MapArgs.Seed);
         MapBuilder builder = new MapBuilder(this, MapArgs.Seed);
 
-
-
-        //await builder.BuildMapData(doPathing);
-
+        await builder.BuildFloorMapData(MapArgs.floorDef, doPathing);
 
 
         callback.Invoke();
@@ -307,11 +304,11 @@ public class MapData
     #region Functional to manipulate mappieces
     internal void AddDoorWide(MapPiece piece1, bool overrideLocked)
     {
-        MapPiece piece2 = piece1.Neighbour(Dungeon.TwistRight(piece1.Orientation), true);
-        piece1.AssignWall(new KeyData() { key = PIECEKEYS.OCCUPIED, dir = Dungeon.Flip(piece1.Orientation) }, overrideLocked);
-        piece2.AssignWall(new KeyData() { key = PIECEKEYS.WDW, dir = Dungeon.Flip(piece1.Orientation) }, overrideLocked);
-        piece1.Neighbour(Dungeon.Flip(piece1.Orientation), true).AssignWall(new KeyData() { key = PIECEKEYS.WDW, dir = piece1.Orientation }, overrideLocked);
-        piece2.Neighbour(Dungeon.Flip(piece1.Orientation), true).AssignWall(new KeyData() { key = PIECEKEYS.OCCUPIED, dir = piece1.Orientation }, overrideLocked);
+        MapPiece piece2 = piece1.Neighbour(DungeonUtils.TwistRight(piece1.Orientation), true);
+        piece1.AssignWall(new KeyData() { key = PIECEKEYS.OCCUPIED, dir = DungeonUtils.Flip(piece1.Orientation) }, overrideLocked);
+        piece2.AssignWall(new KeyData() { key = PIECEKEYS.WDW, dir = DungeonUtils.Flip(piece1.Orientation) }, overrideLocked);
+        piece1.Neighbour(DungeonUtils.Flip(piece1.Orientation), true).AssignWall(new KeyData() { key = PIECEKEYS.WDW, dir = piece1.Orientation }, overrideLocked);
+        piece2.Neighbour(DungeonUtils.Flip(piece1.Orientation), true).AssignWall(new KeyData() { key = PIECEKEYS.OCCUPIED, dir = piece1.Orientation }, overrideLocked);
     }
     internal void MovePieceOwnershipToSection(MapPiece piece, int newOwnerSection)
     {

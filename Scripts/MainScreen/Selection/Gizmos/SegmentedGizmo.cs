@@ -76,7 +76,7 @@ namespace Munglo.DungeonGenerator.Gizmos
         {
             for (int i = 0; i < path.Count - 1; i++)
             {
-                AddSegment(Dungeon.GlobalPosition(path[i].coord), Dungeon.GlobalPosition(path[i + 1].coord));
+                AddSegment(DungeonUtils.GlobalPosition(path[i].coord), DungeonUtils.GlobalPosition(path[i + 1].coord));
             }
         }
         public void AddSegments(Vector3[] segments)

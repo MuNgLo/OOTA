@@ -165,18 +165,15 @@ namespace Munglo.DungeonGenerator
                     SubViewportContainer cont = screen.GetNode<SubViewportContainer>("SubViewportContainer");
 
 
-                    if ((cont as SelectOnClick).RayCastToMapPiece(out MapPiece mp))
+                    if (Input.IsKeyPressed(Key.Shift))
                     {
-                        if (Input.IsKeyPressed(Key.Shift))
-                        {
-                            MS.Selection.SelectPathTargetMapPiece(mp);
-                        }
-                        else
-                        {
-                            MS.Selection.SelectMapPiece(mp);
-                        }
-
+                        (cont as SelectOnClick).RayCastToMapPiece((mp) => { MS.Selection.SelectPathTargetMapPiece(mp); });
                     }
+                    else
+                    {
+                        (cont as SelectOnClick).RayCastToMapPiece((mp) => { MS.Selection.SelectMapPiece(mp); });
+                    }
+
                 }
 
                 if (b.ButtonIndex == MouseButton.Right)

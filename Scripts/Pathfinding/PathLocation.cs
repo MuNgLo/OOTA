@@ -32,7 +32,7 @@ namespace Munglo.DungeonGenerator.Pathfinding
         public void SetNeighbours(Map map)
         {
             Neighbors = new Dictionary<MapCoordinate, double>();
-            MapCoordinate[] mapCoordinates = Dungeon.NeighbourCoordinates(coord);
+            MapCoordinate[] mapCoordinates = DungeonUtils.NeighbourCoordinates(coord);
             for (int i = 0; i < 4; i++)
             {
                 if (map.GetNodeById(mapCoordinates[i]) is not null)

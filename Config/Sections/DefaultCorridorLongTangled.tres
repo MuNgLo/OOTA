@@ -1,12 +1,12 @@
-[gd_resource type="Resource" script_class="PathResource" load_steps=2 format=3 uid="uid://c7uncev2xr220"]
+[gd_resource type="Resource" script_class="PathResource" load_steps=2 format=3 uid="uid://bi6wigkf4cpei"]
 
-[ext_resource type="Script" uid="uid://i4m7f41kqhr7" path="res://addons/MDunGen/Scripts/ResourceDefinitions/PathResource.cs" id="1_8nt58"]
+[ext_resource type="Script" uid="uid://i4m7f41kqhr7" path="res://addons/MDunGen/Scripts/ResourceDefinitions/PathResource.cs" id="1_yk757"]
 
 [resource]
-script = ExtResource("1_8nt58")
-corMaxTotal = 40
-corMaxStraight = 16
-corMinStraight = 8
+script = ExtResource("1_yk757")
+corMaxTotal = 120
+corMaxStraight = 2
+corMinStraight = 2
 sectionName = "Corridor Long"
 sectionType = "PathSection"
 sectionStyle = "Connector"

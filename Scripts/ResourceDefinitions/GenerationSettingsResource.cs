@@ -7,6 +7,7 @@ namespace Munglo.DungeonGenerator
         [ExportGroup("General")]
         [Export] public int nbOfFloors = 1;
         [Export] public FloorResource floorDef;
+        [Export] public bool calculatePathing = true;
         
         [ExportGroup("Seed")]
         [Export] public int seed1 = 1111;

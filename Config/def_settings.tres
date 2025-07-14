@@ -7,7 +7,8 @@
 script = ExtResource("1_t4wih")
 nbOfFloors = 1
 floorDef = ExtResource("1_4bk8j")
-seed1 = 9197
-seed2 = 3868
-seed3 = 9725
-seed4 = 8361
+calculatePathing = true
+seed1 = 3285
+seed2 = 9075
+seed3 = 5363
+seed4 = 9640
