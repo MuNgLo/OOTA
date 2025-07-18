@@ -1,0 +1,85 @@
+[gd_scene load_steps=3 format=3 uid="uid://b2moetunvrqoh"]
+
+[ext_resource type="Script" uid="uid://cf0wv5ukj0dvq" path="res://addons/MSettings/UISettingsEntry.cs" id="1_sitll"]
+[ext_resource type="Texture2D" uid="uid://nfjpgyxpbmhm" path="res://addons/MSettings/Assets/ResetArrow.png" id="2_hitre"]
+
+[node name="SettingsEntry" type="Panel" node_paths=PackedStringArray("elementParent")]
+custom_minimum_size = Vector2(0, 30)
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+script = ExtResource("1_sitll")
+elementParent = NodePath("FlowContainer")
+
+[node name="FlowContainer" type="FlowContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="FlowContainer"]
+custom_minimum_size = Vector2(12, 0)
+layout_mode = 2
+
+[node name="FieldName" type="Label" parent="FlowContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Master"
+vertical_alignment = 1
+
+[node name="HSlider" type="HSlider" parent="FlowContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+step = 0.01
+value = 100.0
+
+[node name="LineEdit" type="LineEdit" parent="FlowContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 2
+
+[node name="Value" type="Label" parent="FlowContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "999"
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="FlowContainer"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="CheckBox" type="CheckBox" parent="FlowContainer"]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="CheckButton" type="CheckButton" parent="FlowContainer"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="KeyBind" type="Button" parent="FlowContainer"]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+text = "W"
+
+[node name="KeyBindAlt" type="Button" parent="FlowContainer"]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+text = "W"
+
+[node name="btnReset" type="TextureButton" parent="FlowContainer"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+texture_normal = ExtResource("2_hitre")
+ignore_texture_size = true
+stretch_mode = 0
