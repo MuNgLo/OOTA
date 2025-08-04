@@ -8,9 +8,13 @@ public class NormalizedVolumeAttribute : Attribute
     public float Max;
     public float Min;
 
-    public NormalizedVolumeAttribute(float max = 0.0f, float min = -30.0f)
+    public float Range;
+
+    public NormalizedVolumeAttribute(float max = 6.0f, float min = -72.0f)
     {
         Max = max; Min = min;
+        Range = max - min;
+        if(max > 0 && min < 0 && Range < 0){ Range = MathF.Abs(Range) + max + max; }
     }
 }
 [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]

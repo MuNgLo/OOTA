@@ -13,7 +13,6 @@ public static class Settings
     /// When a config is reset or saved. Carries the updated version.
     /// </summary>
     static public event EventHandler<object> OnSettingsChange;
-    static readonly string folder = "Settings";
     static private Dictionary<string, object> _settings = null;
 
     private static void RaiseOnSettingsChangedEvent<T>(T obj)
@@ -23,6 +22,10 @@ public static class Settings
         {
             raiseEvent(typeof(Settings), obj);
         }
+    }
+    internal static void ClearCache()
+    {
+        _settings = new Dictionary<string, object>();
     }
     public static object GetPropertyValue(string key, string propertyName)
     {
@@ -66,7 +69,19 @@ public static class Settings
     {
         // Clamp FLOATS
         FieldInfo field = _settings[key].GetType().GetField(fieldName);
-        value = Mathf.Clamp(value, field.GetCustomAttribute<RangeAttribute>().Min, field.GetCustomAttribute<RangeAttribute>().Max);
+
+        // Check if it is normalized volume
+        if (field.GetCustomAttribute<NormalizedVolumeAttribute>() is not null)
+        {
+            //double db = -Mathf.Pow(8.0 - value * 100.0f, 1.8); // Godot normalized to DB?
+            //float value2 = Mathf.Clamp((float)db, field.GetCustomAttribute<NormalizedVolumeAttribute>().Min, field.GetCustomAttribute<NormalizedVolumeAttribute>().Max);
+            value = Mathf.Clamp(value, 0, 1);
+
+        }
+        else
+        {
+            value = Mathf.Clamp(value, field.GetCustomAttribute<RangeAttribute>().Min, field.GetCustomAttribute<RangeAttribute>().Max);
+        }
         SetFieldValueAndSave(key, fieldName, value, subFodler);
         return value;
     }
@@ -116,7 +131,7 @@ public static class Settings
     }
     private static string FilePath(string subFolder)
     {
-        string filePath = folder + "/";
+        string filePath = "";
         if (subFolder.Length > 0)
         {
             filePath += subFolder + "/";
@@ -157,7 +172,7 @@ public static class Settings
         }
         string filePath = FilePath(subFolder);
         VerifyFolder(filePath);
-        filePath += typeof(T).Name + ".json";
+        filePath = System.IO.Path.Combine(filePath, typeof(T).Name + ".json");
 
         if (_settings.ContainsKey(typeof(T).Name))
         {
@@ -172,28 +187,16 @@ public static class Settings
         if (!File.Exists(filePath))
         {
             ResetSettings<T>(typeof(T).Name, subFolder);
-            //ResetSettingsALT(typeof(T), subFolder);
         }
         if (!_settings.ContainsKey(typeof(T).Name))
         {
-            //Debug.Log($"Adding config file to memory ({typeof(T).Name})");
-            //T asd = JsonUtility.FromJson<SkateboardConfig>(File.ReadAllText(filePath));
-
-            //Variant asd = Json.ParseString(File.ReadAllText(filePath));
-
             T asd = JsonSerializer.Deserialize<T>(File.ReadAllText(filePath));
-
             _settings[typeof(T).Name] = asd;
         }
         return JsonSerializer.Deserialize<T>(File.ReadAllText(filePath));
     }
 
-    private static void WriteConfigFile<T>(string filePath, T obj)
-    {
-        var options = new JsonSerializerOptions { WriteIndented = true };
-        File.WriteAllText(filePath, JsonSerializer.Serialize(obj, options));
-        RaiseOnSettingsChangedEvent<T>(obj);
-    }
+
 
     /// <summary>
     /// tHIS IS USED TO CREATE A NEW FILE OR REPLACE OLD WITH A NEW THAT HAS ALL DEFAULT VALUES
@@ -242,16 +245,28 @@ public static class Settings
         SetFieldValueAndSave(settingsName, field, value, subFolder);
     }
 
-    public static void SaveSettings<T>(T config, string subFolder)
+    public static void SaveSettings<T>(T config, string subFolder, bool skipChangedEvent = false)
     {
-        string filePath = FilePath(subFolder);
-        VerifyFolder(filePath);
-        filePath += config.GetType().Name + ".json";
-        WriteConfigFile<T>(filePath, config);
+        if (subFolder.Length > 0)
+        {
+            string filePath = FilePath(subFolder);
+            VerifyFolder(filePath);
+            filePath += config.GetType().Name + ".json";
+            WriteConfigFile<T>(filePath, config);
+        }
+        if (skipChangedEvent) { return; }
+        RaiseOnSettingsChangedEvent<T>(config);
     }
-
+    private static void WriteConfigFile<T>(string filePath, T obj)
+    {
+        var options = new JsonSerializerOptions { WriteIndented = true };
+        File.WriteAllText(filePath, JsonSerializer.Serialize(obj, options));
+    }
     private static void VerifyFolder(string path)
     {
+        if (path.Length < 1) { return; }
         Directory.CreateDirectory(path);
     }
+
+
 }// EOF CLASS

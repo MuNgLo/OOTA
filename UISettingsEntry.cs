@@ -19,7 +19,7 @@ public partial class UISettingsEntry : Control
     private Control elementParent;
     [Export] private string settingsName;
     [Export] private string fieldTarget = "UNSET";
-    #region  The references to first layer children by type. The fieldTarget Type determense which of them get used;
+    #region  The references to first layer children by type. The fieldTarget Type determines which of them get used;
     private LineEdit lineEdit;
     private Slider slider;
     private CheckButton toggleButton;
@@ -45,6 +45,8 @@ public partial class UISettingsEntry : Control
     {
         // Listen for config changes
         Settings.OnSettingsChange += WhenSettingsChange;
+        // Listen for keybinds
+        UIKeybindPopup.OnKeyBindUpdated += WhenNewKeyBindIsMade;
         // GrabChildren
         foreach (Control child in elementParent.GetChildren())
         {
@@ -73,6 +75,16 @@ public partial class UISettingsEntry : Control
         if (btnColourPicker is not null) { btnColourPicker.PopupClosed += WhenBtnColPickPopUpClosed; }
         if (btnReset is not null) { btnReset.Pressed += WhenbtnResetPressed; }
         //dropdown.ItemSelected += WhenItemSelected;
+
+        VisibilityChanged += WhenVisibilityChanged;
+
+        
+    }
+
+    private void WhenVisibilityChanged()
+    {
+        if (!Visible) { return; }
+        if(Core.CurrentProfile is null){ return; }
         // Get Field, verify it is valid and set it up
         FieldInfo fieldInfo = Config.GetType().GetField(fieldTarget);
 
@@ -87,7 +99,7 @@ public partial class UISettingsEntry : Control
             SetupProperty(settingsName, pInfo);
             return;
         }
-        UpdateAllElements(settingsName, fieldInfo, true);
+        UpdateAllElements(settingsName, fieldInfo);
     }
 
     private void WhenSettingsChange(object sender, object e)
@@ -107,7 +119,7 @@ public partial class UISettingsEntry : Control
                 SetupProperty(settingsName, pInfo);
                 return;
             }
-            UpdateAllElements(settingsName, fieldInfo, true);
+            UpdateAllElements(settingsName, fieldInfo);
         }
     }
 
@@ -118,14 +130,14 @@ public partial class UISettingsEntry : Control
     }
 
 
-    private void UpdateAllElements(string settingsName, FieldInfo field, bool firstTime = false)
+    private void UpdateAllElements(string settingsName, FieldInfo field)
     {
         if (field.FieldType == typeof(float)) { FillFloat(settingsName, field); }
         if (field.FieldType == typeof(int)) { FillInt(settingsName, field); }
         if (field.FieldType == typeof(bool)) { FillBool(settingsName, field); }
         if (field.FieldType == typeof(string)) { FillString(settingsName, field); }
         //if (field.FieldType == typeof(char)) { FillString(settingsName, field); }
-        if (field.FieldType == typeof(PlayerKeyBind)) { FillKeyBind(settingsName, field, firstTime); }
+        if (field.FieldType == typeof(PlayerKeyBind)) { FillKeyBind(settingsName, field); }
 
         //if (field.FieldType == typeof(Color)) { FillColor(settingsName, field); }
         //if (field.FieldType.IsEnum) { FillEnum(_settingsName, field); }
@@ -140,7 +152,7 @@ public partial class UISettingsEntry : Control
     }
 
 
-    private void FillKeyBind(string settingsTypeName, FieldInfo field, bool firstTime = false)
+    private void FillKeyBind(string settingsTypeName, FieldInfo field)
     {
         PlayerKeyBind value = (PlayerKeyBind)Settings.GetFieldValue(settingsTypeName, field.Name);
 
@@ -162,18 +174,24 @@ public partial class UISettingsEntry : Control
         }
         if (field.GetCustomAttribute<IsKeyBind>() is not null)
         {
-            UIKeybindPopup.OnKeyBindUpdated += WhenNewKeyBindIsMade;
+            
             if (btnKeyBind is not null)
             {
                 btnKeyBind.Text = value.Key == Key.None ? "M" + value.MouseButton.ToString() : value.Key.ToString();
                 if (btnKeyBind.Text == "MNone") { btnKeyBind.Text = "-"; }
-                if (firstTime) { btnKeyBind.Pressed += () => { UIKeybindPopup.StartKeyBind(settingsName, fieldTarget); }; }
+                if (!btnKeyBind.IsConnected(Button.SignalName.Pressed, startKB))
+                {
+                    btnKeyBind.Connect(Button.SignalName.Pressed, startKB);
+                }
             }
             if (btnKeyBindAlt is not null)
             {
                 btnKeyBindAlt.Text = value.KeyAlt == Key.None ? "M" + value.MouseButtonAlt.ToString() : value.KeyAlt.ToString();
                 if (btnKeyBindAlt.Text == "MNone") { btnKeyBindAlt.Text = "-"; }
-                if (firstTime) { btnKeyBindAlt.Pressed += () => { UIKeybindPopup.StartKeyBind(settingsName, fieldTarget, true); }; }
+                if (!btnKeyBindAlt.IsConnected(Button.SignalName.Pressed, startKBAlt))
+                {
+                    btnKeyBindAlt.Connect(Button.SignalName.Pressed, startKBAlt);
+                }
             }
         }
         if (lineEdit is not null) { lineEdit.Hide(); }
@@ -182,6 +200,16 @@ public partial class UISettingsEntry : Control
         if (toggleButton is not null) { toggleButton.Hide(); }
         if (btnColourPicker is not null) { btnColourPicker.Hide(); }
         if (slider is not null) { slider.Hide(); }
+    }
+    private Callable startKB => Callable.From(StartKeyBind);
+    private void StartKeyBind()
+    {
+        UIKeybindPopup.StartKeyBind(settingsName, fieldTarget, false);
+    }
+    private Callable startKBAlt => Callable.From(StartKeyBindAlt);
+    private void StartKeyBindAlt()
+    {
+        UIKeybindPopup.StartKeyBind(settingsName, fieldTarget, true);
     }
 
     private void WhenNewKeyBindIsMade(object sender, string[] e)
@@ -258,8 +286,17 @@ public partial class UISettingsEntry : Control
         float value = (float)Settings.GetFieldValue(settingsTypeName, field.Name);
         if (slider is not null)
         {
-            slider.MinValue = field.GetCustomAttribute<RangeAttribute>().Min;
-            slider.MaxValue = field.GetCustomAttribute<RangeAttribute>().Max;
+            if (field.GetCustomAttribute<NormalizedVolumeAttribute>() is not null)
+            {
+                slider.MinValue = 0.0f;
+                slider.MaxValue = 1.0f;
+                slider.Step = 0.01f;
+            }
+            else
+            {
+                slider.MinValue = field.GetCustomAttribute<RangeAttribute>().Min;
+                slider.MaxValue = field.GetCustomAttribute<RangeAttribute>().Max;
+            }
             slider.SetValueNoSignal(value);
         }
 
