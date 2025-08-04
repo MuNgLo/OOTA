@@ -37,8 +37,6 @@ public partial class GameConsole : Control
         outputArea.Text += System.Environment.NewLine;
         Hide();
         instance.ProcessMode = ProcessModeEnum.Disabled;
-        // To show log messages from your own system do something like this
-        //Core.OnLogMessagePushed += WhenLogMessagePushed;
     }
     public override void _UnhandledInput(InputEvent @event)
     {
