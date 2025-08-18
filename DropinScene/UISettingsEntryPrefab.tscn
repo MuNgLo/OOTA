@@ -75,6 +75,9 @@ layout_mode = 2
 size_flags_horizontal = 0
 text = "W"
 
+[node name="OptionButton" type="OptionButton" parent="FlowContainer"]
+layout_mode = 2
+
 [node name="btnReset" type="TextureButton" parent="FlowContainer"]
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2

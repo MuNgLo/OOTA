@@ -52,6 +52,11 @@ public static class Settings
         FieldInfo field = _settings[key].GetType().GetField(fieldName);
         SetFieldValueAndSave(key, fieldName, value, subFodler);
     }
+    public static void SetPropertyEnumValue(string key, string propertyName, int value, string subFodler)
+    {
+        PropertyInfo property = _settings[key].GetType().GetProperty(propertyName);
+        SetPropertyValueAndSave(key, propertyName, value, subFodler);
+    }
     public static void SetFieldKeyBindValue(string key, string fieldName, PlayerKeyBind value, string subFodler)
     {
         FieldInfo field = _settings[key].GetType().GetField(fieldName);
@@ -192,6 +197,7 @@ public static class Settings
         {
             T asd = JsonSerializer.Deserialize<T>(File.ReadAllText(filePath));
             _settings[typeof(T).Name] = asd;
+            RaiseOnSettingsChangedEvent<T>(asd);
         }
         return JsonSerializer.Deserialize<T>(File.ReadAllText(filePath));
     }

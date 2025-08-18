@@ -74,17 +74,19 @@ public partial class UISettingsEntry : Control
         if (toggleBox is not null) { toggleBox.Toggled += WhenToggleToggled; }
         if (btnColourPicker is not null) { btnColourPicker.PopupClosed += WhenBtnColPickPopUpClosed; }
         if (btnReset is not null) { btnReset.Pressed += WhenbtnResetPressed; }
-        //dropdown.ItemSelected += WhenItemSelected;
+        dropdown.ItemSelected += WhenItemSelected;
 
         VisibilityChanged += WhenVisibilityChanged;
 
-        
+
     }
+
+
 
     private void WhenVisibilityChanged()
     {
         if (!Visible) { return; }
-        if(Core.CurrentProfile is null){ return; }
+        if (Core.CurrentProfile is null) { return; }
         // Get Field, verify it is valid and set it up
         FieldInfo fieldInfo = Config.GetType().GetField(fieldTarget);
 
@@ -110,6 +112,7 @@ public partial class UISettingsEntry : Control
 
             if (fieldInfo is null)
             {
+
                 PropertyInfo pInfo = Config.GetType().GetProperty(fieldTarget);
                 if (pInfo is null)
                 {
@@ -142,12 +145,21 @@ public partial class UISettingsEntry : Control
         //if (field.FieldType == typeof(Color)) { FillColor(settingsName, field); }
         //if (field.FieldType.IsEnum) { FillEnum(_settingsName, field); }
     }
-    internal void SetupProperty(string settingsName, PropertyInfo field)
+    internal void SetupProperty(string settingsName, PropertyInfo property)
     {
 
-        if (field.PropertyType == typeof(Vector4)) { FillColor(settingsName, field); }
-        if (field.PropertyType == typeof(Color)) { FillColor(settingsName, field); }
-        if (field.PropertyType == typeof(String)) { FillString(settingsName, field); }
+        if (property.PropertyType == typeof(Vector4)) { FillColor(settingsName, property); return; }
+        if (property.PropertyType == typeof(Color)) { FillColor(settingsName, property); return; }
+        if (property.PropertyType == typeof(String)) { FillString(settingsName, property); return; }
+        //if (field.PropertyType == typeof(Enum))
+        if (property.PropertyType != typeof(Type))
+        {
+            MethodInfo methodInfo = typeof(UISettingsEntry).GetMethod("FillPropertyEnum");
+            MethodInfo genericMethodInfo = methodInfo.MakeGenericMethod(property.PropertyType);
+            genericMethodInfo.Invoke(this, new object[] { settingsName, property });
+            return;
+        }
+        GD.PrintErr($"UISettingsEntry::SetupProperty() Property Type[{property.PropertyType.GetType()}] failed to get caught");
 
     }
 
@@ -174,7 +186,7 @@ public partial class UISettingsEntry : Control
         }
         if (field.GetCustomAttribute<IsKeyBind>() is not null)
         {
-            
+
             if (btnKeyBind is not null)
             {
                 btnKeyBind.Text = value.Key == Key.None ? "M" + value.MouseButton.ToString() : value.Key.ToString();
@@ -335,6 +347,7 @@ public partial class UISettingsEntry : Control
         if (toggleBox is not null) { toggleBox.Hide(); }
         if (toggleButton is not null) { toggleButton.Hide(); }
         if (btnColourPicker is not null) { btnColourPicker.Hide(); }
+        if (dropdown is not null) { dropdown.Hide(); }
     }
     /// <summary>
     /// Works as of Nov 26 '24
@@ -385,6 +398,7 @@ public partial class UISettingsEntry : Control
         if (toggleBox is not null) { toggleBox.Hide(); }
         if (toggleButton is not null) { toggleButton.Hide(); }
         if (btnColourPicker is not null) { btnColourPicker.Hide(); }
+        if (dropdown is not null) { dropdown.Hide(); }
     }
     /// <summary>
     /// Works as of Nov 26 '24
@@ -420,6 +434,7 @@ public partial class UISettingsEntry : Control
         if (labelValue is not null) { labelValue.Hide(); }
         if (lineEdit is not null) { lineEdit.Hide(); }
         if (btnColourPicker is not null) { btnColourPicker.Hide(); }
+        if (dropdown is not null) { dropdown.Hide(); }
     }
 
 
@@ -438,8 +453,8 @@ public partial class UISettingsEntry : Control
         if (slider is not null) { slider.Hide(); }
         if (lineEdit is not null)
         {
-            lineEdit.Size = new Vector2(Size.X * 0.5f, lineEdit.Size.Y);
-            lineEdit.Position = new Vector2(Size.X * 0.5f, lineEdit.Position.Y);
+            //lineEdit.Size = new Vector2(Size.X * 0.5f, lineEdit.Size.Y);
+            //lineEdit.Position = new Vector2(Size.X * 0.5f, lineEdit.Position.Y);
 
             if (pInfo.GetCustomAttribute<Encrypt>() is not null)
             {
@@ -482,6 +497,7 @@ public partial class UISettingsEntry : Control
         if (toggleBox is not null) { toggleBox.Hide(); }
         if (toggleButton is not null) { toggleButton.Hide(); }
         if (btnColourPicker is not null) { btnColourPicker.Hide(); }
+        if (dropdown is not null) { dropdown.Hide(); }
     }
 
     private void FillString(string settingsTypeName, FieldInfo field)
@@ -500,8 +516,8 @@ public partial class UISettingsEntry : Control
         if (slider is not null) { slider.Hide(); }
         if (lineEdit is not null)
         {
-            lineEdit.Size = new Vector2(Size.X * 0.5f, lineEdit.Size.Y);
-            lineEdit.Position = new Vector2(Size.X * 0.5f, lineEdit.Position.Y);
+            //lineEdit.Size = new Vector2(Size.X * 0.5f, lineEdit.Size.Y);
+            //lineEdit.Position = new Vector2(Size.X * 0.5f, lineEdit.Position.Y);
 
             if (field.GetCustomAttribute<Encrypt>() is not null)
             {
@@ -544,6 +560,7 @@ public partial class UISettingsEntry : Control
         if (toggleBox is not null) { toggleBox.Hide(); }
         if (toggleButton is not null) { toggleButton.Hide(); }
         if (btnColourPicker is not null) { btnColourPicker.Hide(); }
+        if (dropdown is not null) { dropdown.Hide(); }
     }
     private void FillEnum(string settingsTypeName, FieldInfo field)
     {
@@ -560,8 +577,55 @@ public partial class UISettingsEntry : Control
             dropdown.AddItem(Enum.GetName(field.FieldType, enumValue));
         }
     }
+    public void FillPropertyEnum<T>(string settingsTypeName, PropertyInfo pInfo) where T : Enum
+    {
+        T value = (T)Settings.GetPropertyValue(settingsTypeName, pInfo.Name);
+        if (labelFieldName is not null)
+        {
+            labelFieldName.Text = pInfo.Name;
+            if (pInfo.GetCustomAttribute<MenuLabel>() is not null)
+            {
+                labelFieldName.Text = pInfo.GetCustomAttribute<MenuLabel>().Text;
+            }
+            labelFieldName.Size = Vector2.Right * Size.X * 0.5f;
+            if (pInfo.GetCustomAttribute<Tooltip>() is not null)
+            {
+                labelFieldName.TooltipText = pInfo.GetCustomAttribute<Tooltip>().Text;
+                if (labelFieldName.MouseFilter == MouseFilterEnum.Ignore) { labelFieldName.MouseFilter = MouseFilterEnum.Pass; }
+            }
+        }
+        dropdown.Clear();
+        //List<string> options = new List<string>();
+        // Add current picked first
+        //options.Add(value.ToString());
 
+        foreach (long enumValue in Enum.GetValues(typeof(T)))
+        {
+            // Exclude current pick
+            //if (value.ToString() == Enum.GetName(pInfo.PropertyType, enumValue)) { continue; }
+            dropdown.AddItem(Enum.GetName(pInfo.PropertyType, enumValue));
+        }
+        if (dropdown is not null) { dropdown.Show(); }
+        dropdown.Selected = -1;
 
+        if (slider is not null) { slider.Hide(); }
+        if (lineEdit is not null) { lineEdit.Hide(); }
+        if (btnKeyBind is not null) { btnKeyBind.Hide(); }
+        if (btnKeyBindAlt is not null) { btnKeyBindAlt.Hide(); }
+        if (labelValue is not null) { labelValue.Hide(); }
+        if (toggleBox is not null) { toggleBox.Hide(); }
+        if (toggleButton is not null) { toggleButton.Hide(); }
+        if (btnColourPicker is not null) { btnColourPicker.Hide(); }
+    }
+
+    private void WhenItemSelected(long index)
+    {
+        Settings.SetPropertyEnumValue(settingsName, fieldTarget, (int)index, "");
+        MethodInfo methodInfo = typeof(UISettingsEntry).GetMethod("FillPropertyEnum");
+        PropertyInfo pInfo = Config.GetType().GetProperty(fieldTarget);
+        MethodInfo genericMethodInfo = methodInfo.MakeGenericMethod(pInfo.PropertyType);
+        genericMethodInfo.Invoke(this, new object[] { settingsName, pInfo });
+    }
 
 
     #region Listeners
