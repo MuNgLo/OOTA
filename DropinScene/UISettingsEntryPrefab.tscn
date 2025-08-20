@@ -40,7 +40,6 @@ value = 100.0
 
 [node name="LineEdit" type="LineEdit" parent="FlowContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
 alignment = 2
 
 [node name="Value" type="Label" parent="FlowContainer"]

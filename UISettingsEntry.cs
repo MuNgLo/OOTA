@@ -453,8 +453,7 @@ public partial class UISettingsEntry : Control
         if (slider is not null) { slider.Hide(); }
         if (lineEdit is not null)
         {
-            //lineEdit.Size = new Vector2(Size.X * 0.5f, lineEdit.Size.Y);
-            //lineEdit.Position = new Vector2(Size.X * 0.5f, lineEdit.Position.Y);
+            lineEdit.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
             if (pInfo.GetCustomAttribute<Encrypt>() is not null)
             {
@@ -516,8 +515,7 @@ public partial class UISettingsEntry : Control
         if (slider is not null) { slider.Hide(); }
         if (lineEdit is not null)
         {
-            //lineEdit.Size = new Vector2(Size.X * 0.5f, lineEdit.Size.Y);
-            //lineEdit.Position = new Vector2(Size.X * 0.5f, lineEdit.Position.Y);
+            lineEdit.SizeFlagsHorizontal = SizeFlags.ExpandFill;
 
             if (field.GetCustomAttribute<Encrypt>() is not null)
             {
