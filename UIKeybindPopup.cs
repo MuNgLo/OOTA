@@ -12,7 +12,7 @@ public partial class UIKeybindPopup : Control
     private string fieldTarget;
     private bool asAlt;
     private bool keybindInProgress = false;
-    public static bool Active => Instance.Visible;
+    public static bool Active => Instance != null ? Instance.Visible : false;
     /// <summary>
     /// String array carries SettingsName, FieldName
     /// </summary>
