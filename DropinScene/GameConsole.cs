@@ -22,7 +22,7 @@ public partial class GameConsole : Control
     /// <summary>
     /// Returns true if console is visible and input area has focus. Use this to limit input while console is open.
     /// </summary>
-    public static bool Active => instance.Visible && instance.inputArea.HasFocus();
+    public static bool Active => instance != null ? instance.Visible && instance.inputArea.HasFocus() : false;
     public override void _EnterTree()
     {
         instance = this;
@@ -90,8 +90,8 @@ public partial class GameConsole : Control
         instance.inputArea.Clear();
         instance.inputArea.GrabFocus();
     }
-    public static void AddLine(string e) { instance.OutputAddLine(e); }
-    public static void AddLines(string[] e) { instance.OutputAddLines(e); }
+    public static void AddLine(string e) { instance?.OutputAddLine(e); }
+    public static void AddLines(string[] e) { instance?.OutputAddLines(e); }
     private void OutputAddLine(string e)
     {
         OutputAddLines([e]);

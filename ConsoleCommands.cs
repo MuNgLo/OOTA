@@ -186,6 +186,7 @@ public partial class ConsoleCommands : Node
     /// <returns></returns>
     public static bool RegisterCommand(Command cmd)
     {
+        if(ins is null){ return false; }
         if (ins.commands.ContainsKey(cmd.Name))
         {
             GameConsole.AddLine($"Registering command \"{cmd.Name}\" failed. It already registered!");
