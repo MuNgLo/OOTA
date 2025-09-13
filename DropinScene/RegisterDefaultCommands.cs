@@ -14,6 +14,7 @@ public partial class RegisterDefaultCommands : Node
     [Export] private bool maxfps = true;
     [Export] private bool showfps = true;
     [Export] private bool vsync = true;
+    [Export] private bool wireframe = true;
 
     public override void _Ready()
     {
@@ -21,6 +22,26 @@ public partial class RegisterDefaultCommands : Node
         if (maxfps) { AddMaxFPSCommand(); }
         if (showfps) { ShowFPSCommand(); }
         if (vsync) { VSyncCommand(); }
+        if (wireframe) { WireframeCommand(); }
+    }
+
+    private void WireframeCommand()
+    {
+        Command cmd = new Command("RegisterDefaultCommands") { Name = "r_wireframe", Tip = "turn wireframe on/off",
+            act = (a) =>
+            {
+                if (GetViewport().DebugDraw != Viewport.DebugDrawEnum.Wireframe)
+                {
+                    GetViewport().DebugDraw = Viewport.DebugDrawEnum.Wireframe;
+                    return "Wireframe on.";
+                }
+                else
+                {
+                    GetViewport().DebugDraw = Viewport.DebugDrawEnum.Disabled;
+                    return "Wireframe off.";
+                }
+            } };
+        ConsoleCommands.RegisterCommand(cmd);
     }
 
     private void VSyncCommand()

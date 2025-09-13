@@ -124,6 +124,7 @@ public partial class GameConsole : Control
 
     public static bool Toggle()
     {
+        if(instance is null){ return false; }
         if (instance.Visible)
         {
             instance.Hide();
