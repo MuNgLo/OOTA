@@ -221,7 +221,7 @@ public static class Settings
         string filePath = FilePath(subFolder);
         VerifyFolder(filePath);
         filePath += settingsName + ".json";
-        GD.Print($"WriteConfigFile<{typeof(T)}>({settingsName}) path {filePath}) resetOBJ({obj}) RESET!!");
+        //GD.Print($"WriteConfigFile<{typeof(T)}>({settingsName}) path {filePath}) resetOBJ({obj}) RESET!!");
         var options = new JsonSerializerOptions { WriteIndented = true };
         File.WriteAllText(filePath, JsonSerializer.Serialize(obj, options));
         RaiseOnSettingsChangedEvent<T>(obj);
