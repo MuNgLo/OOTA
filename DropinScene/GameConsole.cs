@@ -155,6 +155,11 @@ public partial class GameConsole : Control
         instance.inputArea.Text = string.Empty;
     }
 
+    internal static void ClearOutput()
+    {
+        instance.outputArea.Text = string.Empty;
+    }
+
     internal static void SetAutoComplete(int i, string v)
     {
         while (instance.autocomplete.GetChildCount() < i + 2)

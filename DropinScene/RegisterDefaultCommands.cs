@@ -15,6 +15,7 @@ public partial class RegisterDefaultCommands : Node
     [Export] private bool showfps = true;
     [Export] private bool vsync = true;
     [Export] private bool wireframe = true;
+    [Export] private bool clear = true;
 
     public override void _Ready()
     {
@@ -23,6 +24,18 @@ public partial class RegisterDefaultCommands : Node
         if (showfps) { ShowFPSCommand(); }
         if (vsync) { VSyncCommand(); }
         if (wireframe) { WireframeCommand(); }
+        if (clear) { ClearCommand(); }
+    }
+
+    private void ClearCommand()
+    {
+          Command cmd = new Command("RegisterDefaultCommands") { Name = "clear", Tip = "Clear the console",
+            act = (a) =>
+            {
+                GameConsole.ClearOutput();
+                return string.Empty;
+            } };
+        ConsoleCommands.RegisterCommand(cmd);
     }
 
     private void WireframeCommand()
