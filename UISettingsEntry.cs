@@ -137,6 +137,7 @@ public partial class UISettingsEntry : Control
     {
         if (field.FieldType == typeof(float)) { FillFloat(settingsName, field); }
         if (field.FieldType == typeof(int)) { FillInt(settingsName, field); }
+        if (field.FieldType == typeof(ulong)) { FillUlong(settingsName, field); }
         if (field.FieldType == typeof(bool)) { FillBool(settingsName, field); }
         if (field.FieldType == typeof(string)) { FillString(settingsName, field); }
         //if (field.FieldType == typeof(char)) { FillString(settingsName, field); }
@@ -392,6 +393,55 @@ public partial class UISettingsEntry : Control
             if (labelValue is not null) { labelValue.Hide(); }
         }
 
+
+        if (btnKeyBind is not null) { btnKeyBind.Hide(); }
+        if (btnKeyBindAlt is not null) { btnKeyBindAlt.Hide(); }
+        if (toggleBox is not null) { toggleBox.Hide(); }
+        if (toggleButton is not null) { toggleButton.Hide(); }
+        if (btnColourPicker is not null) { btnColourPicker.Hide(); }
+        if (dropdown is not null) { dropdown.Hide(); }
+    }
+    /// <summary>
+    /// Work in progress
+    /// </summary>
+    /// <param name="settingsTypeName"></param>
+    /// <param name="field"></param>
+    private void FillUlong(string settingsTypeName, MemberInfo field)
+    {
+        ulong value = (ulong)Settings.GetFieldValue(settingsTypeName, field.Name);
+        if (slider is not null)
+        {
+            slider.MaxValue = field.GetCustomAttribute<RangeAttribute>().Max;
+            slider.MinValue = field.GetCustomAttribute<RangeAttribute>().Min;
+            slider.SetValueNoSignal(value);
+        }
+        if (labelFieldName is not null)
+        {
+            labelFieldName.Text = field.Name;
+            if (field.GetCustomAttribute<MenuLabel>() is not null)
+            {
+                labelFieldName.Text = field.GetCustomAttribute<MenuLabel>().Text;
+            }
+            if (field.GetCustomAttribute<Tooltip>() is not null)
+            {
+                labelFieldName.TooltipText = field.GetCustomAttribute<Tooltip>().Text;
+                if (labelFieldName.MouseFilter == MouseFilterEnum.Ignore) { labelFieldName.MouseFilter = MouseFilterEnum.Pass; }
+            }
+        }
+
+        if (field.GetCustomAttribute<EditableValue>() is null || !field.GetCustomAttribute<EditableValue>().isEditable)
+        {
+            if (labelValue is not null) { labelValue.Text = value.ToString(); }
+            if (lineEdit is not null) { lineEdit.Hide(); }
+        }
+        else
+        {
+            if (lineEdit is not null)
+            {
+                lineEdit.Text = value.ToString();
+            }
+            if (labelValue is not null) { labelValue.Hide(); }
+        }
 
         if (btnKeyBind is not null) { btnKeyBind.Hide(); }
         if (btnKeyBindAlt is not null) { btnKeyBindAlt.Hide(); }
@@ -761,6 +811,11 @@ public partial class UISettingsEntry : Control
         {
             Settings.SetFieldValue(settingsName, fieldTarget, (int)value, "");
             FillInt(settingsName, fieldInfo);
+        }
+        if (fieldInfo.FieldType == typeof(ulong))
+        {
+            Settings.SetFieldValue(settingsName, fieldTarget, (ulong)value, "");
+            FillUlong(settingsName, fieldInfo);
         }
     }
     private void WhenToggleToggled(bool toggleState)

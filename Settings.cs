@@ -100,6 +100,16 @@ public static class Settings
         SetFieldValueAndSave(key, fieldName, value2, subFodler);
         return value2;
     }
+    public static ulong SetFieldValue(string key, string fieldName, ulong value, string subFodler)
+    {
+        // Clamp INTS
+        FieldInfo field = _settings[key].GetType().GetField(fieldName);
+        ulong min = (ulong)field.GetCustomAttribute<RangeAttribute>().Min;
+        ulong max = (ulong)field.GetCustomAttribute<RangeAttribute>().Max;
+        ulong value2 = (ulong)Mathf.Clamp(value, min, max);
+        SetFieldValueAndSave(key, fieldName, value2, subFodler);
+        return value2;
+    }
     public static char SetFieldValue(string key, string fieldName, char value, string subFodler)
     {
         // Clamp INTS
