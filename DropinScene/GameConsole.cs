@@ -42,7 +42,7 @@ public partial class GameConsole : Control
     {
         if (!inputArea.HasFocus()) { return; }
 
-        if (@event is InputEventKey k)
+        if (@event is InputEventKey k && k.IsPressed())
         {
             if (k.Keycode == Key.Up)
             {
