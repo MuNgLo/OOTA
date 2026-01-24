@@ -15,6 +15,7 @@ public partial class RegisterDefaultCommands : Node
     [Export] private bool showfps = true;
     [Export] private bool vsync = true;
     [Export] private bool wireframe = true;
+    [Export] private bool occluders = true;
     [Export] private bool clear = true;
 
     public override void _Ready()
@@ -24,6 +25,7 @@ public partial class RegisterDefaultCommands : Node
         if (showfps) { ShowFPSCommand(); }
         if (vsync) { VSyncCommand(); }
         if (wireframe) { WireframeCommand(); }
+        if (occluders) { OccludersCommand(); }
         if (clear) { ClearCommand(); }
     }
 
@@ -56,6 +58,27 @@ public partial class RegisterDefaultCommands : Node
             } };
         ConsoleCommands.RegisterCommand(cmd);
     }
+
+  private void OccludersCommand()
+    {
+        Command cmd = new Command("RegisterDefaultCommands") { Name = "r_occluders", Tip = "turn occlusion debug view on/off",
+            act = (a) =>
+            {
+                if (GetViewport().DebugDraw != Viewport.DebugDrawEnum.Occluders)
+                {
+                    GetViewport().DebugDraw = Viewport.DebugDrawEnum.Occluders;
+                    return "Occlusion view on.";
+                }
+                else
+                {
+                    GetViewport().DebugDraw = Viewport.DebugDrawEnum.Disabled;
+                    return "Occlusion view off.";
+                }
+            } };
+        ConsoleCommands.RegisterCommand(cmd);
+    }
+
+
 
     private void VSyncCommand()
     {
