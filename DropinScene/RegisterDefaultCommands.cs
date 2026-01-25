@@ -15,6 +15,7 @@ public partial class RegisterDefaultCommands : Node
     [Export] private bool showfps = true;
     [Export] private bool vsync = true;
     [Export] private bool wireframe = true;
+    [Export] private bool colliderDraw = true;
     [Export] private bool occluders = true;
     [Export] private bool clear = true;
 
@@ -25,6 +26,7 @@ public partial class RegisterDefaultCommands : Node
         if (showfps) { ShowFPSCommand(); }
         if (vsync) { VSyncCommand(); }
         if (wireframe) { WireframeCommand(); }
+        if (colliderDraw) { DrawCollidersCommand(); }
         if (occluders) { OccludersCommand(); }
         if (clear) { ClearCommand(); }
     }
@@ -36,6 +38,25 @@ public partial class RegisterDefaultCommands : Node
             {
                 GameConsole.ClearOutput();
                 return string.Empty;
+            } };
+        ConsoleCommands.RegisterCommand(cmd);
+    }
+
+    private void DrawCollidersCommand()
+    {
+        Command cmd = new Command("RegisterDefaultCommands") { Name = "r_colliders", Tip = "toggle collider draw",
+            act = (a) =>
+            {
+                if (!GetTree().DebugCollisionsHint)
+                {
+                    GetTree().DebugCollisionsHint = true;
+                    return "Drawing colliders.";
+                }
+                else
+                {
+                    GetTree().DebugCollisionsHint = false;
+                    return "Drawing colliders turned off.";
+                }
             } };
         ConsoleCommands.RegisterCommand(cmd);
     }
