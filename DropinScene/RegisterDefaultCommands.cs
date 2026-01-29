@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Godot;
 
 namespace MConsole;
@@ -10,41 +11,57 @@ namespace MConsole;
 [GlobalClass]
 public partial class RegisterDefaultCommands : Node
 {
-    [Export] private bool quitExitapp = true;
-    [Export] private bool maxfps = true;
-    [Export] private bool showfps = true;
+    [Export] private bool quitExitApp = true;
+    [Export] private bool maxFPS = true;
+    [Export] private bool showFPS = true;
     [Export] private bool vsync = true;
     [Export] private bool wireframe = true;
     [Export] private bool colliderDraw = true;
     [Export] private bool occluders = true;
     [Export] private bool clear = true;
 
+    [ExportGroup("Debug build only")]
+    [Export] private bool debugOrphans = true;
+
+
     public override void _Ready()
     {
-        if (quitExitapp) { AddExitQuitCommand(); }
-        if (maxfps) { AddMaxFPSCommand(); }
-        if (showfps) { ShowFPSCommand(); }
+        if (quitExitApp) { AddExitQuitCommand(); }
+        if (maxFPS) { AddMaxFPSCommand(); }
+        if (showFPS) { ShowFPSCommand(); }
         if (vsync) { VSyncCommand(); }
         if (wireframe) { WireframeCommand(); }
         if (colliderDraw) { DrawCollidersCommand(); }
         if (occluders) { OccludersCommand(); }
         if (clear) { ClearCommand(); }
+#if TOOLS
+        if (debugOrphans) { DebugOrphanCommand(); }
+#endif
     }
+
+
 
     private void ClearCommand()
     {
-          Command cmd = new Command("RegisterDefaultCommands") { Name = "clear", Tip = "Clear the console",
+        Command cmd = new Command("RegisterDefaultCommands")
+        {
+            Name = "clear",
+            Tip = "Clear the console",
             act = (a) =>
             {
                 GameConsole.ClearOutput();
                 return string.Empty;
-            } };
+            }
+        };
         ConsoleCommands.RegisterCommand(cmd);
     }
 
     private void DrawCollidersCommand()
     {
-        Command cmd = new Command("RegisterDefaultCommands") { Name = "r_colliders", Tip = "toggle collider draw",
+        Command cmd = new Command("RegisterDefaultCommands")
+        {
+            Name = "r_colliders",
+            Tip = "toggle collider draw",
             act = (a) =>
             {
                 if (!GetTree().DebugCollisionsHint)
@@ -57,13 +74,17 @@ public partial class RegisterDefaultCommands : Node
                     GetTree().DebugCollisionsHint = false;
                     return "Drawing colliders turned off.";
                 }
-            } };
+            }
+        };
         ConsoleCommands.RegisterCommand(cmd);
     }
 
     private void WireframeCommand()
     {
-        Command cmd = new Command("RegisterDefaultCommands") { Name = "r_wireframe", Tip = "turn wireframe on/off",
+        Command cmd = new Command("RegisterDefaultCommands")
+        {
+            Name = "r_wireframe",
+            Tip = "turn wireframe on/off",
             act = (a) =>
             {
                 if (GetViewport().DebugDraw != Viewport.DebugDrawEnum.Wireframe)
@@ -76,13 +97,17 @@ public partial class RegisterDefaultCommands : Node
                     GetViewport().DebugDraw = Viewport.DebugDrawEnum.Disabled;
                     return "Wireframe off.";
                 }
-            } };
+            }
+        };
         ConsoleCommands.RegisterCommand(cmd);
     }
 
-  private void OccludersCommand()
+    private void OccludersCommand()
     {
-        Command cmd = new Command("RegisterDefaultCommands") { Name = "r_occluders", Tip = "turn occlusion debug view on/off",
+        Command cmd = new Command("RegisterDefaultCommands")
+        {
+            Name = "r_occluders",
+            Tip = "turn occlusion debug view on/off",
             act = (a) =>
             {
                 if (GetViewport().DebugDraw != Viewport.DebugDrawEnum.Occluders)
@@ -95,7 +120,8 @@ public partial class RegisterDefaultCommands : Node
                     GetViewport().DebugDraw = Viewport.DebugDrawEnum.Disabled;
                     return "Occlusion view off.";
                 }
-            } };
+            }
+        };
         ConsoleCommands.RegisterCommand(cmd);
     }
 
@@ -103,7 +129,10 @@ public partial class RegisterDefaultCommands : Node
 
     private void VSyncCommand()
     {
-        Command cmd = new Command("RegisterDefaultCommands") { Name = "r_vsync", Tip = "turn vertical sync on/off",
+        Command cmd = new Command("RegisterDefaultCommands")
+        {
+            Name = "r_vsync",
+            Tip = "turn vertical sync on/off",
             act = (a) =>
             {
                 if (DisplayServer.WindowGetVsyncMode() == DisplayServer.VSyncMode.Disabled)
@@ -116,7 +145,8 @@ public partial class RegisterDefaultCommands : Node
                     DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);
                     return "VSync off.";
                 }
-            } };
+            }
+        };
         ConsoleCommands.RegisterCommand(cmd);
     }
 
@@ -158,5 +188,50 @@ public partial class RegisterDefaultCommands : Node
         ConsoleCommands.RegisterCommand(cmd1);
         ConsoleCommands.RegisterCommand(cmd2);
     }
+
+#if TOOLS
+    private void DebugOrphanCommand()
+    {
+        Command cmd = new Command("RegisterDefaultCommands")
+        {
+            Name = "debug_orphanReport",
+            Tip = "outputs stats about orphaned nodes in current game instance",
+            act = (a) =>
+            {
+                return DebugOrphanReport();
+            }
+        };
+        ConsoleCommands.RegisterCommand(cmd);
+    }
+
+    private string DebugOrphanReport()
+    {
+        int[] ids = GetOrphanNodeIds().ToArray();
+        Core.LogInfo($"[[[ ORPHAN REPORT ]]]  Total of [{ids.Length}] orphans.", true);
+        int validCount = 0;
+        for (int i = 0; i < ids.Length; i++)
+        {
+            if (IsInstanceIdValid((ulong)ids[i]))
+            {
+                validCount++;
+            }
+        }
+        Core.LogInfo($"Of those [{validCount}] is valid instances.", true);
+
+        for (int i = 0; i < ids.Length; i++)
+        {
+            GodotObject n = InstanceFromId((ulong)ids[i]);
+            if(n is not null)
+            {
+                Core.LogInfo($"[{i}] Name[{n.GetType()}]", true);
+            }
+        }
+
+        PrintOrphanNodes();
+
+
+        return string.Empty;
+    }
+#endif
 }// EOF CLASS
 
