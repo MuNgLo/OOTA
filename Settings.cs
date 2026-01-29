@@ -47,20 +47,20 @@ public static class Settings
         FieldInfo field = _settings[key].GetType().GetField(fieldName);
         return field.GetValue(_settings[key]);
     }
-    public static void SetFieldEnumValue(string key, string fieldName, int value, string subFodler)
+    public static void SetFieldEnumValue(string key, string fieldName, int value, string subFolder)
     {
         FieldInfo field = _settings[key].GetType().GetField(fieldName);
-        SetFieldValueAndSave(key, fieldName, value, subFodler);
+        SetFieldValueAndSave(key, fieldName, value, subFolder);
     }
-    public static void SetPropertyEnumValue(string key, string propertyName, int value, string subFodler)
+    public static void SetPropertyEnumValue(string key, string propertyName, int value, string subFolder)
     {
         PropertyInfo property = _settings[key].GetType().GetProperty(propertyName);
-        SetPropertyValueAndSave(key, propertyName, value, subFodler);
+        SetPropertyValueAndSave(key, propertyName, value, subFolder);
     }
-    public static void SetFieldKeyBindValue(string key, string fieldName, PlayerKeyBind value, string subFodler)
+    public static void SetFieldKeyBindValue(string key, string fieldName, PlayerKeyBind value, string subFolder)
     {
         FieldInfo field = _settings[key].GetType().GetField(fieldName);
-        SetFieldValueAndSave(key, fieldName, value, subFodler);
+        SetFieldValueAndSave(key, fieldName, value, subFolder);
     }
     /// <summary>
     /// Sets and saves
@@ -68,9 +68,9 @@ public static class Settings
     /// <param name="key"></param>
     /// <param name="fieldName"></param>
     /// <param name="value"></param>
-    /// <param name="subFodler"></param>
+    /// <param name="subFolder"></param>
     /// <returns></returns>
-    public static float SetFieldValue(string key, string fieldName, float value, string subFodler)
+    public static float SetFieldValue(string key, string fieldName, float value, string subFolder)
     {
         // Clamp FLOATS
         FieldInfo field = _settings[key].GetType().GetField(fieldName);
@@ -87,34 +87,34 @@ public static class Settings
         {
             value = Mathf.Clamp(value, field.GetCustomAttribute<RangeAttribute>().Min, field.GetCustomAttribute<RangeAttribute>().Max);
         }
-        SetFieldValueAndSave(key, fieldName, value, subFodler);
+        SetFieldValueAndSave(key, fieldName, value, subFolder);
         return value;
     }
-    public static int SetFieldValue(string key, string fieldName, int value, string subFodler)
+    public static int SetFieldValue(string key, string fieldName, int value, string subFolder)
     {
         // Clamp INTS
         FieldInfo field = _settings[key].GetType().GetField(fieldName);
         float min = field.GetCustomAttribute<RangeAttribute>().Min;
         float max = field.GetCustomAttribute<RangeAttribute>().Max;
         int value2 = Mathf.Clamp(value, (int)min, (int)max);
-        SetFieldValueAndSave(key, fieldName, value2, subFodler);
+        SetFieldValueAndSave(key, fieldName, value2, subFolder);
         return value2;
     }
-    public static ulong SetFieldValue(string key, string fieldName, ulong value, string subFodler)
+    public static ulong SetFieldValue(string key, string fieldName, ulong value, string subFolder)
     {
         // Clamp INTS
         FieldInfo field = _settings[key].GetType().GetField(fieldName);
         ulong min = (ulong)field.GetCustomAttribute<RangeAttribute>().Min;
         ulong max = (ulong)field.GetCustomAttribute<RangeAttribute>().Max;
         ulong value2 = (ulong)Mathf.Clamp(value, min, max);
-        SetFieldValueAndSave(key, fieldName, value2, subFodler);
+        SetFieldValueAndSave(key, fieldName, value2, subFolder);
         return value2;
     }
-    public static char SetFieldValue(string key, string fieldName, char value, string subFodler)
+    public static char SetFieldValue(string key, string fieldName, char value, string subFolder)
     {
         // Clamp INTS
         FieldInfo field = _settings[key].GetType().GetField(fieldName);
-        SetFieldValueAndSave(key, fieldName, value, subFodler);
+        SetFieldValueAndSave(key, fieldName, value, subFolder);
         return value;
     }
     /// <summary>
@@ -123,26 +123,26 @@ public static class Settings
     /// <param name="key"></param>
     /// <param name="fieldName"></param>
     /// <param name="value"></param>
-    /// <param name="subFodler"></param>
-    public static void SetFieldValue(string key, string fieldName, object value, string subFodler)
+    /// <param name="subFolder"></param>
+    public static void SetFieldValue(string key, string fieldName, object value, string subFolder)
     {
-        SetFieldValueAndSave(key, fieldName, value, subFodler);
+        SetFieldValueAndSave(key, fieldName, value, subFolder);
     }
-    private static void SetFieldValueAndSave(string key, string fieldName, object value, string subFodler)
+    private static void SetFieldValueAndSave(string key, string fieldName, object value, string subFolder)
     {
         if (_settings[key].GetType().GetField(fieldName) is null)
         {
-            SetPropertyValueAndSave(key, fieldName, value, subFodler);
+            SetPropertyValueAndSave(key, fieldName, value, subFolder);
             return;
         }
         _settings[key].GetType().GetField(fieldName).SetValue(_settings[key], value);
-        //Debug.Log($"Looking for it! {key}->{fieldName} in {subFodler}");
-        SaveSettings(_settings[key], subFodler);
+        //Debug.Log($"Looking for it! {key}->{fieldName} in {subFolder}");
+        SaveSettings(_settings[key], subFolder);
     }
-    private static void SetPropertyValueAndSave(string key, string propertyName, object value, string subFodler)
+    private static void SetPropertyValueAndSave(string key, string propertyName, object value, string subFolder)
     {
         _settings[key].GetType().GetProperty(propertyName).SetValue(_settings[key], value);
-        SaveSettings(_settings[key], subFodler);
+        SaveSettings(_settings[key], subFolder);
     }
     private static string FilePath(string subFolder)
     {
@@ -155,7 +155,7 @@ public static class Settings
     }
     /// <summary>
     /// Before accessing anything through this method the Type trying to be accessed should already been accessed through the generic
-    /// Getsettings<T>.
+    /// GetSettings<T>.
     /// If there is no hit in the cache, NULL will be returned.
     /// </summary>
     /// <param name="typeName"></param>
@@ -252,8 +252,8 @@ public static class Settings
                 return;
             }
 
-            object pvalue = pInfo.GetValue(ogConfig);
-            SetPropertyValueAndSave(settingsName, field, pvalue, subFolder);
+            object pValue = pInfo.GetValue(ogConfig);
+            SetPropertyValueAndSave(settingsName, field, pValue, subFolder);
             return;
         }
 
