@@ -35,6 +35,17 @@ public static class GizmoUtils
         gizmo.AddSegments(path);
         gizmo.UpdateGizmo(duration);
     }
+
+    public static void DrawLine(List<Vector3> path, float duration, Color col)
+    {
+        SegmentedGizmo gizmo = new SegmentedGizmo(); gizmo.pathScale = 1.0f;
+        gizmo.color = col;
+        MainLoop ml = Engine.GetMainLoop();
+        (ml as SceneTree).Root.AddChild(gizmo);
+        gizmo.ClearSegments();
+        gizmo.AddSegments(path);
+        gizmo.UpdateGizmo(duration);
+    }
     /// <summary>
     /// Draws a shape at world location for the duration and with the size of scale
     /// Shapes are defined in the static Class GizmoShapes
