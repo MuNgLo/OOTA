@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://de1od7uc00qsf"]
+[gd_scene format=3 uid="uid://de1od7uc00qsf"]
 
 [ext_resource type="Script" uid="uid://bqb5j728q60s5" path="res://addons/MConsole/DropinScene/GameConsole.cs" id="1_fd6dq"]
 [ext_resource type="Script" uid="uid://d1al8ofrpjq1a" path="res://addons/MConsole/ConsoleCommands.cs" id="2_5v3cq"]
 [ext_resource type="Script" uid="uid://up4om7cdqs7y" path="res://addons/MConsole/DropinScene/RegisterDefaultCommands.cs" id="3_eovab"]
 
-[node name="GameConsole" type="GridContainer" node_paths=PackedStringArray("outputArea", "inputArea", "autocomplete")]
+[node name="GameConsole" type="GridContainer" unique_id=1855708324 node_paths=PackedStringArray("outputArea", "inputArea", "autocomplete")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -19,19 +19,19 @@ inputArea = NodePath("PanelContainer/GridContainer/MarginContainer2/LineEdit")
 autocomplete = NodePath("GridContainer")
 maxLineCount = 11
 
-[node name="PanelContainer" type="PanelContainer" parent="."]
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=2047778259]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="GridContainer" type="GridContainer" parent="PanelContainer"]
+[node name="GridContainer" type="GridContainer" parent="PanelContainer" unique_id=258211425]
 layout_mode = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/GridContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer/GridContainer" unique_id=1178427545]
 layout_mode = 2
 theme_override_constants/margin_left = 4
 theme_override_constants/margin_right = 4
 
-[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/GridContainer/MarginContainer"]
+[node name="RichTextLabel" type="RichTextLabel" parent="PanelContainer/GridContainer/MarginContainer" unique_id=1177669120]
 custom_minimum_size = Vector2(0, 200)
 layout_mode = 2
 bbcode_enabled = true
@@ -39,7 +39,7 @@ text = "
 "
 vertical_alignment = 2
 
-[node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/GridContainer"]
+[node name="MarginContainer2" type="MarginContainer" parent="PanelContainer/GridContainer" unique_id=695801909]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/margin_left = 4
@@ -47,16 +47,16 @@ theme_override_constants/margin_top = 2
 theme_override_constants/margin_right = 4
 theme_override_constants/margin_bottom = 4
 
-[node name="LineEdit" type="LineEdit" parent="PanelContainer/GridContainer/MarginContainer2"]
+[node name="LineEdit" type="LineEdit" parent="PanelContainer/GridContainer/MarginContainer2" unique_id=433863768]
 layout_mode = 2
 size_flags_horizontal = 3
 focus_next = NodePath(".")
 
-[node name="GridContainer" type="GridContainer" parent="."]
+[node name="GridContainer" type="GridContainer" parent="." unique_id=1079231243]
 layout_mode = 2
 
-[node name="ConsoleCommands" type="Node" parent="."]
+[node name="ConsoleCommands" type="Node" parent="." unique_id=310752408]
 script = ExtResource("2_5v3cq")
 
-[node name="RegisterDefaultCommands" type="Node" parent="ConsoleCommands"]
+[node name="RegisterDefaultCommands" type="Node" parent="ConsoleCommands" unique_id=1020253209]
 script = ExtResource("3_eovab")
