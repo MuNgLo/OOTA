@@ -3,65 +3,82 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using MLobby;
+using MLogging;
 
 namespace MLobby;
 /// <summary>
 /// The LobbyManager is to usher new connections in and once they are ready
-/// inform the gamelogic there is a new player ready to join the game.
+/// inform the game logic there is a new player ready to join the game.
 /// </summary>
 [GlobalClass]
-internal partial class LobbyManager : MultiplayerSpawner
+public partial class LobbyManager : MultiplayerSpawner
 {
     // Running is an active host, connected is is a client instance of the lobby
     [Export] private bool debug = true;
-    [Export] private LobbyEvents Events;
-    [Export] private int maxPlayers = 10;
+    [Export] private LobbyEvents events;
+    [Export] private PackedScene prefabLobbyMember;
+
+    IPAddress ipAddress;
+    int port;
+
+    public LobbyEvents LobbyEvents => events;
 
     private LOBBYSTATE state = LOBBYSTATE.OFFLINE;
-    private List<LobbyMember> Members;
+    private List<LobbyMember> members;
+    public List<LobbyMember> Members => members;
     private ENetMultiplayerPeer localPeer;
     private MultiplayerApi MP => Multiplayer;
 
     public override void _Ready()
     {
+        SpawnFunction = new Callable(this, nameof(SpawnMember));
         // Initialize things
         MP.MultiplayerPeer = null;
-        Members = new();
+        members = new();
         // Hook up events
         MP.ConnectedToServer += OnConnectedToServer;
         MP.ConnectionFailed += OnConnectionFailed;
         MP.PeerConnected += OnPeerConnected;
         MP.PeerDisconnected += OnPeerDisconnected;
         MP.ServerDisconnected += OnServerDisconnected;
+        // Set ip to local 127.0.0.1 as default
+        if (IPAddress.TryParse("127.0.0.1", out System.Net.IPAddress ip))
+        {
+            ipAddress = ip;
+        }
     }
     /// <summary>
     /// Fires on Client as it connects to a host
     /// </summary>
     private void OnConnectedToServer()
     {
-        if (debug) { GD.Print($"LobbyManager::OnConnectedToServer()"); }
-        Events.RaiseConnectedToServer();
+        if (debug) { MLog.LogInfo($"LobbyManager::OnConnectedToServer()"); }
+        LobbyEvents.RaiseConnectedToServer();
+        string key = Core.AddressAndPortToString(ipAddress, port);
+        Core.OnLobbyKeyActive(this, key);
     }
     /// <summary>
-    /// Fires when a clients is started but timesout after ~34s
+    /// Fires when a clients is started but times out after ~34s
     /// Sets the MP Peer to NULL
     /// </summary>
     private void OnConnectionFailed()
     {
-        if (debug) { GD.Print($"LobbyManager::OnConnectionFailed()"); }
+        if (debug) { MLog.LogError($"LobbyManager::OnConnectionFailed()"); }
         GetTree().GetMultiplayer().MultiplayerPeer = null; // Remove peer.
+        LobbyEvents.RaiseOnConnectionFailed();
     }
     /// <summary>
     /// Fires on Client as server drops from network
     /// </summary>
     private void OnServerDisconnected()
     {
-        if (debug) { GD.Print($"LobbyManager::OnServerDisconnected()"); }
+        if (debug) { MLog.LogInfo($"LobbyManager::OnServerDisconnected()"); }
         GetTree().GetMultiplayer().MultiplayerPeer.Close();
         MP.MultiplayerPeer = null;
         ClearAll();
         state = LOBBYSTATE.OFFLINE;
-        Events.RaiseServerDisconnected();
+        LobbyEvents.RaiseServerDisconnected();
     }
     /// <summary>
     /// Fires on all as a peer disconnect. Yes host too but not on the peer that disconnects
@@ -69,12 +86,12 @@ internal partial class LobbyManager : MultiplayerSpawner
     /// <param name="id"></param>
     private void OnPeerDisconnected(long id)
     {
-        if (debug) { GD.Print($"LobbyManager::PeerDisconnected({id})"); }
+        if (debug) { MLog.LogInfo($"LobbyManager::PeerDisconnected({id})"); }
         if (MP.IsServer())
         {
             LobbyMember pl = Members.Find(p => p.PeerID == id);
             Members.Remove(pl);
-            Events.RaiseMemberDisconnected(id);
+            LobbyEvents.RaiseMemberDisconnected(id);
             pl.QueueFree();
         }
     }
@@ -83,11 +100,27 @@ internal partial class LobbyManager : MultiplayerSpawner
     /// Fires once on Host and existing Clients for the joining client.
     /// </summary>
     /// <param name="id"></param>
-    private void OnPeerConnected(long id) // Seems connecting client has id as 1 and host has the random peer ID
+    private void OnPeerConnected(long id)
     {
-        if (debug) { GD.Print($"LobbyManager::OnPeerConnected({id})"); }
+        if (debug) { MLog.LogInfo($"LobbyManager::OnPeerConnected({id})"); }
         AddMember(id, LOBBYMEMBERSTATENUM.CONNECTING);
+        if (MP.IsServer()) { TellPeerHostInfo(id); }
     }
+
+    private void TellPeerHostInfo(long id)
+    {
+        RpcId(id, nameof(RPCReceiveHostInfo),
+            "Host",
+            Core.AddressAndPortToString(ipAddress, port),
+            2
+          );
+    }
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void RPCReceiveHostInfo(string hostName, string lobbyKey, int maxPlayers)
+    {
+        LobbyEvents.RaiseHostInfoReceived(new HostInfo(hostName, lobbyKey, maxPlayers));
+    }
+
     /// <summary>
     /// If host, stop it!
     /// </summary>
@@ -95,62 +128,144 @@ internal partial class LobbyManager : MultiplayerSpawner
     {
         if (MP.IsServer())
         {
-            GD.Print($"LobbyManager::StopHost()");
+            MLog.LogInfo($"LobbyManager::StopHost()");
             MP.MultiplayerPeer.Close(); // OnServerDisconnected will fire on clients. NOT on host
             MP.MultiplayerPeer = null;
             ClearAll();
-            Events.RaiseHostClosed();
+            LobbyEvents.RaiseHostClosed();
             state = LOBBYSTATE.OFFLINE;
         }
     }
     /// <summary>
-    /// Asynchrounously checks UPNP 
-    /// Only fails if adress is in use
-    /// When succeded, raises Events.NET.RaiseGameConnectedEvent (disabled now)
+    /// Asynchronously checks UPNP 
+    /// Only fails if address is in use
+    /// When succeeded, raises Events.NET.RaiseGameConnectedEvent (disabled now)
     /// </summary>
-    public void StartHost(int currentPort)
+    public async void StartHost(int usePort, int maxClients, string ip = "")
     {
-        if (state != LOBBYSTATE.OFFLINE) { return; }
-        if (GetChildCount() > 0)
+        if (state != LOBBYSTATE.OFFLINE)
         {
-            GD.Print($"LobbyManager::StartHost() Can't host, Manager Node has [{GetChildCount()}]Children left.");
+            MLog.LogError($"LobbyManager::StartHost() Failed since state is not Offline[{state}]");
             return;
         }
-        if (debug) { GD.Print($"LobbyManager::StartHost() Launching host..."); }
+        if (GetChildCount() > 0)
+        {
+            MLog.LogError($"LobbyManager::StartHost() Can't host, Manager Node has [{GetChildCount()}]Children left.");
+            return;
+        }
+        if (debug) { MLog.LogInfo($"LobbyManager::StartHost() Launching host..."); }
+
+        //Events.RaiseOnLoadStateChanged(new Events.LoadStateArguments() { text = "Starting a game as host...", loadProgressNormal = 0.0f });
+
         state = LOBBYSTATE.LAUNCHING;
         localPeer = new ENetMultiplayerPeer();
-        Error err = localPeer.CreateServer(currentPort, maxPlayers);
+        port = usePort;
+
+        StartHostMonitor(localPeer, 5000);
+
+
+        Error err = localPeer.CreateServer(port, maxClients);
         if (err != Error.Ok)
         {
             // Is another server running?
-            GD.Print($"LobbyManager::StartHost() Can't host, address in use.");
+            MLog.LogError($"LobbyManager::StartHost() Can't host, address in use.");
             state = LOBBYSTATE.OFFLINE;
             localPeer = null;
             return;
         }
-        GD.Print($"LobbyManager::StartHost() Running host with maxPlayers[{maxPlayers}]");
+        if (debug) { MLog.LogInfo($"LobbyManager::StartHost() Running host with maxPlayers[{maxClients}]"); }
         GetTree().GetMultiplayer().MultiplayerPeer = localPeer;
         state = LOBBYSTATE.RUNNING;
-        Members = new();
+        members = new();
         AddMember(1, LOBBYMEMBERSTATENUM.CONNECTING);
-        Events.RaiseHostSetupReady();
+        LobbyEvents.RaiseHostSetupReady();
+
+        if (ip == "")
+        {
+            Upnp upnp = new();
+            await Task.Run(() =>
+            {
+                try { upnp.Discover(); } catch (Exception e) { MLog.LogError(e.Message); }
+            });
+            // No UPNP device found so setting all read
+            if (upnp.GetDeviceCount() > 0)
+            {
+                // resolve external IP
+                await Task.Run(() =>
+                {
+                    ip = upnp.QueryExternalAddress();
+                });
+            }
+        }
+        //Verify its a valid IP
+        if (IPAddress.TryParse(ip, out IPAddress address))
+        {
+            ipAddress = address;
+            string lobbyKey = Core.AddressAndPortToString(address, port);
+            Core.OnLobbyKeyActive?.Invoke(this, lobbyKey);
+        }
     }
-    public void JoinHost(IPAddress ip, int port)
+
+
+    private async void StartHostMonitor(MultiplayerPeer peer, int ms)
     {
-        if (state != LOBBYSTATE.OFFLINE) { return; }
+        await Task.Delay(ms);
+        if (peer.GetConnectionStatus() != MultiplayerPeer.ConnectionStatus.Connected)
+        {
+            peer.Close();
+            MP.MultiplayerPeer = null;
+            //MLog.LogError($"LobbyManager::ConnectingMonitor() Connection was not established");
+            state = LOBBYSTATE.OFFLINE;
+            LobbyEvents.RaiseOnHostFailed();
+        }
+    }
+
+
+    public void JoinHost(IPAddress ip, int usePort)
+    {
+        if (state != LOBBYSTATE.OFFLINE)
+        {
+            MLog.LogError($"LobbyManager::JoinHost({ip}:{port}) Failed since state is not Offline[{state}]");
+            return;
+        }
+
+        if (debug) { MLog.LogInfo($"LobbyManager::JoinHost() Joining host"); }
+
+        //Events.RaiseOnLoadStateChanged(new Events.LoadStateArguments() { text = "Establishing connection...", loadProgressNormal = 0.0f });
         state = LOBBYSTATE.LAUNCHING;
 
+
         localPeer = new ENetMultiplayerPeer();
-        Error err = localPeer.CreateClient(ip.ToString(), port);
+        ipAddress = ip;
+        port = usePort;
+
+
+
+        ConnectingMonitor(localPeer, 5000);
+        Error err = localPeer.CreateClient(ipAddress.ToString(), port);
         if (err != Error.Ok)
         {
-            GD.Print($"LobbyManager::JoinHost({ip}:{port}) Client creation error :: {err}", true);
+            MLog.LogError($"LobbyManager::JoinHost({ip}:{port}) Client creation error :: {err}");
             state = LOBBYSTATE.OFFLINE;
             return;
         }
         GetTree().GetMultiplayer().MultiplayerPeer = localPeer;
-        if (debug) { GD.Print($"LobbyManager::JoinHost({ip}:{port}) Connecting..."); }
+        if (debug) { MLog.LogInfo($"LobbyManager::JoinHost({ip}:{port}) Connecting..."); }
         state = LOBBYSTATE.CONNECTED;
+    }
+
+
+    private async void ConnectingMonitor(MultiplayerPeer peer, int ms)
+    {
+        await Task.Delay(ms);
+        if (peer.GetConnectionStatus() != MultiplayerPeer.ConnectionStatus.Connected)
+        {
+            peer.Close();
+            MP.MultiplayerPeer = null;
+            //MLog.LogError($"LobbyManager::ConnectingMonitor() Connection was not established");
+            state = LOBBYSTATE.OFFLINE;
+            LobbyEvents.RaiseOnConnectionFailed();
+        }
     }
     /// <summary>
     /// Call this on client to leave the host
@@ -163,12 +278,12 @@ internal partial class LobbyManager : MultiplayerSpawner
             MP.MultiplayerPeer.Close();
             MP.MultiplayerPeer = null;
             state = LOBBYSTATE.OFFLINE;
-            Events.RaiseLeavingHost();
+            LobbyEvents.RaiseLeavingHost();
         }
     }
     /// <summary>
     /// When Host starts up or when a client connects, this will be used to add them as a member of the lobby
-    /// It will instantiate and add a copy of the member scene under lobby node. Lobby node being a spawner and memeber scene being the FIRST entry in the spawner's spawnable scenes
+    /// It will instantiate and add a copy of the member scene under lobby node. Lobby node being a spawner and member scene being the FIRST entry in the spawner's spawnable scenes
     /// will cause the member nodes to be replicated across network.
     /// </summary>
     /// <param name="id"></param>
@@ -179,21 +294,25 @@ internal partial class LobbyManager : MultiplayerSpawner
         {
             if (Members.Exists(p => p.PeerID == id))
             {
-                GD.PrintErr($"LobbyManager::AddMember({id}) peerID already exists! Handle This!");
+                MLog.LogError($"LobbyManager::AddMember({id}) peerID already exists! Handle This!");
                 return;
             }
-            string path = GetSpawnableScene(0);
-            LobbyMember newMember = GD.Load<PackedScene>(path).Instantiate() as LobbyMember;
-            newMember.SetMemberInfo(id, pState);
+            LobbyMember newMember = Spawn(new Godot.Collections.Dictionary<string, Variant>() { { "id", id }, { "pState", (int)pState } }) as LobbyMember;
             Members.Add(newMember);
-            newMember.Name = id.ToString();
-            AddChild(newMember); // Remember this should be host authority synced over network with a networkspawner
             ValidateMember(id);
         }
     }
+    private LobbyMember SpawnMember(Godot.Collections.Dictionary<string, Variant> args)
+    {
+        LobbyMember newMember = prefabLobbyMember.Instantiate() as LobbyMember;
+        newMember.SetMemberInfo(args["id"].AsInt32(), (LOBBYMEMBERSTATENUM)args["pState"].AsInt32());
+        newMember.Name = args["id"].AsInt32().ToString();
+        return newMember;
+    }
     /// <summary>
-    /// Validate that given Peer is ready to join the gamelogic side of things
-    /// What needs validation would depend on game. Is the client running same version would usally be good to check.
+    /// Validate that given Peer is ready to join the game logic side of things
+    /// What needs validation would depend on game. Is the client running same version would usually be good to check.
+    /// Also informs client if they passed or not
     /// </summary>
     /// <param name="id"></param>
     /// <exception cref="NotImplementedException"></exception>
@@ -204,11 +323,26 @@ internal partial class LobbyManager : MultiplayerSpawner
         {
             Members.Find(p => p.PeerID == id).State = LOBBYMEMBERSTATENUM.CONNECTED;
         }
-        Events.RaiseHostMemberValidated(id);
+        LobbyEvents.RaiseHostMemberValidated(id);
+        RpcId(id, nameof(RPCValidationResult), true);
     }
     #region SingleFunction
     /// <summary>
-    /// Make sure the Lobby is fully reset and any straggling memeber nodes is removed
+    /// Tell peer if they passed validation or not
+    /// </summary>
+    /// <param name="result"></param>
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void RPCValidationResult(bool result)
+    {
+        if (!result)
+        {
+            // FAILED! Do fail things
+        }
+        LobbyEvents.RaiseLocalClientValidated();
+    }
+
+    /// <summary>
+    /// Make sure the Lobby is fully reset and any straggling member nodes is removed
     /// </summary>
     public void ClearAll()
     {
@@ -222,13 +356,19 @@ internal partial class LobbyManager : MultiplayerSpawner
                 }
             }
         }
-        Members = new();
+        members = new();
     }
 
-    public async Task<string> ProbeNetworkForInfo(int currentPort){
-        GD.Print($"LobbyManager::ProbeNetworkForInfo() Trying to resolve network info through UPNP");
+
+    private bool isProbing = false;
+    public async Task<string> ProbeNetworkForInfo(int currentPort)
+    {
+        if (isProbing) { return string.Empty; }
+        isProbing = true;
+        MLog.LogInfo($"LobbyManager::ProbeNetworkForInfo() Trying to resolve network info through UPNP");
         string result = await TryUPNP(currentPort);
-        GD.Print($"LobbyManager::ProbeNetworkForInfo() result -> {result}");
+        MLog.LogInfo($"LobbyManager::ProbeNetworkForInfo() result -> {result}");
+        isProbing = false;
         return result;
     }
 
@@ -242,30 +382,29 @@ internal partial class LobbyManager : MultiplayerSpawner
         Upnp upnp = new();
         await Task.Run(() =>
         {
-            try { upnp.Discover(); } catch (Exception e) { GD.Print(e.Message); }
+            try { upnp.Discover(); } catch (Exception e) { MLog.LogError(e.Message); }
         });
         // No UPNP device found so setting all read
         if (upnp.GetDeviceCount() < 1)
         {
-            GD.Print($"LobbyManager::TryUPNP() No UPNP device found");
+            MLog.LogInfo($"LobbyManager::TryUPNP() No UPNP device found");
             return "";
         }
-
+        string ip = "";
         await Task.Run(() =>
         {
             if ((Upnp.UpnpResult)upnp.AddPortMapping(currentPort) != Upnp.UpnpResult.Success)
             {
-                GD.Print($"LobbyManager::TryUPNP() Failed to map Port[{currentPort}] It might already be forwarded though");
+                MLog.LogError($"LobbyManager::TryUPNP() Failed to map Port[{currentPort}] It might already be forwarded though");
             }
         }
         );
-        string ipString = "127.0.0.1";
         // resolve external IP
         await Task.Run(() =>
         {
-            ipString = upnp.QueryExternalAddress();
+            ip = upnp.QueryExternalAddress();
         });
-        return $"{ipString}:{currentPort}";
+        return $"{ip}:{currentPort}";
     }
     #endregion
 }// EOF CLASS
