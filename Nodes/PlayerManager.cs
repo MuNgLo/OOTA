@@ -1,5 +1,4 @@
 using Godot;
-using MLogging;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -40,10 +39,10 @@ public partial class PlayerManager : MultiplayerSpawner
     public override void _Ready()
     {
         ChildEnteredTree += WhenChildEnterTree;
-        lobby.LobbyEvents.OnHostClosed += Cleanup;
-        lobby.LobbyEvents.OnServerDisconnected += Cleanup;
-        lobby.LobbyEvents.OnLeavingHost += Cleanup;
-        lobby.LobbyEvents.OnLobbyMemberValidated += WhenLobbyMemberValidate;
+        LobbyEvents.OnHostClosed += Cleanup;
+        LobbyEvents.OnServerDisconnected += Cleanup;
+        LobbyEvents.OnLeavingHost += Cleanup;
+        LobbyEvents.OnLobbyMemberValidated += WhenLobbyMemberValidate;
     }
 
     private void WhenChildEnterTree(Node node)

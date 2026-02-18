@@ -1,4 +1,4 @@
-# MLobby v1.1
+# MLobby v1.2
 
 Drop in lobby manager to create host and join to a host. Using standard ip:port connections without any punch through or other third party reliance.
 Uses 2 MultiPlayerSpawners to spawn in nodes representing the connection (lobbyMember) and player (MLobbyPlayer).
