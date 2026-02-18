@@ -1,25 +1,17 @@
-using Godot;
 using System;
-namespace PlayerSpace;
-
-public partial class Player : Node
+using Godot;
+using MLobby;
+[GlobalClass]
+public partial class OOTAPlayer : MLobbyPlayer
 {
-    [Export] PrivateData privateData;
-    [Export] PublicData publicData;
-
-    public long PeerID => publicData.PeerID;
-    public TEAM Team => publicData.Team;
+    public TEAM Team => (publicData as OOTAPublicData).Team;
     public int Gold => privateData.Gold;
-    public float Health => publicData.Health;
-    public float MaxHealth => publicData.MaxHealth;
-    public bool IsReady => publicData.IsReady;
+    public float Health => (publicData as OOTAPublicData).Health;
+    public float MaxHealth => (publicData as OOTAPublicData).MaxHealth;
+    public bool IsReady => (publicData as OOTAPublicData).IsReady;
     public double NormalizedHealth => Math.Clamp(Health / MaxHealth, 0.0, 1.0);
-
-
-
     PlayerAvatar avatar;
     public PlayerAvatar Avatar { get => avatar; set => SetAvatar(value); }
-    public string PlayerName { get => publicData.PlayerName; internal set => publicData.PlayerName = value; }
 
     private void SetAvatar(PlayerAvatar value)
     {
@@ -35,22 +27,17 @@ public partial class Player : Node
         }
     }
 
-    public void SetUpPlayer(long peerID)
-    {
-        publicData.PeerID = peerID;
-    }
-
     public void AddHealth(int amount)
     {
         if (amount < 1) { return; }
-        publicData.Health += amount;
+        (publicData as OOTAPublicData).Health += amount;
     }
 
     public void TakeDamage(int amount)
     {
         if (amount < 1) { return; }
-        publicData.Health = publicData.Health - amount;
-        if (publicData.Health <= 0)
+        (publicData as OOTAPublicData).Health = (publicData as OOTAPublicData).Health - amount;
+        if ((publicData as OOTAPublicData).Health <= 0)
         {
             //GD.Print($"Player::TakeDamage({amount}) Dying and avatar is null [{avatar is null}]");
             Die();
@@ -92,28 +79,27 @@ public partial class Player : Node
 
     internal void SetToReady()
     {
-        publicData.IsReady = true;
+        (publicData as OOTAPublicData).IsReady = true;
     }
 
     internal void SetTeam(TEAM assignment)
     {
-        GD.Print($"SetTeam");
-
-        publicData.Team = assignment;
+        (publicData as OOTAPublicData).Team = assignment;
     }
 
     internal void SetPeerID(int peerID)
     {
-        publicData.PeerID = peerID;
+        (publicData as OOTAPublicData).PeerID = peerID;
     }
 
     internal void SetMaxHealth(int playerStartHealth)
     {
-        publicData.MaxHealth = playerStartHealth;
+        (publicData as OOTAPublicData).MaxHealth = playerStartHealth;
     }
 
     internal void SetFullHealth()
     {
-        publicData.Health = publicData.MaxHealth;
+        (publicData as OOTAPublicData).Health = (publicData as OOTAPublicData).MaxHealth;
     }
+
 }// EOF CLASS

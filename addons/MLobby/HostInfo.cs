@@ -8,14 +8,16 @@ public class HostInfo
     [JsonInclude]
     public readonly string name;
     [JsonInclude]
-    public readonly string key;
+    public readonly string address;
     [JsonInclude]
+    public readonly int port;
+      [JsonInclude]
     public readonly int maxPlayers;
     [JsonInclude]
     public bool isFavourite = false;
 
-    public HostInfo(string name, string key, int maxPlayers)
+    public HostInfo(string name, string address, int port, int maxPlayers)
     {
-        this.name = name; this.key = key; this.maxPlayers = maxPlayers;
+        this.name = name; this.address = address; this.port = port; this.maxPlayers = maxPlayers;
     }
 }// EOF CLASS

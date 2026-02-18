@@ -1,7 +1,6 @@
 using Godot;
 using MLobby;
 using MLogging;
-using PlayerSpace;
 using System;
 using System.Diagnostics;
 
@@ -15,6 +14,7 @@ public partial class Core : Node
     [Export] PackedScene healthPrefab;
 
     [Export] LobbyManager lobby;
+    [Export] OOTAPlayerManager players;
     [Export] GameLogic rules;
     public static GameLogic Rules => ins.rules;
     public static LobbyManager Lobby => ins.lobby;
@@ -30,15 +30,10 @@ public partial class Core : Node
 
     public static Material TeamLeft => ins.teamLeft;
     public static Material TeamRight => ins.teamRight;
+    internal static OOTAPlayerManager Players => ins.players;
 
 
     public static Camera3D Camera { get; set; }
-
-    /// <summary>
-    /// Raised when you host or connect. Carrying the current active key.
-    /// </summary>
-    public static EventHandler<string> OnLobbyKeyActive;
-    internal static PlayerManager players;
 
     public override void _EnterTree()
     {

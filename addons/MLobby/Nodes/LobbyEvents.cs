@@ -1,14 +1,15 @@
 using System;
+using System.Net;
 using Godot;
 using MLobby;
 
 namespace MLobby;
 /// <summary>
-/// GDLobby related events
+/// Lobby related events
 /// The RPC side is handled inside the Lobby so these can be raised on all or specific client from there
 /// </summary>
 [GlobalClass]
-public partial class LobbyEvents : Node
+public partial class LobbyEvents : MLobbyBaseNode
 {
     [Export] private bool debug = true;
 
@@ -16,7 +17,7 @@ public partial class LobbyEvents : Node
     /// Fires when Host has been setup completely and the host member has been added to the member list.
     /// Local to host
     /// </summary>
-    public event EventHandler OnHostSetupReady;
+    public event EventHandler<ConnectedEventArguments> OnHostSetupReady;
     /// <summary>
     /// When host closed down this will fire.
     /// Local to host
@@ -44,7 +45,7 @@ public partial class LobbyEvents : Node
     /// <summary>
     /// Fires on Client as it connected to a host
     /// </summary>
-    public event EventHandler OnConnectedToServer;
+    public event EventHandler<ConnectedEventArguments> OnConnectedToServer;
     /// <summary>
     /// Fires locally on a client after they connected to a host and they receive the host information.
     /// </summary>
@@ -61,13 +62,13 @@ public partial class LobbyEvents : Node
     /// <summary>
     /// Local to host
     /// </summary>
-    public void RaiseHostSetupReady()
+    public void RaiseHostSetupReady(IPAddress ip, int port)
     {
         if (debug) { GD.Print($"LobbyEvents::RaiseHostSetupReady()"); }
-        EventHandler raiseEvent = OnHostSetupReady;
+        EventHandler<ConnectedEventArguments> raiseEvent = OnHostSetupReady;
         if (raiseEvent != null)
         {
-            raiseEvent(this, null);
+            raiseEvent(this, new(){ip = ip, port = port});
         }
     }
 
@@ -150,13 +151,13 @@ public partial class LobbyEvents : Node
     /// <summary>
     /// Fires on Client as it connects to a host
     /// </summary>
-    internal void RaiseConnectedToServer()
+    internal void RaiseConnectedToServer(IPAddress ip, int port)
     {
         if (debug) { GD.Print($"LobbyEvents::RaiseConnectedToServer()"); }
-        EventHandler raiseEvent = OnConnectedToServer;
+        EventHandler<ConnectedEventArguments> raiseEvent = OnConnectedToServer;
         if (raiseEvent != null)
         {
-            raiseEvent(this, null);
+            raiseEvent(this, new(){ ip = ip, port = port });
         }
     }
     /// <summary>

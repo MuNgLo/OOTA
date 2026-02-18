@@ -1,4 +1,5 @@
 using Godot;
+using MLobby;
 using System;
 
 public partial class UILobbyKey : Control
@@ -9,7 +10,8 @@ public partial class UILobbyKey : Control
 
     public override void _Ready()
     {
-        Core.OnLobbyKeyActive += WhenLobbyKeyActive;
+        Core.Lobby.LobbyEvents.OnConnectedToServer += WhenConnectedToServer;
+        Core.Lobby.LobbyEvents.OnHostSetupReady += WhenConnectedToServer;
 
         btn_Secret.Pressed += WhenSecretPressed;
         btn_Copy.Pressed += WhenCopyPressed;
@@ -21,6 +23,13 @@ public partial class UILobbyKey : Control
         Hide();
     }
 
+    private void WhenConnectedToServer(object sender, ConnectedEventArguments e)
+    {
+        string key = Core.AddressAndPortToString(e.ip, e.port);
+        le_key.Text = key;
+        Show();
+    }
+
     public void WhenSecretPressed()
     {
         le_key.Secret = !le_key.Secret;
@@ -28,12 +37,6 @@ public partial class UILobbyKey : Control
     private void WhenCopyPressed()
     {
         DisplayServer.ClipboardSet(le_key.Text);
-    }
-
-    private void WhenLobbyKeyActive(object sender, string e)
-    {
-        le_key.Text = e;
-        Show();
     }
 
 }// EOF CLASS

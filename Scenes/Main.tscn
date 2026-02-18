@@ -19,7 +19,9 @@
 [ext_resource type="PackedScene" uid="uid://c8amfxmmxyj51" path="res://addons/MLobby/DropinScene/LobbyMember.tscn" id="10_6heos"]
 [ext_resource type="Script" uid="uid://c1efn3impdgid" path="res://Scripts/Resources/EnemySpawn.cs" id="10_346fj"]
 [ext_resource type="PackedScene" uid="uid://bgcalbv5r35bg" path="res://Scenes/Buildings/Base.tscn" id="10_bmxlf"]
+[ext_resource type="Script" uid="uid://de2j8pgfyip6y" path="res://Scripts/Commons/OOTAPlayerManager.cs" id="11_vs04g"]
 [ext_resource type="PackedScene" uid="uid://2am2lupffi35" path="res://Scenes/HUD/HudWorldElements.tscn" id="12_0sclb"]
+[ext_resource type="PackedScene" uid="uid://dbofrojhhg7ws" path="res://Scenes/OOTAPlayer.tscn" id="12_6ehlx"]
 [ext_resource type="Script" uid="uid://bqpkyuk7ke4mu" path="res://addons/MLobby/Nodes/LobbyManager.cs" id="12_sxkr1"]
 [ext_resource type="Script" uid="uid://bkpdn2eaegyir" path="res://Scripts/GameLogic/GameStats.cs" id="13_0sclb"]
 [ext_resource type="Script" uid="uid://wkkb5q71fb" path="res://addons/MLobby/Nodes/LobbyEvents.cs" id="14_jyqft"]
@@ -35,9 +37,7 @@
 [ext_resource type="PackedScene" uid="uid://bwf2h6blppepx" path="res://Scenes/Projectiles/Projectile.tscn" id="21_4n42c"]
 [ext_resource type="Script" uid="uid://bqmsnui6f1p4t" path="res://Scripts/Spawners/PickupSpawner.cs" id="22_4n42c"]
 [ext_resource type="Script" uid="uid://bh6vusv8b7mi" path="res://Scripts/Spawners/BuildingSpawner.cs" id="23_c5snn"]
-[ext_resource type="Script" uid="uid://dhdxvks818ir8" path="res://Scripts/Player/PlayerManager.cs" id="30_btbly"]
 [ext_resource type="Script" uid="uid://c2ogmd33xllep" path="res://addons/MMenuSystem/HUDSystem.cs" id="30_vvnwx"]
-[ext_resource type="PackedScene" uid="uid://crb5h86y2gr5h" path="res://Scripts/Player/Player.tscn" id="31_vs04g"]
 [ext_resource type="PackedScene" uid="uid://cacw3c477jwjv" path="res://Scenes/UI/UIMenus.tscn" id="32_qta6b"]
 [ext_resource type="PackedScene" uid="uid://15klytxgu1fl" path="res://Scenes/HUD/UiUnitHealthBar.tscn" id="34_6ehlx"]
 
@@ -174,11 +174,12 @@ properties/2/replication_mode = 2
 
 [node name="Main" type="Node3D" unique_id=1609698201]
 
-[node name="Core" type="Node" parent="." unique_id=1977013728 node_paths=PackedStringArray("lobby", "rules")]
+[node name="Core" type="Node" parent="." unique_id=1977013728 node_paths=PackedStringArray("lobby", "players", "rules")]
 script = ExtResource("5_pbw6q")
 goldPrefab = ExtResource("6_jw32o")
 healthPrefab = ExtResource("3_bmxlf")
 lobby = NodePath("LobbyManager")
+players = NodePath("PlayerManager")
 rules = NodePath("GameLogic")
 teamLeft = ExtResource("5_frkhe")
 teamRight = ExtResource("6_1p5hy")
@@ -200,12 +201,21 @@ avatarContainer = NodePath("../../PlayerAvatars")
 [node name="LobbyManager" type="MultiplayerSpawner" parent="Core" unique_id=833463994 node_paths=PackedStringArray("events")]
 spawn_path = NodePath(".")
 script = ExtResource("12_sxkr1")
+debug = false
 events = NodePath("../LobbyEvents")
 prefabLobbyMember = ExtResource("10_6heos")
 metadata/_custom_type_script = "uid://bqpkyuk7ke4mu"
 
+[node name="PlayerManager" type="MultiplayerSpawner" parent="Core" unique_id=15852706 node_paths=PackedStringArray("lobby")]
+spawn_path = NodePath(".")
+script = ExtResource("11_vs04g")
+lobby = NodePath("../LobbyManager")
+playerPrefab = ExtResource("12_6ehlx")
+metadata/_custom_type_script = "uid://dhdxvks818ir8"
+
 [node name="LobbyEvents" type="Node" parent="Core" unique_id=257916232]
 script = ExtResource("14_jyqft")
+debug = false
 metadata/_custom_type_script = "uid://wkkb5q71fb"
 
 [node name="GameLogic" type="Node" parent="Core" unique_id=1852553460 node_paths=PackedStringArray("baseLocationLeft", "baseLocationRight", "gameStats")]
@@ -265,12 +275,6 @@ script = ExtResource("23_c5snn")
 prefabBase = ExtResource("10_bmxlf")
 prefabTower = ExtResource("3_50glp")
 metadata/_custom_type_script = "uid://bh6vusv8b7mi"
-
-[node name="PlayerManager" type="MultiplayerSpawner" parent="Core" unique_id=15852706]
-spawn_path = NodePath(".")
-script = ExtResource("30_btbly")
-playerPrefab = ExtResource("31_vs04g")
-metadata/_custom_type_script = "uid://dhdxvks818ir8"
 
 [node name="CanvasHUD" type="CanvasLayer" parent="." unique_id=1983381410 node_paths=PackedStringArray("persistent")]
 script = ExtResource("30_vvnwx")

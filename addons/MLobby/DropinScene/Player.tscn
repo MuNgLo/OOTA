@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://crb5h86y2gr5h"]
 
-[ext_resource type="Script" uid="uid://bawyqmpcawepb" path="res://Scripts/Player/Player.cs" id="1_fqfuk"]
-[ext_resource type="Script" uid="uid://cdfqpq4w4jnwh" path="res://Scripts/Player/PrivateData.cs" id="2_g7na3"]
-[ext_resource type="Script" uid="uid://uev4rn0gqeiq" path="res://Scripts/Player/PublicData.cs" id="3_7s4cc"]
+[ext_resource type="Script" uid="uid://cah1w70gfg3jn" path="res://addons/MLobby/Nodes/MLobbyPlayer.cs" id="1_8yxx2"]
+[ext_resource type="Script" uid="uid://cdfqpq4w4jnwh" path="res://addons/MLobby/Nodes/PrivateData.cs" id="2_g7na3"]
+[ext_resource type="Script" uid="uid://uev4rn0gqeiq" path="res://addons/MLobby/Nodes/PublicData.cs" id="3_7s4cc"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_g7na3"]
 properties/0/path = NodePath(".:Gold")
@@ -30,7 +30,7 @@ properties/5/spawn = true
 properties/5/replication_mode = 2
 
 [node name="Player" type="Node" unique_id=276271352 node_paths=PackedStringArray("privateData", "publicData")]
-script = ExtResource("1_fqfuk")
+script = ExtResource("1_8yxx2")
 privateData = NodePath("PrivateData")
 publicData = NodePath("PublicData")
 

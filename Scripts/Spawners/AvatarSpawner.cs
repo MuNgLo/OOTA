@@ -1,6 +1,6 @@
 using Godot;
+using MLobby;
 using MLogging;
-using PlayerSpace;
 [GlobalClass]
 public partial class AvatarSpawner : MultiplayerSpawner
 {
@@ -34,7 +34,7 @@ public partial class AvatarSpawner : MultiplayerSpawner
         PlayerAvatar avatar = packedLevel.Instantiate() as PlayerAvatar;
         avatar.Name = $"P[{peerID}]";
         avatar.Team = (TEAM)args["team"].AsInt32();
-        if (Core.players.GetPlayer(peerID, out Player pl)){
+        if (Core.Players.GetPlayer(peerID, out OOTAPlayer pl)){
             avatar.player = pl;
         }
         avatar.Position = args["pos"].AsVector3();
@@ -59,7 +59,7 @@ public partial class AvatarSpawner : MultiplayerSpawner
 
         public NodePath exclude;
 
-        public SpawnAvatarArgument(Player player)
+        public SpawnAvatarArgument(OOTAPlayer player)
         {
             this.peerID = player.PeerID;
             this.team = player.Team;

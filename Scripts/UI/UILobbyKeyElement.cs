@@ -1,4 +1,5 @@
 using Godot;
+using MLobby;
 using System;
 
 namespace UIAPI.Menus;
@@ -12,7 +13,8 @@ public partial class UILobbyKeyElement : Control
 
     public override void _Ready()
     {
-        Core.OnLobbyKeyActive += WhenLobbyKeyActive;
+        Core.Lobby.LobbyEvents.OnConnectedToServer += WhenConnectedToServer;
+        Core.Lobby.LobbyEvents.OnHostSetupReady += WhenConnectedToServer;
 
         MMenuSystem.MenuSystem.OnMenuVisibilityChanged += (s, o) => { Visible = o && le_key.Text != string.Empty; };
 
@@ -26,6 +28,13 @@ public partial class UILobbyKeyElement : Control
         Hide();
     }
 
+    private void WhenConnectedToServer(object sender, ConnectedEventArguments e)
+    {
+        string key = Core.AddressAndPortToString(e.ip, e.port);
+        le_key.Text = key;
+        Show();
+    }
+
     public void WhenSecretPressed()
     {
         le_key.Secret = !le_key.Secret;
@@ -35,9 +44,4 @@ public partial class UILobbyKeyElement : Control
         DisplayServer.ClipboardSet(le_key.Text);
     }
 
-    private void WhenLobbyKeyActive(object sender, string e)
-    {
-        le_key.Text = e;
-        Show();
-    }
 }// EOF  CLASS

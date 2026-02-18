@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Godot;
-using PlayerSpace;
+using MLobby;
 using Waves;
 [GlobalClass]
 public partial class GameLogic : Node
@@ -67,10 +67,10 @@ public partial class GameLogic : Node
         //GD.Print($"GameLogic::StartGame()");
         AssignTeams();
         await Task.Delay(500);
-        Core.players.SpawnPlayers();
+        Core.Players.SpawnPlayers();
         SpawnBases();
         GameTimer.StartTimer();
-        Core.players.SetStartResourcesOnAll(startGold, startHealth);
+        Core.Players.SetStartResourcesOnAll(startGold, startHealth);
         Rpc(nameof(RPCRaiseOnGameStart));
     }
 
@@ -103,9 +103,9 @@ public partial class GameLogic : Node
     {
 
         TEAM assignment = GD.RandRange(0, 100) < 50 ? TEAM.LEFT : TEAM.RIGHT;
-        foreach (Player player in Core.players.All)
+        foreach (MLobbyPlayer player in Core.Players.All)
         {
-            player.SetTeam(assignment);
+            (player as OOTAPlayer).SetTeam(assignment);
             assignment = assignment == TEAM.LEFT ? TEAM.RIGHT : TEAM.LEFT;
         }
     }
@@ -123,7 +123,7 @@ public partial class GameLogic : Node
     public void RPCPlaceTower(long peerID, int team, int buildingType, Vector3 placerPoint)
     {
         if (!Multiplayer.IsServer()) { return; }
-        if (Core.players.GetPlayer(peerID, out Player player))
+        if (Core.Players.GetPlayer(peerID, out OOTAPlayer player))
         {
             if (player.Pay(10))
             {
@@ -145,11 +145,11 @@ public partial class GameLogic : Node
     private void RPCHandleReadyUp()
     {
         long peerID = Multiplayer.GetRemoteSenderId() == 0 ? 1 : Multiplayer.GetRemoteSenderId();
-        if (Core.players.GetPlayer(peerID, out Player player))
+        if (Core.Players.GetPlayer(peerID, out MLobbyPlayer player))
         {
-            player.SetToReady();
+            (player as OOTAPlayer).SetToReady();
         }
-        if (Core.players.IsEveryoneReady())
+        if (Core.Players.IsEveryoneReady())
         {
             DelayedStart();
         }
@@ -175,38 +175,38 @@ public partial class GameLogic : Node
     private void RPCAvatarHandedOver(string nodePath)
     {
         long peerID = Multiplayer.GetRemoteSenderId() == 0 ? 1 : Multiplayer.GetRemoteSenderId();
-        if (Core.players.GetPlayer(peerID, out Player player))
+        if (Core.Players.GetPlayer(peerID, out MLobbyPlayer player))
         {
-            player.Avatar.QueueFree();
-            player.Avatar = null;
+            (player as OOTAPlayer).Avatar.QueueFree();
+            (player as OOTAPlayer).Avatar = null;
         }
-        Core.players.SpawnPlayerWithDelay(1000, peerID);
+        Core.Players.SpawnPlayerWithDelay(1000, peerID);
     }
 
    
 
     internal void PlayerAddGold(int peerID, int gold)
     {
-        if (Core.players.GetPlayer(peerID, out Player player))
+        if (Core.Players.GetPlayer(peerID, out MLobbyPlayer player))
         {
-            player.AddGold(gold);
+            (player as OOTAPlayer).AddGold(gold);
         }
     }
 
     internal void PlayerAddHealth(int peerID, int health)
     {
-        if (Core.players.GetPlayer(peerID, out Player player))
+        if (Core.Players.GetPlayer(peerID, out MLobbyPlayer player))
         {
-            player.AddHealth(health);
+            (player as OOTAPlayer).AddHealth(health);
         }
     }
 
     internal bool CanPlayerPay(int peerID, int amount)
     {
 
-        if (Core.players.GetPlayer(peerID, out Player player))
+        if (Core.Players.GetPlayer(peerID, out MLobbyPlayer player))
         {
-            return player.CanPay(amount);
+            return (player as OOTAPlayer).CanPay(amount);
         }
         return false;
     }
@@ -219,7 +219,7 @@ public partial class GameLogic : Node
     private void RPCHandleNameChange(string newName)
     {
         long peerID = Multiplayer.GetRemoteSenderId() == 0 ? 1 : Multiplayer.GetRemoteSenderId();
-        Core.players.SetNameOnPlayer(peerID, newName);
+        Core.Players.SetNameOnPlayer(peerID, newName);
 
     }
 }// EOF CLASS

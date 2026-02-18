@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://dbofrojhhg7ws"]
+
+[ext_resource type="Script" uid="uid://cxhrkpc734rrp" path="res://Scripts/Commons/OOTAPlayer.cs" id="2_t6kih"]
+[ext_resource type="Script" uid="uid://cdfqpq4w4jnwh" path="res://addons/MLobby/Nodes/PrivateData.cs" id="2_xjs34"]
+[ext_resource type="Script" uid="uid://c3remxbs7qs61" path="res://Scripts/Commons/OOTAPublicData.cs" id="3_t6kih"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_g7na3"]
+properties/0/path = NodePath(".:Gold")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_7s4cc"]
+properties/0/path = NodePath(".:Team")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:IsReady")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:PeerID")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:MaxHealth")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath(".:Health")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+properties/5/path = NodePath(".:PlayerName")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+
+[node name="Player" type="Node" unique_id=276271352 node_paths=PackedStringArray("privateData", "publicData")]
+script = ExtResource("2_t6kih")
+privateData = NodePath("PrivateData")
+publicData = NodePath("PublicData")
+
+[node name="PrivateData" type="Node" parent="." unique_id=1556979909 node_paths=PackedStringArray("player", "synchronizer")]
+script = ExtResource("2_xjs34")
+player = NodePath("..")
+synchronizer = NodePath("PrivateSynchronizer")
+
+[node name="PrivateSynchronizer" type="MultiplayerSynchronizer" parent="PrivateData" unique_id=899383308]
+replication_config = SubResource("SceneReplicationConfig_g7na3")
+
+[node name="PublicData" type="Node" parent="." unique_id=1038104991]
+script = ExtResource("3_t6kih")
+
+[node name="PublicSynchronizer" type="MultiplayerSynchronizer" parent="PublicData" unique_id=1574362466]
+replication_config = SubResource("SceneReplicationConfig_7s4cc")

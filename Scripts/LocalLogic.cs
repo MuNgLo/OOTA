@@ -20,7 +20,6 @@ public partial class LocalLogic : Node
     public override void _Ready()
     {
         lobbyManager.ChildEnteredTree += WhenLobbyMemberAdded;
-        Core.OnLobbyKeyActive += WhenLobbyKey;
         Core.Rules.OnGameStart += WhenGameStarts;
 
     }
@@ -32,10 +31,7 @@ public partial class LocalLogic : Node
         MenuSystem.HideMenu();
     }
 
-    private void WhenLobbyKey(object sender, string key)
-    {
-        //GD.Print($"LocalLogic::WhenLobbyKey() {key}");
-    }
+
 
     private void WhenLobbyMemberAdded(Node node)
     {
@@ -77,11 +73,7 @@ public partial class LocalLogic : Node
     }
 
     #region Local Events from PlayerData
-    public static event EventHandler<int> OnGoldAmountChanged;
-    internal static void GoldChanged(int amount)
-    {
-        OnGoldAmountChanged?.Invoke(null, amount);
-    }
+ 
     public static event EventHandler<bool> OnReadyChanged;
 
     internal static void ReadyChanged(bool value)

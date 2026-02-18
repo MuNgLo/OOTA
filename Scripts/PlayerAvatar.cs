@@ -1,5 +1,5 @@
 using Godot;
-using PlayerSpace;
+using MLobby;
 using System;
 using System.Collections.Generic;
 [GlobalClass]
@@ -9,7 +9,7 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
     /// <summary>
     /// Host side only, reference back to player object that controls the avatar
     /// </summary>
-    public Player player;
+    public OOTAPlayer player;
 
     [Export] public PLAYERMODE mode = PLAYERMODE.NONE;
     [Export] float moveSpeed = 5.0f;

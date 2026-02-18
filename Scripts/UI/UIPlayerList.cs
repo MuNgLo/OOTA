@@ -1,5 +1,5 @@
 using Godot;
-using PlayerSpace;
+using MLobby;
 using System;
 
 public partial class UIPlayerList : GridContainer
@@ -15,7 +15,7 @@ public partial class UIPlayerList : GridContainer
     public override void _Ready()
     {
         ogPos = playerList.Position;
-        Core.players.OnPlayersChanged += UpdatePlayerList;
+        MLobbyPlayerEvents.OnPlayersChanged += UpdatePlayerList;
         playerNameEdit.TextSubmitted += WhenPlayerNameSubmitted;
     }
 
@@ -26,11 +26,11 @@ public partial class UIPlayerList : GridContainer
 
     private void UpdatePlayerList(object sender, EventArgs args)
     {
-        GD.Print($"UpdatePlayerList() playerCounty[{Core.players.All.Count}]");
+        //GD.Print($"UpdatePlayerList() playerCounty[{Core.Players.All.Count}]");
         ClearsList();
-        foreach (Player player in Core.players.All)
+        foreach (MLobbyPlayer player in Core.Players.All)
         {
-            AddPlayerEntry(player);
+            AddPlayerEntry(player as OOTAPlayer);
         }
         if (GetChildCount() > 0 && !isShowing)
         {
@@ -60,7 +60,7 @@ public partial class UIPlayerList : GridContainer
               .SetEase(Tween.EaseType.InOut);
     }
 
-    private void AddPlayerEntry(Player player)
+    private void AddPlayerEntry(OOTAPlayer player)
     {
         // Name Ready Ping
         Control entry = prefabPlayerEntry.Instantiate<Control>();

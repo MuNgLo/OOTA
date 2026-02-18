@@ -21,6 +21,7 @@ public partial class LobbyManager : MultiplayerSpawner
 
     IPAddress ipAddress;
     int port;
+    int maxClients;
 
     public LobbyEvents LobbyEvents => events;
 
@@ -54,9 +55,7 @@ public partial class LobbyManager : MultiplayerSpawner
     private void OnConnectedToServer()
     {
         if (debug) { MLog.LogInfo($"LobbyManager::OnConnectedToServer()"); }
-        LobbyEvents.RaiseConnectedToServer();
-        string key = Core.AddressAndPortToString(ipAddress, port);
-        Core.OnLobbyKeyActive(this, key);
+        LobbyEvents.RaiseConnectedToServer(ipAddress, port);
     }
     /// <summary>
     /// Fires when a clients is started but times out after ~34s
@@ -109,16 +108,12 @@ public partial class LobbyManager : MultiplayerSpawner
 
     private void TellPeerHostInfo(long id)
     {
-        RpcId(id, nameof(RPCReceiveHostInfo),
-            "Host",
-            Core.AddressAndPortToString(ipAddress, port),
-            2
-          );
+        RpcId(id, nameof(RPCReceiveHostInfo), "Host", ipAddress.ToString(), port, maxClients);
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void RPCReceiveHostInfo(string hostName, string lobbyKey, int maxPlayers)
+    private void RPCReceiveHostInfo(string hostName, string address, int port, int maxPlayers)
     {
-        LobbyEvents.RaiseHostInfoReceived(new HostInfo(hostName, lobbyKey, maxPlayers));
+        LobbyEvents.RaiseHostInfoReceived(new HostInfo(hostName, address, port, maxPlayers));
     }
 
     /// <summary>
@@ -141,7 +136,7 @@ public partial class LobbyManager : MultiplayerSpawner
     /// Only fails if address is in use
     /// When succeeded, raises Events.NET.RaiseGameConnectedEvent (disabled now)
     /// </summary>
-    public async void StartHost(int usePort, int maxClients, string ip = "")
+    public async void StartHost(int usePort, int clientsMax, string ip = "")
     {
         if (state != LOBBYSTATE.OFFLINE)
         {
@@ -163,7 +158,7 @@ public partial class LobbyManager : MultiplayerSpawner
 
         StartHostMonitor(localPeer, 5000);
 
-
+        maxClients = clientsMax;
         Error err = localPeer.CreateServer(port, maxClients);
         if (err != Error.Ok)
         {
@@ -178,7 +173,6 @@ public partial class LobbyManager : MultiplayerSpawner
         state = LOBBYSTATE.RUNNING;
         members = new();
         AddMember(1, LOBBYMEMBERSTATENUM.CONNECTING);
-        LobbyEvents.RaiseHostSetupReady();
 
         if (ip == "")
         {
@@ -201,9 +195,13 @@ public partial class LobbyManager : MultiplayerSpawner
         if (IPAddress.TryParse(ip, out IPAddress address))
         {
             ipAddress = address;
-            string lobbyKey = Core.AddressAndPortToString(address, port);
-            Core.OnLobbyKeyActive?.Invoke(this, lobbyKey);
+            LobbyEvents.RaiseHostSetupReady(address, port);
         }
+        else
+        {
+            LobbyEvents.RaiseHostSetupReady(null, port);
+        }
+
     }
 
 
