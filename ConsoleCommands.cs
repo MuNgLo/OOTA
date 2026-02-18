@@ -133,21 +133,21 @@ public partial class ConsoleCommands : Node
     /// When input is sent to console this is where it gets processed
     /// </summary>
     /// <param name="sender"></param>
-    /// <param name="incomming"></param>
-    private void WhenConsoleInputSubmitted(object sender, string incomming)
+    /// <param name="incoming"></param>
+    private void WhenConsoleInputSubmitted(object sender, string incoming)
     {
         // add to history
-        history.Add(incomming);
+        history.Add(incoming);
         // Clamp history
         if (history.Count > 20) { history.RemoveAt(0); }
         // Set history back to present
         historyIndex = history.Count;
-        // Split the incomming string
-        string[] args = incomming.Trim().Split(' ');
+        // Split the incoming string
+        string[] args = incoming.Trim().Split(' ');
         // Check if there is a command registered
         if (commands.ContainsKey(args[0]))
         {
-            // Get the commmand from the dictionary
+            // Get the command from the dictionary
             Command cmd = commands[args[0]];
 
             if (args.Length == 1)

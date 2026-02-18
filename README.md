@@ -2,7 +2,7 @@
 
 v1.4
 
-Dropin in-game developer console for Godot
+Drop in in-game developer console for Godot
 
 ![Demo](https://github.com/MuNgLo/MConsole/blob/main/GitHubMedia/MConsole-01.gif)
 

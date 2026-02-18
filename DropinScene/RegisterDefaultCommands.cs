@@ -145,8 +145,8 @@ public partial class RegisterDefaultCommands : Node
                     DisplayServer.WindowSetVsyncMode(DisplayServer.VSyncMode.Disabled);
                     return "VSync off.";
                 }
-            }
-        };
+
+            } };
         ConsoleCommands.RegisterCommand(cmd);
     }
 
@@ -188,7 +188,6 @@ public partial class RegisterDefaultCommands : Node
         ConsoleCommands.RegisterCommand(cmd1);
         ConsoleCommands.RegisterCommand(cmd2);
     }
-
 #if TOOLS
     private void DebugOrphanCommand()
     {

@@ -4,8 +4,8 @@ namespace MConsole;
 /// <summary>
 /// This is the class that controls the visual UI elements for the console
 /// Make sure you ONLY have one of these in the scene and that the console UI is on top.
-/// There should be a ready to dropin scene in same folder.
-/// Somewhere in Project you need to also create an isntance of the Manager class.
+/// There should be a ready to drop in scene in same folder.
+/// Somewhere in Project you need to also create an instance of the Manager class.
 /// </summary>
 public partial class GameConsole : Control
 {
@@ -37,6 +37,8 @@ public partial class GameConsole : Control
         outputArea.Text += System.Environment.NewLine;
         Hide();
         instance.ProcessMode = ProcessModeEnum.Disabled;
+        // To show log messages from your own system do something like this
+        //Core.OnLogMessagePushed += WhenLogMessagePushed;
     }
     public override void _UnhandledInput(InputEvent @event)
     {
