@@ -1,11 +1,12 @@
 # MConsole
 
-v1.3
+v1.4
 
 Dropin in-game developer console for Godot
 
 ![Demo](https://github.com/MuNgLo/MConsole/blob/main/GitHubMedia/MConsole-01.gif)
 
+1.4 Couple commands added
 1.3 command search and listing added, autocompletion on Tab to best match
 1.2 adding video and use instructions
 1.1 history works, fpscounter, defaultcommands node added
