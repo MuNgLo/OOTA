@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://mlidwcxhtmyf"]
+
+[ext_resource type="Script" uid="uid://ccn8nh85ga532" path="res://Scripts/Projectile.cs" id="1_bnm3r"]
+[ext_resource type="Material" uid="uid://cmi7xouarvcnb" path="res://Materials/Projectile.tres" id="2_840v6"]
+[ext_resource type="Script" uid="uid://cnxmhyihofeeq" path="res://Scripts/Commons/Trail.cs" id="3_66d5l"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_k1cl8"]
+size = Vector3(0.13, 0.13, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_y0kec"]
+size = Vector3(0.35, 0.35, 0.35)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vku8s"]
+transparency = 1
+vertex_color_use_as_albedo = true
+
+[node name="Projectile" type="ShapeCast3D" unique_id=565534511]
+enabled = false
+shape = SubResource("BoxShape3D_k1cl8")
+target_position = Vector3(0, 0, 0)
+collision_mask = 15
+script = ExtResource("1_bnm3r")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1995678970]
+material_override = ExtResource("2_840v6")
+mesh = SubResource("BoxMesh_y0kec")
+
+[node name="Trail" type="MeshInstance3D" parent="." unique_id=808665668]
+material_override = SubResource("StandardMaterial3D_vku8s")
+script = ExtResource("3_66d5l")
+startWidth = 0.2
+scaleAcceleration = 10.85552
+lifeSpan = 0.1
+startColor = Color(0.9300122, 0.47431988, 0.31535077, 1)
+endColor = Color(1, 0, 0, 1)
+metadata/_custom_type_script = "uid://cnxmhyihofeeq"

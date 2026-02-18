@@ -11,12 +11,12 @@
 friction = 0.0
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_cvnsp"]
-radius = 0.25
-height = 1.0
+radius = 0.2
+height = 0.6
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cvnsp"]
-radius = 0.25
-height = 1.0
+radius = 0.2
+height = 0.6
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_dewec"]
 height = 3.9194336
@@ -26,7 +26,7 @@ radius = 4.209961
 top_radius = 0.2
 
 [sub_resource type="BoxMesh" id="BoxMesh_megsn"]
-size = Vector3(0.1, 0.1, 0.635)
+size = Vector3(0.1, 0.1, 0.44)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_52ee3"]
 properties/0/path = NodePath(".:position")
@@ -57,11 +57,11 @@ projectilePrefab = ExtResource("2_52ee3")
 projectileDuration = 0.5
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1047895395]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
 mesh = SubResource("CapsuleMesh_cvnsp")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2022986322]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
 shape = SubResource("CapsuleShape3D_cvnsp")
 
 [node name="Attractor" type="Area3D" parent="." unique_id=931587777 node_paths=PackedStringArray("pl")]
@@ -88,12 +88,12 @@ mesh = SubResource("CylinderMesh_nn08x")
 [node name="WeaponPivot" type="Node3D" parent="." unique_id=531366280]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="WeaponPivot" unique_id=740297577]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22760487, 0.24730456, -0.23734015)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.19945705, 0.3204226, -0.13003588)
 material_override = ExtResource("7_bhhdu")
 mesh = SubResource("BoxMesh_megsn")
 
 [node name="Muzzle" type="Node3D" parent="WeaponPivot/MeshInstance3D" unique_id=1893312184]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.3754207)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.2432069)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=67609905]
 replication_interval = 0.016
