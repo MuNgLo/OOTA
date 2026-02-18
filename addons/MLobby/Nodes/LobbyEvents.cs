@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using MLobby;
 
 namespace MLobby;
 /// <summary>
@@ -9,6 +10,8 @@ namespace MLobby;
 [GlobalClass]
 public partial class LobbyEvents : Node
 {
+    [Export] private bool debug = true;
+
     /// <summary>
     /// Fires when Host has been setup completely and the host member has been added to the member list.
     /// Local to host
@@ -42,6 +45,17 @@ public partial class LobbyEvents : Node
     /// Fires on Client as it connected to a host
     /// </summary>
     public event EventHandler OnConnectedToServer;
+    /// <summary>
+    /// Fires locally on a client after they connected to a host and they receive the host information.
+    /// </summary>
+    public event EventHandler<HostInfo> OnHostInfoReceived;
+    /// <summary>
+    /// Fires on local client carrying the result of the validation
+    /// </summary>
+    public event EventHandler OnLocalClientValidated;
+
+    public event EventHandler OnConnectionFailed;
+    public event EventHandler OnHostFailed;
 
 
     /// <summary>
@@ -49,7 +63,7 @@ public partial class LobbyEvents : Node
     /// </summary>
     public void RaiseHostSetupReady()
     {
-        GD.Print($"LobbyEvents::RaiseHostSetupReady()");
+        if (debug) { GD.Print($"LobbyEvents::RaiseHostSetupReady()"); }
         EventHandler raiseEvent = OnHostSetupReady;
         if (raiseEvent != null)
         {
@@ -58,15 +72,31 @@ public partial class LobbyEvents : Node
     }
 
     /// <summary>
-    /// Local to host
+    /// Local to clients
+    /// Fires when they connected and the host send the host info to them
     /// </summary>
-    public void RaiseHostMemberValidated(long id)
+    public void RaiseHostInfoReceived(HostInfo hostInfo)
     {
-        GD.Print($"LobbyEvents::RaiseHostMemberValidated() New Lobby member PeerID[{id}]");
+        if (debug) { GD.Print($"LobbyEvents::RaiseHostInfoRecieved()"); }
+        EventHandler<HostInfo> raiseEvent = OnHostInfoReceived;
+        if (raiseEvent != null)
+        {
+            raiseEvent(this, hostInfo);
+        }
+    }
+
+    /// <summary>
+    /// Local to host
+    /// As a peer has been ushered in on network and validated this fires as a last step allowing gamelogic to 
+    /// step in and react.
+    /// </summary>
+    public void RaiseHostMemberValidated(long peerID)
+    {
+        if (debug) { GD.Print($"LobbyEvents::RaiseHostMemberValidated() New Lobby member PeerID[{peerID}]"); }
         EventHandler<long> raiseEvent = OnLobbyMemberValidated;
         if (raiseEvent != null)
         {
-            raiseEvent(this, id);
+            raiseEvent(this, peerID);
         }
     }
     /// <summary>
@@ -75,6 +105,7 @@ public partial class LobbyEvents : Node
     /// </summary>
     public void RaiseMemberDisconnected(long peerID)
     {
+        if (debug) { GD.Print($"LobbyEvents::RaiseMemberDisconnected({peerID})"); }
         EventHandler<long> raiseEvent = OnLobbyMemberDisconnected;
         if (raiseEvent != null)
         {
@@ -86,6 +117,7 @@ public partial class LobbyEvents : Node
     /// </summary>
     public void RaiseHostClosed()
     {
+        if (debug) { GD.Print($"LobbyEvents::RaiseHostClosed()"); }
         EventHandler raiseEvent = OnHostClosed;
         if (raiseEvent != null)
         {
@@ -95,6 +127,7 @@ public partial class LobbyEvents : Node
 
     internal void RaiseLeavingHost()
     {
+        if (debug) { GD.Print($"LobbyEvents::RaiseLeavingHost()"); }
         EventHandler raiseEvent = OnLeavingHost;
         if (raiseEvent != null)
         {
@@ -107,6 +140,7 @@ public partial class LobbyEvents : Node
     /// </summary>
     internal void RaiseServerDisconnected()
     {
+        if (debug) { GD.Print($"LobbyEvents::RaiseServerDisconnected()"); }
         EventHandler raiseEvent = OnServerDisconnected;
         if (raiseEvent != null)
         {
@@ -118,7 +152,39 @@ public partial class LobbyEvents : Node
     /// </summary>
     internal void RaiseConnectedToServer()
     {
+        if (debug) { GD.Print($"LobbyEvents::RaiseConnectedToServer()"); }
         EventHandler raiseEvent = OnConnectedToServer;
+        if (raiseEvent != null)
+        {
+            raiseEvent(this, null);
+        }
+    }
+    /// <summary>
+    /// Raised on client when they get the validation result from host they connected to
+    /// </summary>
+    internal void RaiseLocalClientValidated()
+    {
+        if (debug) { GD.Print($"LobbyEvents::RaiseLocalClientValidated()"); }
+        EventHandler raiseEvent = OnLocalClientValidated;
+        if (raiseEvent != null)
+        {
+            raiseEvent(this, null);
+        }
+    }
+
+    internal void RaiseOnConnectionFailed()
+    {
+        if (debug) { GD.Print($"LobbyEvents::RaiseOnConnectionFailed()"); }
+        EventHandler raiseEvent = OnConnectionFailed;
+        if (raiseEvent != null)
+        {
+            raiseEvent(this, null);
+        }
+    }
+    internal void RaiseOnHostFailed()
+    {
+        if (debug) { GD.Print($"LobbyEvents::RaiseOnHostFailed()"); }
+        EventHandler raiseEvent = OnHostFailed;
         if (raiseEvent != null)
         {
             raiseEvent(this, null);
