@@ -1,0 +1,45 @@
+using Godot;
+using Godot.Collections;
+using System;
+
+namespace Waves;
+
+public partial class Waves : Node
+{
+    [Export] int finalWaveTiming = 10;
+
+    [Export(PropertyHint.ResourceType, "WaveDefinition")]
+    WaveDefinition[] waves;
+
+    int lastWaveIndexSpawned = -1;
+
+    public override void _Ready()
+    {
+        base._Ready();
+        GameTimer.OnGameTick += WhenGameTick;
+    }
+
+    private void WhenGameTick(object sender, int tick)
+    {
+        int tickOffset = 0;
+        if (lastWaveIndexSpawned > waves.Length - 1)
+        {
+            tickOffset = finalWaveTiming * (lastWaveIndexSpawned - waves.Length - 1);
+        }
+        WaveDefinition wave = GetWaveByIndex(lastWaveIndexSpawned + 1);
+        if (wave.spawnsOnGameTick + tickOffset <= tick)
+        {
+            Core.Rules.SpawnWave(wave);
+            lastWaveIndexSpawned++;
+        }
+    }
+
+    public WaveDefinition GetWaveByIndex(int idx)
+    {
+        if (idx < 0) { GD.PushError("Index negative!"); return null; }
+
+        idx = Mathf.Clamp(idx, 0, waves.Length - 1);
+
+        return waves[idx];
+    }
+}// EOF CLASS

@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://bwasbkaw1rn3u"]
+
+[ext_resource type="Material" uid="uid://dm1ecabb4s8sj" path="res://Materials/Gold.tres" id="1_n7jaf"]
+[ext_resource type="Script" uid="uid://ps8tc1kxgp34" path="res://Scripts/Pickup.cs" id="1_v2e86"]
+[ext_resource type="Script" uid="uid://ceshj47msk6h6" path="res://Scripts/Commons/TimeToLive.cs" id="3_tn2hn"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_v2e86"]
+radius = 0.15
+height = 0.3
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_wdbla"]
+radius = 0.2
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5nomj"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Gold" type="RigidBody3D" unique_id=1600337201]
+collision_layer = 16
+linear_damp = 3.96
+script = ExtResource("1_v2e86")
+gold = 1
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=634995220]
+material_override = ExtResource("1_n7jaf")
+mesh = SubResource("SphereMesh_v2e86")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1617609014]
+shape = SubResource("SphereShape3D_wdbla")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1383119590]
+replication_config = SubResource("SceneReplicationConfig_5nomj")
+visibility_update_mode = 1
+
+[node name="TimeToLive" type="Node3D" parent="." unique_id=1307058459]
+script = ExtResource("3_tn2hn")
+ttl = 15.0
+targetParent = true
+destroy = true
+metadata/_custom_type_script = "uid://ceshj47msk6h6"

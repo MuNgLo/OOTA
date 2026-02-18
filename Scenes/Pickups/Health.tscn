@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://bj484sau2we4n"]
+
+[ext_resource type="Script" uid="uid://ps8tc1kxgp34" path="res://Scripts/Pickup.cs" id="1_2docl"]
+[ext_resource type="Material" uid="uid://dtwp24ieh374a" path="res://Materials/Health.tres" id="2_2docl"]
+[ext_resource type="Script" uid="uid://ceshj47msk6h6" path="res://Scripts/Commons/TimeToLive.cs" id="3_c2c7p"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_v2e86"]
+radius = 0.15
+height = 0.3
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_wdbla"]
+radius = 0.2
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_jwukc"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Health" type="RigidBody3D" unique_id=1600337201]
+collision_layer = 16
+linear_damp = 3.96
+script = ExtResource("1_2docl")
+health = 50
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=634995220]
+material_override = ExtResource("2_2docl")
+mesh = SubResource("SphereMesh_v2e86")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1617609014]
+shape = SubResource("SphereShape3D_wdbla")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1797815511]
+replication_config = SubResource("SceneReplicationConfig_jwukc")
+visibility_update_mode = 1
+
+[node name="TimeToLive" type="Node3D" parent="." unique_id=1257337525]
+script = ExtResource("3_c2c7p")
+ttl = 15.0
+targetParent = true
+destroy = true
+metadata/_custom_type_script = "uid://ceshj47msk6h6"

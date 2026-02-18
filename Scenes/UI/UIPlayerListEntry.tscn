@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cu1yynbdjctcx"]
+
+[ext_resource type="Theme" uid="uid://37lnj814yiul" path="res://Theme/Theme.tres" id="1_hh4gh"]
+
+[node name="PlayerListEntry" type="HFlowContainer" unique_id=818929090]
+custom_minimum_size = Vector2(0, 20)
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 24.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+
+[node name="Control" type="Control" parent="." unique_id=1872904122]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+
+[node name="Ping" type="Label" parent="." unique_id=922441628]
+layout_mode = 2
+text = "---"
+horizontal_alignment = 1
+
+[node name="Name" type="RichTextLabel" parent="." unique_id=489153157]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"playername"
+bbcode_enabled = true
+text = "playername"
+vertical_alignment = 1
+
+[node name="Ready" type="CheckBox" parent="." unique_id=205646579]
+layout_mode = 2
+size_flags_horizontal = 8
+theme = ExtResource("1_hh4gh")
+button_pressed = true
+button_mask = 0

@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://2am2lupffi35"]
+
+[ext_resource type="Script" uid="uid://1l28iagnt8of" path="res://Scripts/HUD/HUDWorldElements.cs" id="1_634gl"]
+[ext_resource type="PackedScene" uid="uid://15klytxgu1fl" path="res://Scenes/HUD/UiUnitHealthBar.tscn" id="2_642il"]
+
+[node name="HUDWorldElements" type="Control" unique_id=253459713]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_634gl")
+prefab = ExtResource("2_642il")
+fullHealth = Color(1.5883148e-06, 0.58149064, 0.320268, 1)
+noHealth = Color(0.8981459, 0, 0.27410156, 1)

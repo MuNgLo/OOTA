@@ -1,0 +1,77 @@
+[gd_scene format=3 uid="uid://dksxlufpmucdu"]
+
+[ext_resource type="Script" uid="uid://bee4m0xfvm75s" path="res://Scripts/UI/UITime.cs" id="1_qhdlv"]
+[ext_resource type="Script" uid="uid://b13gm80wwd8q2" path="res://Scripts/HUD/HUDBaseHealthBar.cs" id="2_xxi3c"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_at7y4"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0, 1, 0, 0.7411765)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1.6183965e-06, 0.364729, 0, 0.7411765)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+corner_detail = 6
+
+[node name="TopElement" type="Control" unique_id=1227094197]
+custom_minimum_size = Vector2(588, 60)
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -294.0
+offset_right = 294.0
+offset_bottom = 60.0
+grow_horizontal = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=1798831219]
+custom_minimum_size = Vector2(120, 60)
+layout_mode = 0
+offset_left = 234.0
+offset_right = 354.0
+offset_bottom = 60.0
+theme_override_font_sizes/normal_font_size = 40
+bbcode_enabled = true
+text = "00:00"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("1_qhdlv")
+
+[node name="BaseHealth" type="ProgressBar" parent="." unique_id=379845115]
+custom_minimum_size = Vector2(234, 12)
+layout_mode = 1
+offset_top = 27.0
+offset_right = 234.0
+offset_bottom = 39.0
+theme_override_constants/outline_size = 5
+theme_override_styles/fill = SubResource("StyleBoxFlat_at7y4")
+max_value = 5000.0
+step = 1.0
+value = 30.0
+fill_mode = 1
+show_percentage = false
+script = ExtResource("2_xxi3c")
+team = 1
+
+[node name="BaseHealth2" type="ProgressBar" parent="." unique_id=1340965196]
+custom_minimum_size = Vector2(234, 12)
+layout_mode = 1
+offset_left = 354.0
+offset_top = 27.0
+offset_right = 588.0
+offset_bottom = 39.0
+theme_override_constants/outline_size = 5
+theme_override_styles/fill = SubResource("StyleBoxFlat_at7y4")
+max_value = 5000.0
+step = 1.0
+value = 30.0
+show_percentage = false
+script = ExtResource("2_xxi3c")
+team = 2

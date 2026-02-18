@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://15klytxgu1fl"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_k6pft"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b0ip4"]
+bg_color = Color(0, 0.5214021, 0.18424463, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
+
+[node name="UIUnitHealthBar" type="ProgressBar" unique_id=276506475]
+custom_minimum_size = Vector2(25, 6)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -12.5
+offset_right = 12.5
+offset_bottom = 6.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxEmpty_k6pft")
+theme_override_styles/fill = SubResource("StyleBoxFlat_b0ip4")
+value = 45.83
+show_percentage = false

@@ -1,0 +1,87 @@
+[gd_scene format=3 uid="uid://y0ku5gnvasjq"]
+
+[ext_resource type="Script" uid="uid://bo5oidian2top" path="res://Scripts/Buildings/Tower.cs" id="1_4yjk7"]
+[ext_resource type="Material" uid="uid://dafyt7kexxmrp" path="res://Materials/Tower.tres" id="1_ry8d0"]
+[ext_resource type="Material" uid="uid://clb8vxdgv3xw1" path="res://Materials/Hut.tres" id="3_tpt2e"]
+[ext_resource type="Material" uid="uid://bgbya1ktllsfd" path="res://Materials/Barrel.tres" id="4_o0k2e"]
+[ext_resource type="Script" uid="uid://c3qkbidk7pl64" path="res://Scripts/HUD/HUDLabelMaker.cs" id="5_bypgs"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_gaesr"]
+top_radius = 0.2
+height = 1.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4yjk7"]
+top_radius = 0.2
+bottom_radius = 0.395
+height = 0.3
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_4yjk7"]
+height = 1.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_tpt2e"]
+radius = 5.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_bypgs"]
+size = Vector3(0.115, 0.125, 0.48)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_bypgs"]
+properties/0/path = NodePath("WeaponPivot:rotation")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:health")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[node name="Tower" type="StaticBody3D" unique_id=1281713625 node_paths=PackedStringArray("weaponPivot", "weaponMuzzle", "area")]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_4yjk7")
+maxHealth = 1000.0
+weaponPivot = NodePath("WeaponPivot")
+weaponMuzzle = NodePath("WeaponPivot/Barrel/Muzzle")
+damage = 75
+attackCoolDownMS = 750
+area = NodePath("Area3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1818366435]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+material_override = ExtResource("1_ry8d0")
+mesh = SubResource("CylinderMesh_gaesr")
+
+[node name="TeamMesh" type="MeshInstance3D" parent="." unique_id=791793649]
+transform = Transform3D(1, 0, 0, 0, -1, -8.742278e-08, 0, 8.742278e-08, -1, 0, 0.68842363, 1.4327063e-08)
+mesh = SubResource("CylinderMesh_4yjk7")
+surface_material_override/0 = ExtResource("3_tpt2e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1347173250]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_4yjk7")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1894626626]
+collision_layer = 0
+collision_mask = 6
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=165295688]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CylinderShape3D_tpt2e")
+debug_color = Color(0, 0.4745098, 0, 0.8980392)
+
+[node name="WeaponPivot" type="Node3D" parent="." unique_id=1197676531]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8564053, 0)
+
+[node name="Barrel" type="MeshInstance3D" parent="WeaponPivot" unique_id=1499651751]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03959471, -0.245)
+material_override = ExtResource("4_o0k2e")
+mesh = SubResource("BoxMesh_bypgs")
+
+[node name="Muzzle" type="Node3D" parent="WeaponPivot/Barrel" unique_id=1868989317]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.25884867)
+
+[node name="LabelMaker" type="Node3D" parent="." unique_id=960099250 node_paths=PackedStringArray("building")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2396566, 0)
+script = ExtResource("5_bypgs")
+building = NodePath("..")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=772288372]
+replication_config = SubResource("SceneReplicationConfig_bypgs")
+visibility_update_mode = 1

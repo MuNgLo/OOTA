@@ -1,0 +1,61 @@
+[gd_scene format=3 uid="uid://p7gblyg4fk0h"]
+
+[ext_resource type="Script" uid="uid://btxk033l7oxdm" path="res://Scripts/Units/UnitMelee.cs" id="1_33ws7"]
+[ext_resource type="PhysicsMaterial" uid="uid://dr8slojgt6lyu" path="res://Materials/Physics/UnitsDefault.tres" id="1_bhn57"]
+[ext_resource type="Script" uid="uid://c3qkbidk7pl64" path="res://Scripts/HUD/HUDLabelMaker.cs" id="2_en7ll"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_pqfs0"]
+size = Vector3(0.2, 0.4, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_33ws7"]
+size = Vector3(0.2, 0.4, 0.2)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_axtxo"]
+height = 1.0
+radius = 3.0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_en7ll"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:health")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[node name="MT1" type="RigidBody3D" unique_id=852337211 node_paths=PackedStringArray("area")]
+collision_layer = 0
+collision_mask = 7
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+physics_material_override = ExtResource("1_bhn57")
+script = ExtResource("1_33ws7")
+moveSpeed = 4.0
+damage = 20
+attackRange = 0.5
+area = NodePath("Area3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=917551841]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+mesh = SubResource("BoxMesh_pqfs0")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=378679345]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+shape = SubResource("BoxShape3D_33ws7")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=279177486]
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=2133194914]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_axtxo")
+
+[node name="LabelMaker" type="Node3D" parent="." unique_id=409128245 node_paths=PackedStringArray("unit")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0)
+script = ExtResource("2_en7ll")
+unit = NodePath("..")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=2132295127]
+replication_config = SubResource("SceneReplicationConfig_en7ll")
+visibility_update_mode = 1

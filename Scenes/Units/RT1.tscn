@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://qxksm15ggivu"]
+
+[ext_resource type="Script" uid="uid://dsbsydafqkpqf" path="res://Scripts/Units/UnitRanged.cs" id="1_l8n76"]
+[ext_resource type="Material" uid="uid://cppy5eut1v0ry" path="res://Materials/Weapon.tres" id="2_svtjg"]
+[ext_resource type="Script" uid="uid://c3qkbidk7pl64" path="res://Scripts/HUD/HUDLabelMaker.cs" id="3_47cc2"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gvmvp"]
+friction = 0.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_pqfs0"]
+size = Vector3(0.23, 0.4, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_i0lqr"]
+size = Vector3(0.135, 0.205, 0.135)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_33ws7"]
+size = Vector3(0.2, 0.4, 0.2)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_axtxo"]
+height = 1.0
+radius = 3.0
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_en7ll"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:health")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[node name="RT1" type="RigidBody3D" unique_id=852337211 node_paths=PackedStringArray("weaponMuzzle", "area")]
+collision_layer = 2
+collision_mask = 15
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+physics_material_override = SubResource("PhysicsMaterial_gvmvp")
+script = ExtResource("1_l8n76")
+projectileSpeed = 8.0
+projectileTTL = 3.0
+weaponMuzzle = NodePath("Muzzle")
+moveSpeed = 4.0
+attackCoolDownMS = 500
+damage = 35
+attackRange = 4.0
+range = 8.0
+area = NodePath("Area3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=917551841]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+mesh = SubResource("BoxMesh_pqfs0")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="MeshInstance3D" unique_id=1323105922]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0)
+material_override = ExtResource("2_svtjg")
+mesh = SubResource("BoxMesh_i0lqr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=378679345]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+shape = SubResource("BoxShape3D_33ws7")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=279177486]
+collision_layer = 0
+collision_mask = 14
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=2133194914]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_axtxo")
+
+[node name="LabelMaker" type="Node3D" parent="." unique_id=409128245 node_paths=PackedStringArray("unit")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0)
+script = ExtResource("3_47cc2")
+unit = NodePath("..")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=2132295127]
+replication_config = SubResource("SceneReplicationConfig_en7ll")
+visibility_update_mode = 1
+
+[node name="Muzzle" type="Node3D" parent="." unique_id=1548434956]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4339093, 0)

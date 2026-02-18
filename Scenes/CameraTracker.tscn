@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://evcej7t3o6vg"]
+
+[ext_resource type="Script" uid="uid://dwvoajupjnimd" path="res://Scripts/CameraTracker.cs" id="1_xdfgl"]
+
+[node name="CameraTarget" type="Node3D" unique_id=925498331]
+script = ExtResource("1_xdfgl")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=880259235]
+transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 8.2651615, 4.216813)

@@ -1,0 +1,333 @@
+[gd_scene format=3 uid="uid://do6g4exfmgrb4"]
+
+[ext_resource type="PackedScene" uid="uid://d1n0d775ekmp" path="res://Scenes/World.tscn" id="1_kln2b"]
+[ext_resource type="PackedScene" uid="uid://y0ku5gnvasjq" path="res://Scenes/Buildings/Tower.tscn" id="3_50glp"]
+[ext_resource type="PackedScene" uid="uid://bj484sau2we4n" path="res://Scenes/Pickups/Health.tscn" id="3_bmxlf"]
+[ext_resource type="PackedScene" uid="uid://evcej7t3o6vg" path="res://Scenes/CameraTracker.tscn" id="3_pbw6q"]
+[ext_resource type="PackedScene" uid="uid://cab4ia5tx3mr0" path="res://Scenes/HUD/GoldCounter.tscn" id="4_rgh2o"]
+[ext_resource type="Script" uid="uid://du4kk6xseht4l" path="res://Scripts/GameLogic/Waves.cs" id="5_4kpch"]
+[ext_resource type="Material" uid="uid://bdpvphxt80dv3" path="res://Materials/TeamLeft.tres" id="5_frkhe"]
+[ext_resource type="Script" uid="uid://ewx8khoihbgr" path="res://Scripts/Core.cs" id="5_pbw6q"]
+[ext_resource type="Material" uid="uid://cg7g57nfgrpx6" path="res://Materials/TeamRight.tres" id="6_1p5hy"]
+[ext_resource type="PackedScene" uid="uid://bwasbkaw1rn3u" path="res://Scenes/Pickups/Gold.tscn" id="6_jw32o"]
+[ext_resource type="Script" uid="uid://v2b41f1yds24" path="res://Scripts/UI/UIAPICalls.cs" id="7_4yxf6"]
+[ext_resource type="Script" uid="uid://b7rdr5kjto5tm" path="res://Scripts/EarlyInitThings.cs" id="7_hwpts"]
+[ext_resource type="PackedScene" uid="uid://bpkdew2hyxn37" path="res://Scenes/HUD/HealthBar.tscn" id="8_50glp"]
+[ext_resource type="Script" uid="uid://cppk1p232dwwq" path="res://Scripts/Resources/WaveDefinition.cs" id="8_erwvk"]
+[ext_resource type="Script" uid="uid://bsart4jxdo0x5" path="res://Scripts/LocalLogic.cs" id="8_x3rx7"]
+[ext_resource type="PackedScene" uid="uid://p7gblyg4fk0h" path="res://Scenes/Units/MT1.tscn" id="9_2w5on"]
+[ext_resource type="PackedScene" uid="uid://c8amfxmmxyj51" path="res://addons/MLobby/DropinScene/LobbyMember.tscn" id="10_6heos"]
+[ext_resource type="Script" uid="uid://c1efn3impdgid" path="res://Scripts/Resources/EnemySpawn.cs" id="10_346fj"]
+[ext_resource type="PackedScene" uid="uid://bgcalbv5r35bg" path="res://Scenes/Buildings/Base.tscn" id="10_bmxlf"]
+[ext_resource type="PackedScene" uid="uid://2am2lupffi35" path="res://Scenes/HUD/HudWorldElements.tscn" id="12_0sclb"]
+[ext_resource type="Script" uid="uid://bqpkyuk7ke4mu" path="res://addons/MLobby/Nodes/LobbyManager.cs" id="12_sxkr1"]
+[ext_resource type="Script" uid="uid://bkpdn2eaegyir" path="res://Scripts/GameLogic/GameStats.cs" id="13_0sclb"]
+[ext_resource type="Script" uid="uid://wkkb5q71fb" path="res://addons/MLobby/Nodes/LobbyEvents.cs" id="14_jyqft"]
+[ext_resource type="Script" uid="uid://rk2ggwbwc83k" path="res://Scripts/GameLogic/GameLogic.cs" id="15_3tgeq"]
+[ext_resource type="Script" uid="uid://cp8ximd1s3b04" path="res://Scripts/Spawners/AvatarSpawner.cs" id="15_jyqft"]
+[ext_resource type="PackedScene" uid="uid://qxksm15ggivu" path="res://Scenes/Units/RT1.tscn" id="15_xvtyr"]
+[ext_resource type="Script" uid="uid://dnk2xqg2o3t4m" path="res://Scripts/GameTimer.cs" id="16_aht7i"]
+[ext_resource type="PackedScene" uid="uid://cx1xbaju338gj" path="res://Scenes/Units/ST1.tscn" id="16_u7mjy"]
+[ext_resource type="PackedScene" uid="uid://cjlqmhw2x3wuy" path="res://Scenes/PlayerAvatar.tscn" id="17_3tgeq"]
+[ext_resource type="Script" uid="uid://b0ciamxuywagm" path="res://Scripts/Spawners/UnitSpawner.cs" id="18_c4ay3"]
+[ext_resource type="Script" uid="uid://c08wprspm4bf" path="res://Scripts/Spawners/ProjectileSpawner.cs" id="20_kpo4j"]
+[ext_resource type="PackedScene" uid="uid://dksxlufpmucdu" path="res://Scenes/HUD/TopElement.tscn" id="20_sxkr1"]
+[ext_resource type="PackedScene" uid="uid://bwf2h6blppepx" path="res://Scenes/Projectiles/Projectile.tscn" id="21_4n42c"]
+[ext_resource type="Script" uid="uid://bqmsnui6f1p4t" path="res://Scripts/Spawners/PickupSpawner.cs" id="22_4n42c"]
+[ext_resource type="Script" uid="uid://bh6vusv8b7mi" path="res://Scripts/Spawners/BuildingSpawner.cs" id="23_c5snn"]
+[ext_resource type="Script" uid="uid://dhdxvks818ir8" path="res://Scripts/Player/PlayerManager.cs" id="30_btbly"]
+[ext_resource type="Script" uid="uid://c2ogmd33xllep" path="res://addons/MMenuSystem/HUDSystem.cs" id="30_vvnwx"]
+[ext_resource type="PackedScene" uid="uid://crb5h86y2gr5h" path="res://Scripts/Player/Player.tscn" id="31_vs04g"]
+[ext_resource type="PackedScene" uid="uid://cacw3c477jwjv" path="res://Scenes/UI/UIMenus.tscn" id="32_qta6b"]
+[ext_resource type="PackedScene" uid="uid://15klytxgu1fl" path="res://Scenes/HUD/UiUnitHealthBar.tscn" id="34_6ehlx"]
+
+[sub_resource type="Resource" id="Resource_vvnwx"]
+script = ExtResource("10_346fj")
+enemyPrefab = ExtResource("16_u7mjy")
+amount = 1
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_0sclb"]
+script = ExtResource("10_346fj")
+enemyPrefab = ExtResource("9_2w5on")
+amount = 5
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_x3rx7"]
+script = ExtResource("10_346fj")
+enemyPrefab = ExtResource("15_xvtyr")
+amount = 5
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_sxkr1"]
+script = ExtResource("8_erwvk")
+spawnsOnGameTick = 1
+spawns = Array[Object]([SubResource("Resource_vvnwx"), SubResource("Resource_0sclb"), SubResource("Resource_x3rx7")])
+metadata/_custom_type_script = "uid://cppk1p232dwwq"
+
+[sub_resource type="Resource" id="Resource_btbly"]
+script = ExtResource("10_346fj")
+enemyPrefab = ExtResource("16_u7mjy")
+amount = 1
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_fq0cl"]
+script = ExtResource("10_346fj")
+enemyPrefab = ExtResource("9_2w5on")
+amount = 5
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_u7mjy"]
+script = ExtResource("10_346fj")
+enemyPrefab = ExtResource("15_xvtyr")
+amount = 1
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_hwpts"]
+script = ExtResource("8_erwvk")
+spawnsOnGameTick = 10
+spawns = Array[Object]([SubResource("Resource_btbly"), SubResource("Resource_fq0cl"), SubResource("Resource_u7mjy")])
+metadata/_custom_type_script = "uid://cppk1p232dwwq"
+
+[sub_resource type="Resource" id="Resource_vs04g"]
+script = ExtResource("10_346fj")
+enemyPrefab = ExtResource("16_u7mjy")
+amount = 2
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_3tgeq"]
+script = ExtResource("10_346fj")
+enemyPrefab = ExtResource("9_2w5on")
+amount = 5
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_4yxf6"]
+script = ExtResource("10_346fj")
+enemyPrefab = ExtResource("15_xvtyr")
+amount = 2
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_c4ay3"]
+script = ExtResource("8_erwvk")
+spawnsOnGameTick = 20
+spawns = Array[Object]([SubResource("Resource_vs04g"), SubResource("Resource_3tgeq"), SubResource("Resource_4yxf6")])
+metadata/_custom_type_script = "uid://cppk1p232dwwq"
+
+[sub_resource type="Resource" id="Resource_6ehlx"]
+script = ExtResource("10_346fj")
+enemyPrefab = ExtResource("16_u7mjy")
+amount = 3
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_5jffn"]
+script = ExtResource("10_346fj")
+enemyPrefab = ExtResource("9_2w5on")
+amount = 5
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_qta6b"]
+script = ExtResource("10_346fj")
+enemyPrefab = ExtResource("15_xvtyr")
+amount = 3
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_kpo4j"]
+script = ExtResource("8_erwvk")
+spawnsOnGameTick = 30
+spawns = Array[Object]([SubResource("Resource_6ehlx"), SubResource("Resource_5jffn"), SubResource("Resource_qta6b")])
+metadata/_custom_type_script = "uid://cppk1p232dwwq"
+
+[sub_resource type="Resource" id="Resource_utia5"]
+script = ExtResource("10_346fj")
+enemyPrefab = ExtResource("16_u7mjy")
+amount = 3
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_c5snn"]
+script = ExtResource("10_346fj")
+enemyPrefab = ExtResource("9_2w5on")
+amount = 6
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_6heos"]
+script = ExtResource("10_346fj")
+enemyPrefab = ExtResource("15_xvtyr")
+amount = 4
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_xvtyr"]
+script = ExtResource("8_erwvk")
+spawnsOnGameTick = 40
+spawns = Array[Object]([SubResource("Resource_utia5"), SubResource("Resource_c5snn"), SubResource("Resource_6heos")])
+metadata/_custom_type_script = "uid://cppk1p232dwwq"
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_kpo4j"]
+properties/0/path = NodePath("GameLogic/GameTimer:totalGameTime")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath("GameLogic/GameStats:BaseHealthLeft")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath("GameLogic/GameStats:BaseHealthRight")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+
+[node name="Main" type="Node3D" unique_id=1609698201]
+
+[node name="Core" type="Node" parent="." unique_id=1977013728 node_paths=PackedStringArray("lobby", "rules")]
+script = ExtResource("5_pbw6q")
+goldPrefab = ExtResource("6_jw32o")
+healthPrefab = ExtResource("3_bmxlf")
+lobby = NodePath("LobbyManager")
+rules = NodePath("GameLogic")
+teamLeft = ExtResource("5_frkhe")
+teamRight = ExtResource("6_1p5hy")
+mouseCursorCollision = 1
+
+[node name="EarlyInitThings" type="Node" parent="Core" unique_id=1274971559]
+script = ExtResource("7_hwpts")
+metadata/_custom_type_script = "uid://b7rdr5kjto5tm"
+
+[node name="UIAPICalls" type="Node" parent="Core" unique_id=1575631226]
+script = ExtResource("7_4yxf6")
+metadata/_custom_type_script = "uid://v2b41f1yds24"
+
+[node name="LogicLogic" type="Node" parent="Core" unique_id=2056196228 node_paths=PackedStringArray("lobbyManager", "avatarContainer")]
+script = ExtResource("8_x3rx7")
+lobbyManager = NodePath("../LobbyManager")
+avatarContainer = NodePath("../../PlayerAvatars")
+
+[node name="LobbyManager" type="MultiplayerSpawner" parent="Core" unique_id=833463994 node_paths=PackedStringArray("events")]
+spawn_path = NodePath(".")
+script = ExtResource("12_sxkr1")
+events = NodePath("../LobbyEvents")
+prefabLobbyMember = ExtResource("10_6heos")
+metadata/_custom_type_script = "uid://bqpkyuk7ke4mu"
+
+[node name="LobbyEvents" type="Node" parent="Core" unique_id=257916232]
+script = ExtResource("14_jyqft")
+metadata/_custom_type_script = "uid://wkkb5q71fb"
+
+[node name="GameLogic" type="Node" parent="Core" unique_id=1852553460 node_paths=PackedStringArray("baseLocationLeft", "baseLocationRight", "gameStats")]
+script = ExtResource("15_3tgeq")
+baseLocationLeft = NodePath("../../World/baseLeftLocation")
+baseLocationRight = NodePath("../../World/baseRightLocation")
+gameStats = NodePath("GameStats")
+towerPrefab = ExtResource("3_50glp")
+leftTeamCollision = 2
+rightTeamCollision = 4
+
+[node name="Waves" type="Node" parent="Core/GameLogic" unique_id=1893195776]
+script = ExtResource("5_4kpch")
+waves = Array[Resource]([SubResource("Resource_sxkr1"), SubResource("Resource_hwpts"), SubResource("Resource_c4ay3"), SubResource("Resource_kpo4j"), SubResource("Resource_xvtyr")])
+
+[node name="GameTimer" type="Node" parent="Core/GameLogic" unique_id=1803392230]
+script = ExtResource("16_aht7i")
+ticksPerSecond = 0.4
+
+[node name="GameStats" type="Node" parent="Core/GameLogic" unique_id=976334290]
+script = ExtResource("13_0sclb")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Core" unique_id=751636681]
+replication_config = SubResource("SceneReplicationConfig_kpo4j")
+
+[node name="Spawners" type="Node" parent="Core" unique_id=1332942485]
+
+[node name="AvatarSpawner" type="MultiplayerSpawner" parent="Core/Spawners" unique_id=2123365749 node_paths=PackedStringArray("spawnLeft", "spawnRight")]
+spawn_path = NodePath("../../../PlayerAvatars")
+script = ExtResource("15_jyqft")
+packedLevel = ExtResource("17_3tgeq")
+spawnLeft = NodePath("../../../World/SpawnLeft")
+spawnRight = NodePath("../../../World/SpawnRight")
+
+[node name="UnitSpawner" type="MultiplayerSpawner" parent="Core/Spawners" unique_id=1513468807]
+spawn_path = NodePath("../../../Units")
+script = ExtResource("18_c4ay3")
+metadata/_custom_type_script = "uid://b0ciamxuywagm"
+
+[node name="ProjectileSpawner" type="MultiplayerSpawner" parent="Core/Spawners" unique_id=669255474]
+spawn_path = NodePath("../../../Projectiles")
+script = ExtResource("20_kpo4j")
+debug = true
+packedLevel = ExtResource("21_4n42c")
+metadata/_custom_type_script = "uid://c08wprspm4bf"
+
+[node name="PickupSpawner" type="MultiplayerSpawner" parent="Core/Spawners" unique_id=58980480]
+spawn_path = NodePath("../../../Pickups")
+script = ExtResource("22_4n42c")
+prefabGold = ExtResource("6_jw32o")
+prefabHealth = ExtResource("3_bmxlf")
+metadata/_custom_type_script = "uid://bqmsnui6f1p4t"
+
+[node name="BuildingSpawner" type="MultiplayerSpawner" parent="Core/Spawners" unique_id=157883056]
+spawn_path = NodePath("../../../Buildings")
+script = ExtResource("23_c5snn")
+prefabBase = ExtResource("10_bmxlf")
+prefabTower = ExtResource("3_50glp")
+metadata/_custom_type_script = "uid://bh6vusv8b7mi"
+
+[node name="PlayerManager" type="MultiplayerSpawner" parent="Core" unique_id=15852706]
+spawn_path = NodePath(".")
+script = ExtResource("30_btbly")
+playerPrefab = ExtResource("31_vs04g")
+metadata/_custom_type_script = "uid://dhdxvks818ir8"
+
+[node name="CanvasHUD" type="CanvasLayer" parent="." unique_id=1983381410 node_paths=PackedStringArray("persistent")]
+script = ExtResource("30_vvnwx")
+persistent = []
+
+[node name="HUDWorldElements" parent="CanvasHUD" unique_id=253459713 instance=ExtResource("12_0sclb")]
+prefabHealthBar = ExtResource("34_6ehlx")
+
+[node name="Resources" parent="CanvasHUD" unique_id=268344532 instance=ExtResource("4_rgh2o")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_right = 120.0
+offset_bottom = 40.0
+grow_horizontal = 1
+grow_vertical = 1
+size_flags_horizontal = 0
+
+[node name="HealthBar" parent="CanvasHUD" unique_id=379845115 instance=ExtResource("8_50glp")]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+offset_left = -122.0
+offset_top = -34.0
+offset_right = 118.0
+offset_bottom = -14.0
+grow_vertical = 0
+
+[node name="TopElement" parent="CanvasHUD" unique_id=1227094197 instance=ExtResource("20_sxkr1")]
+
+[node name="CanvasMENUS" parent="." unique_id=1834781793 instance=ExtResource("32_qta6b")]
+
+[node name="World" parent="." unique_id=2113057013 instance=ExtResource("1_kln2b")]
+
+[node name="SpawnLeft" type="Node3D" parent="World" unique_id=482879428]
+transform = Transform3D(-2.9802322e-08, 0, -1, 0, 1, 0, 1, 0, -2.9802322e-08, -28.213041, 0, 13.096056)
+
+[node name="SpawnRight" type="Node3D" parent="World" unique_id=2101850589]
+transform = Transform3D(1.172251e-07, 0, 1, 0, 1, 0, -1, 0, 1.172251e-07, 27.550863, 0, -12.369669)
+
+[node name="baseLeftLocation" type="Node3D" parent="World" unique_id=1794628689]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -30.780245, 0, -0.36870384)
+
+[node name="baseRightLocation" type="Node3D" parent="World" unique_id=2017474905]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.418005, 0, -0.36870384)
+
+[node name="CameraTarget" parent="." unique_id=925498331 node_paths=PackedStringArray("avatarsContainer") instance=ExtResource("3_pbw6q")]
+physics_interpolation_mode = 2
+avatarsContainer = NodePath("../PlayerAvatars")
+
+[node name="PlayerAvatars" type="Node3D" parent="." unique_id=628736147]
+
+[node name="Units" type="Node3D" parent="." unique_id=1304417982]
+
+[node name="Projectiles" type="Node3D" parent="." unique_id=1024129859]
+
+[node name="Pickups" type="Node3D" parent="." unique_id=170036029]
+
+[node name="Buildings" type="Node3D" parent="." unique_id=1446149746]
