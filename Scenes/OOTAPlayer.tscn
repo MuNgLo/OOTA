@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dbofrojhhg7ws"]
 
 [ext_resource type="Script" uid="uid://cxhrkpc734rrp" path="res://Scripts/Commons/OOTAPlayer.cs" id="2_t6kih"]
-[ext_resource type="Script" uid="uid://cdfqpq4w4jnwh" path="res://addons/MLobby/Nodes/PrivateData.cs" id="2_xjs34"]
+[ext_resource type="Script" uid="uid://cgac7o2up0104" path="res://addons/MLobby/Nodes/PrivateData.cs" id="2_xjs34"]
 [ext_resource type="Script" uid="uid://c3remxbs7qs61" path="res://Scripts/Commons/OOTAPublicData.cs" id="3_t6kih"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_g7na3"]

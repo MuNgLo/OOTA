@@ -22,9 +22,8 @@
 [ext_resource type="Script" uid="uid://de2j8pgfyip6y" path="res://Scripts/Commons/OOTAPlayerManager.cs" id="11_vs04g"]
 [ext_resource type="PackedScene" uid="uid://2am2lupffi35" path="res://Scenes/HUD/HudWorldElements.tscn" id="12_0sclb"]
 [ext_resource type="PackedScene" uid="uid://dbofrojhhg7ws" path="res://Scenes/OOTAPlayer.tscn" id="12_6ehlx"]
-[ext_resource type="Script" uid="uid://bqpkyuk7ke4mu" path="res://addons/MLobby/Nodes/LobbyManager.cs" id="12_sxkr1"]
+[ext_resource type="Script" uid="uid://612b6ecu667p" path="res://addons/MLobby/Nodes/LobbyManager.cs" id="12_sxkr1"]
 [ext_resource type="Script" uid="uid://bkpdn2eaegyir" path="res://Scripts/GameLogic/GameStats.cs" id="13_0sclb"]
-[ext_resource type="Script" uid="uid://wkkb5q71fb" path="res://addons/MLobby/Nodes/LobbyEvents.cs" id="14_jyqft"]
 [ext_resource type="Script" uid="uid://rk2ggwbwc83k" path="res://Scripts/GameLogic/GameLogic.cs" id="15_3tgeq"]
 [ext_resource type="Script" uid="uid://cp8ximd1s3b04" path="res://Scripts/Spawners/AvatarSpawner.cs" id="15_jyqft"]
 [ext_resource type="PackedScene" uid="uid://qxksm15ggivu" path="res://Scenes/Units/RT1.tscn" id="15_xvtyr"]
@@ -198,25 +197,17 @@ script = ExtResource("8_x3rx7")
 lobbyManager = NodePath("../LobbyManager")
 avatarContainer = NodePath("../../PlayerAvatars")
 
-[node name="LobbyManager" type="MultiplayerSpawner" parent="Core" unique_id=833463994 node_paths=PackedStringArray("events")]
+[node name="LobbyManager" type="MultiplayerSpawner" parent="Core" unique_id=833463994]
 spawn_path = NodePath(".")
 script = ExtResource("12_sxkr1")
 debug = false
-events = NodePath("../LobbyEvents")
 prefabLobbyMember = ExtResource("10_6heos")
-metadata/_custom_type_script = "uid://bqpkyuk7ke4mu"
 
 [node name="PlayerManager" type="MultiplayerSpawner" parent="Core" unique_id=15852706 node_paths=PackedStringArray("lobby")]
 spawn_path = NodePath(".")
 script = ExtResource("11_vs04g")
 lobby = NodePath("../LobbyManager")
 playerPrefab = ExtResource("12_6ehlx")
-metadata/_custom_type_script = "uid://dhdxvks818ir8"
-
-[node name="LobbyEvents" type="Node" parent="Core" unique_id=257916232]
-script = ExtResource("14_jyqft")
-debug = false
-metadata/_custom_type_script = "uid://wkkb5q71fb"
 
 [node name="GameLogic" type="Node" parent="Core" unique_id=1852553460 node_paths=PackedStringArray("baseLocationLeft", "baseLocationRight", "gameStats")]
 script = ExtResource("15_3tgeq")

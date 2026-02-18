@@ -35,9 +35,9 @@ public partial class GameLogic : Node
 
     public override void _Ready()
     {
-        Core.Lobby.LobbyEvents.OnHostClosed += Cleanup;
-        Core.Lobby.LobbyEvents.OnServerDisconnected += Cleanup;
-        Core.Lobby.LobbyEvents.OnLeavingHost += Cleanup;
+        LobbyEvents.OnHostClosed += Cleanup;
+        LobbyEvents.OnServerDisconnected += Cleanup;
+        LobbyEvents.OnLeavingHost += Cleanup;
     }
 
     private void Cleanup(object sender, EventArgs e)

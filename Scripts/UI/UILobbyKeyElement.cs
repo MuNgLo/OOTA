@@ -13,17 +13,17 @@ public partial class UILobbyKeyElement : Control
 
     public override void _Ready()
     {
-        Core.Lobby.LobbyEvents.OnConnectedToServer += WhenConnectedToServer;
-        Core.Lobby.LobbyEvents.OnHostSetupReady += WhenConnectedToServer;
+        LobbyEvents.OnConnectedToServer += WhenConnectedToServer;
+        LobbyEvents.OnHostSetupReady += WhenConnectedToServer;
 
         MMenuSystem.MenuSystem.OnMenuVisibilityChanged += (s, o) => { Visible = o && le_key.Text != string.Empty; };
 
         btn_Secret.Pressed += WhenSecretPressed;
         btn_Copy.Pressed += WhenCopyPressed;
 
-        Core.Lobby.LobbyEvents.OnLeavingHost += (sender, args) => { Hide(); };
-        Core.Lobby.LobbyEvents.OnHostClosed += (sender, args) => { Hide(); };
-        Core.Lobby.LobbyEvents.OnServerDisconnected += (sender, args) => { Hide(); };
+        LobbyEvents.OnLeavingHost += (sender, args) => { Hide(); };
+        LobbyEvents.OnHostClosed += (sender, args) => { Hide(); };
+        LobbyEvents.OnServerDisconnected += (sender, args) => { Hide(); };
         le_key.Secret = true;
         Hide();
     }
