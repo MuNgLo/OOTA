@@ -3,7 +3,7 @@ using Godot;
 namespace MLobby;
 
 [GlobalClass]
-public partial class LobbyMember : Node
+public partial class LobbyMember : MLobbyBaseNode
 {
     [Export] private long peerID;
     [Export(PropertyHint.Enum)] private LOBBYMEMBERSTATENUM state = LOBBYMEMBERSTATENUM.NONE;
