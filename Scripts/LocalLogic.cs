@@ -1,4 +1,5 @@
 using Godot;
+using MConsole;
 using MLobby;
 using MMenuSystem;
 using System;
@@ -21,10 +22,25 @@ public partial class LocalLogic : Node
     {
         lobbyManager.ChildEnteredTree += WhenLobbyMemberAdded;
         Core.Rules.OnGameStart += WhenGameStarts;
-
+        RegisterConsoleCommands();
     }
 
-    
+    private void RegisterConsoleCommands()
+    {
+        Command cmd = new Command("RegisterDefaultCommands", -1)
+        {
+            Name = "name",
+            Tip = "Set your player name",
+            Help = "Example: name Bob",
+            act = (a) =>
+            {
+
+                Core.Rules.PlayerRequestNameChange(a[1]);
+                return "Sending name change request to host";
+            }
+        };
+        ConsoleCommands.RegisterCommand(cmd);
+    }
 
     private void WhenGameStarts(object sender, EventArgs e)
     {
@@ -63,6 +79,11 @@ public partial class LocalLogic : Node
         {
             MMenuSystem.MenuSystem.ToggleMenu();
         }
+        if (Input.IsActionJustPressed("ToggleConsole"))
+        {
+            MConsole.GameConsole.Toggle();
+        }
+
     }
 
     public static event EventHandler<PlayerAvatar> OnAvatarAssigned;
@@ -73,7 +94,7 @@ public partial class LocalLogic : Node
     }
 
     #region Local Events from PlayerData
- 
+
     public static event EventHandler<bool> OnReadyChanged;
 
     internal static void ReadyChanged(bool value)

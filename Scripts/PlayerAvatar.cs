@@ -147,7 +147,7 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
         if (Time.GetTicksMsec() > TSLastAttackMS + attackCoolDownMS)
         {
             TSLastAttackMS = Time.GetTicksMsec();
-            Projectile proj = ProjectileSpawner.SpawnThisProjectile(new ProjectileSpawner.SpawnProjectileArgument(
+            Projectile proj = ProjectileSpawner.SpawnThisProjectile(new ProjectileSpawner.SpawnProjectileArgument("res://Scenes/Projectiles/PlayerBaseProjectile.tscn",
                 team, damage, projectileSpeed, projectileDuration, GetPath(), weaponMuzzle.GlobalRotation, weaponMuzzle.GlobalPosition
             ));
         }

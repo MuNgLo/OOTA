@@ -206,7 +206,7 @@ public partial class RegisterDefaultCommands : Node
     private string DebugOrphanReport()
     {
         int[] ids = GetOrphanNodeIds().ToArray();
-        Core.LogInfo($"[[[ ORPHAN REPORT ]]]  Total of [{ids.Length}] orphans.", true);
+        GD.Print($"[[[ ORPHAN REPORT ]]]  Total of [{ids.Length}] orphans.", true);
         int validCount = 0;
         for (int i = 0; i < ids.Length; i++)
         {
@@ -215,14 +215,14 @@ public partial class RegisterDefaultCommands : Node
                 validCount++;
             }
         }
-        Core.LogInfo($"Of those [{validCount}] is valid instances.", true);
+        GD.Print($"Of those [{validCount}] is valid instances.", true);
 
         for (int i = 0; i < ids.Length; i++)
         {
             GodotObject n = InstanceFromId((ulong)ids[i]);
             if(n is not null)
             {
-                Core.LogInfo($"[{i}] Name[{n.GetType()}]", true);
+                GD.Print($"[{i}] Name[{n.GetType()}]", true);
             }
         }
 

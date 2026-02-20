@@ -38,6 +38,7 @@ public partial class Core : Node
     public override void _EnterTree()
     {
         ins = this;
+        
     }
 
     public static bool PlotMouseWorldPosition(out Vector3 worldPosition)

@@ -5,7 +5,9 @@ using System.Linq;
 [GlobalClass]
 public partial class UnitBaseClass : RigidBody3D, ITargetable
 {
+    public enum PATHSTATE { IDLE, PENDING, EXECUTING }
     [Export] protected TEAM team = TEAM.NONE;
+    [Export] protected PATHSTATE pathState = PATHSTATE.IDLE;
     public Node3D target;
     [Export] float moveSpeed = 8.0f;
     [Export] protected ulong attackCoolDownMS = 300;
@@ -58,8 +60,23 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable
     }
     public override void _PhysicsProcess(double delta)
     {
+        // Skip on non Host
         if (!Multiplayer.IsServer()) { return; }
-        PickTarget();
+        // If unit has no target
+        if (target is null)
+        {
+            PickTarget();
+        }
+        // if no path
+        if (pathState == PATHSTATE.IDLE)
+        {
+            GetPathToTarget();
+        }
+        // Skip if waiting for path
+        if (pathState == PATHSTATE.PENDING) { return; }
+
+        // move along path
+        if (pathState != PATHSTATE.EXECUTING) { return; }
 
         inVec = Vector3.Zero;
         inVec = GlobalPosition.DirectionTo(target.GlobalPosition);
@@ -89,6 +106,23 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable
                 LinearVelocity *= 0.85f;
             }
         }
+    }
+
+
+    Vector3[] path;
+    private async void GetPathToTarget()
+    {
+        // Block if we have a query pending
+        if (pathState == PATHSTATE.PENDING) { return; }
+        await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
+        path = NavigationServer3D.MapGetPath(WorldNavigation.WorldNavMapRid, GlobalPosition, target.GlobalPosition, false);
+        if(path.Length > 0)
+        {
+            pathState = PATHSTATE.EXECUTING;
+            return;
+        }
+        target = null;
+        pathState = PATHSTATE.IDLE;
     }
 
     private protected bool TargetInRange()
@@ -215,7 +249,7 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable
 
     private void UpdateUnitScale()
     {
-        if(!IsInstanceValid(this) || !Multiplayer.HasMultiplayerPeer()){return;}
+        if (!IsInstanceValid(this) || !Multiplayer.HasMultiplayerPeer()) { return; }
         float totalScale = 1.0f;
         foreach (ISupporter supporter in supporters)
         {
@@ -223,7 +257,7 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable
         }
         Rpc(nameof(RPCSetUnitScale), totalScale);
     }
-    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode =  MultiplayerPeer.TransferModeEnum.Reliable)]
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void RPCSetUnitScale(float totalScale)
     {
         GetNode<MeshInstance3D>("MeshInstance3D").Scale = Vector3.One * totalScale;

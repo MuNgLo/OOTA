@@ -39,6 +39,8 @@
 [ext_resource type="Script" uid="uid://c2ogmd33xllep" path="res://addons/MMenuSystem/HUDSystem.cs" id="30_vvnwx"]
 [ext_resource type="PackedScene" uid="uid://cacw3c477jwjv" path="res://Scenes/UI/UIMenus.tscn" id="32_qta6b"]
 [ext_resource type="PackedScene" uid="uid://15klytxgu1fl" path="res://Scenes/HUD/UiUnitHealthBar.tscn" id="34_6ehlx"]
+[ext_resource type="PackedScene" uid="uid://de1od7uc00qsf" path="res://addons/MConsole/DropinScene/GameConsole.tscn" id="38_utia5"]
+[ext_resource type="PackedScene" uid="uid://v4kptsufr618" path="res://addons/MConsole/DropinScene/FPSCounter.tscn" id="39_f7hdo"]
 
 [sub_resource type="Resource" id="Resource_vvnwx"]
 script = ExtResource("10_346fj")
@@ -298,6 +300,17 @@ grow_vertical = 0
 [node name="TopElement" parent="CanvasHUD" unique_id=1227094197 instance=ExtResource("20_sxkr1")]
 
 [node name="CanvasMENUS" parent="." unique_id=1834781793 instance=ExtResource("32_qta6b")]
+layer = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1374208752]
+layer = 3
+
+[node name="GameConsole" parent="CanvasLayer" unique_id=1855708324 instance=ExtResource("38_utia5")]
+offset_top = 0.0
+offset_bottom = 0.0
+metadata/_edit_group_ = true
+
+[node name="FPScounter" parent="CanvasLayer" unique_id=1918910941 instance=ExtResource("39_f7hdo")]
 
 [node name="World" parent="." unique_id=2113057013 instance=ExtResource("1_kln2b")]
 

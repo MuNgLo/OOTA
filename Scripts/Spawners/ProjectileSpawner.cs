@@ -6,7 +6,6 @@ public partial class ProjectileSpawner : MultiplayerSpawner
 {
     private static ProjectileSpawner ins;
     [Export] bool debug = false;
-    [Export] PackedScene packedLevel;
 
     public override void _EnterTree()
     {
@@ -19,7 +18,7 @@ public partial class ProjectileSpawner : MultiplayerSpawner
     }
     private Node SpawnProjectile(Godot.Collections.Dictionary<string, Variant> args)
     {
-        Projectile proj = packedLevel.Instantiate() as Projectile;
+        Projectile proj = GD.Load<PackedScene>(args["resourcePath"].AsString()).Instantiate() as Projectile;
 
         proj.Team = (TEAM)args["team"].AsInt32();
         proj.damage = args["damage"].AsInt32();
@@ -51,11 +50,12 @@ public partial class ProjectileSpawner : MultiplayerSpawner
         public float duration;
         public Vector3 rotation;
         public Vector3 position;
-
+        public string resourcePath;
         public NodePath exclude;
 
-        public SpawnProjectileArgument(TEAM team, int damage, float speed, float duration, NodePath exclude, Vector3 rotation, Vector3 position)
+        public SpawnProjectileArgument(string resourcePath, TEAM team, int damage, float speed, float duration, NodePath exclude, Vector3 rotation, Vector3 position)
         {
+            this.resourcePath = resourcePath;
             this.team = team;
             this.damage = damage;
             this.speed = speed;
@@ -67,6 +67,7 @@ public partial class ProjectileSpawner : MultiplayerSpawner
 
         public Godot.Collections.Dictionary<string, Variant> AsSpawnArgs => new Godot.Collections.Dictionary<string, Variant>()
         {
+            {"resourcePath", resourcePath },
             {"team", (int)team },
             {"damage", damage},
             {"speed", speed},

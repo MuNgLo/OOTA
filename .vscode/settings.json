@@ -25,6 +25,7 @@
         "NOTREADY",
         "ontop",
         "OOTA",
+        "PATHSTATE",
         "PICKUPTYPE",
         "PLAYERMODE",
         "Shapecast",

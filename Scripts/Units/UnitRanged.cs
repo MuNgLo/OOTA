@@ -54,7 +54,7 @@ public partial class UnitRanged : UnitBaseClass
     public override void AttackTarget()
     {
         weaponMuzzle.LookAt(target.GlobalPosition + Vector3.Up * 0.25f, Vector3.Up);
-        Projectile proj = ProjectileSpawner.SpawnThisProjectile(new ProjectileSpawner.SpawnProjectileArgument(
+        Projectile proj = ProjectileSpawner.SpawnThisProjectile(new ProjectileSpawner.SpawnProjectileArgument("res://Scenes/Projectiles/Projectile.tscn",
             Team, BuildDamage(damage), projectileSpeed, projectileTTL, GetPath(), weaponMuzzle.GlobalRotation, weaponMuzzle.GlobalPosition
         ));
     }

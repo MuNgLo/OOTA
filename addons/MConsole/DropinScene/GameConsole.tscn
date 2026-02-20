@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://de1od7uc00qsf"]
 
-[ext_resource type="Script" uid="uid://bqb5j728q60s5" path="res://addons/MConsole/DropinScene/GameConsole.cs" id="1_fd6dq"]
-[ext_resource type="Script" uid="uid://d1al8ofrpjq1a" path="res://addons/MConsole/ConsoleCommands.cs" id="2_5v3cq"]
-[ext_resource type="Script" uid="uid://up4om7cdqs7y" path="res://addons/MConsole/DropinScene/RegisterDefaultCommands.cs" id="3_eovab"]
+[ext_resource type="Script" uid="uid://nf1rhcbkgep2" path="res://addons/MConsole/DropinScene/GameConsole.cs" id="1_fd6dq"]
+[ext_resource type="Script" uid="uid://dos7ljy8epcrb" path="res://addons/MConsole/ConsoleCommands.cs" id="2_5v3cq"]
+[ext_resource type="Script" uid="uid://l7awdrd8wlvx" path="res://addons/MConsole/DropinScene/RegisterDefaultCommands.cs" id="3_eovab"]
 
 [node name="GameConsole" type="GridContainer" unique_id=1855708324 node_paths=PackedStringArray("outputArea", "inputArea", "autocomplete")]
 anchors_preset = 15
