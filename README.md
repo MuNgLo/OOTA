@@ -1,6 +1,6 @@
 # MGizmosCSharp
 
-v1.0
+v1.1
 
 Debug Gizmos for Godot written in C# for both runtime and in editor use.
 
