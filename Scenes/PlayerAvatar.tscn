@@ -1,18 +1,15 @@
 [gd_scene format=3 uid="uid://cjlqmhw2x3wuy"]
 
-[ext_resource type="Script" uid="uid://b2rv7kaeif66c" path="res://Scripts/PlayerAvatar.cs" id="1_cvnsp"]
+[ext_resource type="Script" uid="uid://b2rv7kaeif66c" path="res://Scripts/Commons/PlayerAvatar.cs" id="1_cvnsp"]
 [ext_resource type="PackedScene" uid="uid://bwf2h6blppepx" path="res://Scenes/Projectiles/Projectile.tscn" id="2_52ee3"]
-[ext_resource type="Script" uid="uid://cxvpy7i3wphew" path="res://Scripts/Attractor.cs" id="3_gntrk"]
+[ext_resource type="Script" uid="uid://cxvpy7i3wphew" path="res://Scripts/Components/Attractor.cs" id="3_gntrk"]
+[ext_resource type="ArrayMesh" uid="uid://d0rxjfwmd8o8s" path="res://Meshes/Troll.res" id="3_trr27"]
 [ext_resource type="Material" uid="uid://ch7ne8nwbxk4q" path="res://Materials/TowerGhost.tres" id="5_5ixxa"]
 [ext_resource type="Script" uid="uid://c3qkbidk7pl64" path="res://Scripts/HUD/HUDLabelMaker.cs" id="6_fente"]
 [ext_resource type="Material" uid="uid://cppy5eut1v0ry" path="res://Materials/Weapon.tres" id="7_bhhdu"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_kyqiw"]
 friction = 0.0
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_cvnsp"]
-radius = 0.2
-height = 0.6
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cvnsp"]
 radius = 0.2
@@ -22,8 +19,9 @@ height = 0.6
 height = 3.9194336
 radius = 4.209961
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_nn08x"]
-top_radius = 0.2
+[sub_resource type="SphereMesh" id="SphereMesh_fente"]
+radius = 0.2
+height = 0.4
 
 [sub_resource type="BoxMesh" id="BoxMesh_megsn"]
 size = Vector3(0.1, 0.1, 0.44)
@@ -36,7 +34,7 @@ properties/1/path = NodePath("WeaponPivot:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[node name="Player" type="RigidBody3D" unique_id=153915498 node_paths=PackedStringArray("placer", "placerPoint", "weaponPivot", "weaponMuzzle")]
+[node name="Player" type="RigidBody3D" unique_id=153915498 node_paths=PackedStringArray("placer", "placerPoint", "placeGhost", "weaponPivot", "weaponMuzzle")]
 collision_layer = 4
 collision_mask = 15
 axis_lock_angular_x = true
@@ -49,7 +47,8 @@ team = 1
 moveSpeed = 10.0
 placer = NodePath("Placer")
 placerPoint = NodePath("Placer/Placer2")
-weaponPivot = NodePath("WeaponPivot")
+placeGhost = NodePath("Placer/Placer2/PlaceGhost")
+weaponPivot = NodePath(".")
 weaponMuzzle = NodePath("WeaponPivot/MeshInstance3D/Muzzle")
 damage = 30
 attackCoolDownMS = 250
@@ -57,8 +56,7 @@ projectilePrefab = ExtResource("2_52ee3")
 projectileDuration = 0.5
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1047895395]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
-mesh = SubResource("CapsuleMesh_cvnsp")
+mesh = ExtResource("3_trr27")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2022986322]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
@@ -75,15 +73,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9597168, 0)
 shape = SubResource("CylinderShape3D_dewec")
 
 [node name="Placer" type="Node3D" parent="." unique_id=700988330]
-visible = false
 
 [node name="Placer2" type="Node3D" parent="Placer" unique_id=1262603750]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.4182942)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Placer/Placer2" unique_id=795434290]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+[node name="PlaceGhost" type="MeshInstance3D" parent="Placer/Placer2" unique_id=795434290]
 material_override = ExtResource("5_5ixxa")
-mesh = SubResource("CylinderMesh_nn08x")
+mesh = SubResource("SphereMesh_fente")
 
 [node name="WeaponPivot" type="Node3D" parent="." unique_id=531366280]
 

@@ -1,5 +1,10 @@
 using Godot;
 using MLogging;
+using OOTA.Enums;
+using OOTA.Units;
+
+namespace OOTA.Spawners;
+
 [GlobalClass]
 public partial class UnitSpawner : MultiplayerSpawner
 {

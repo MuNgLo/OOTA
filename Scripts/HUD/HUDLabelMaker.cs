@@ -1,7 +1,9 @@
 using Godot;
+using OOTA.Buildings;
+using OOTA.Units;
 using System;
 
-namespace HUD;
+namespace OOTA.HUD;
 
 public partial class HUDLabelMaker : Node3D
 {

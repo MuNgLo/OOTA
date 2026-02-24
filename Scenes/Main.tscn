@@ -1,7 +1,5 @@
 [gd_scene format=3 uid="uid://do6g4exfmgrb4"]
 
-[ext_resource type="PackedScene" uid="uid://d1n0d775ekmp" path="res://Scenes/World.tscn" id="1_kln2b"]
-[ext_resource type="PackedScene" uid="uid://y0ku5gnvasjq" path="res://Scenes/Buildings/Tower.tscn" id="3_50glp"]
 [ext_resource type="PackedScene" uid="uid://bj484sau2we4n" path="res://Scenes/Pickups/Health.tscn" id="3_bmxlf"]
 [ext_resource type="PackedScene" uid="uid://evcej7t3o6vg" path="res://Scenes/CameraTracker.tscn" id="3_pbw6q"]
 [ext_resource type="PackedScene" uid="uid://cab4ia5tx3mr0" path="res://Scenes/HUD/GoldCounter.tscn" id="4_rgh2o"]
@@ -10,37 +8,96 @@
 [ext_resource type="Script" uid="uid://ewx8khoihbgr" path="res://Scripts/Core.cs" id="5_pbw6q"]
 [ext_resource type="Material" uid="uid://cg7g57nfgrpx6" path="res://Materials/TeamRight.tres" id="6_1p5hy"]
 [ext_resource type="PackedScene" uid="uid://bwasbkaw1rn3u" path="res://Scenes/Pickups/Gold.tscn" id="6_jw32o"]
-[ext_resource type="Script" uid="uid://v2b41f1yds24" path="res://Scripts/UI/UIAPICalls.cs" id="7_4yxf6"]
-[ext_resource type="Script" uid="uid://b7rdr5kjto5tm" path="res://Scripts/EarlyInitThings.cs" id="7_hwpts"]
+[ext_resource type="Script" uid="uid://v2b41f1yds24" path="res://Scripts/GameLogic/UIAPICalls.cs" id="7_4yxf6"]
+[ext_resource type="Script" uid="uid://b7rdr5kjto5tm" path="res://Scripts/Commons/EarlyInitThings.cs" id="7_hwpts"]
 [ext_resource type="PackedScene" uid="uid://bpkdew2hyxn37" path="res://Scenes/HUD/HealthBar.tscn" id="8_50glp"]
 [ext_resource type="Script" uid="uid://cppk1p232dwwq" path="res://Scripts/Resources/WaveDefinition.cs" id="8_erwvk"]
-[ext_resource type="Script" uid="uid://bsart4jxdo0x5" path="res://Scripts/LocalLogic.cs" id="8_x3rx7"]
+[ext_resource type="Script" uid="uid://bsart4jxdo0x5" path="res://Scripts/Commons/LocalLogic.cs" id="8_x3rx7"]
 [ext_resource type="PackedScene" uid="uid://p7gblyg4fk0h" path="res://Scenes/Units/MT1.tscn" id="9_2w5on"]
 [ext_resource type="PackedScene" uid="uid://c8amfxmmxyj51" path="res://addons/MLobby/DropinScene/LobbyMember.tscn" id="10_6heos"]
 [ext_resource type="Script" uid="uid://c1efn3impdgid" path="res://Scripts/Resources/EnemySpawn.cs" id="10_346fj"]
 [ext_resource type="PackedScene" uid="uid://bgcalbv5r35bg" path="res://Scenes/Buildings/Base.tscn" id="10_bmxlf"]
 [ext_resource type="Script" uid="uid://de2j8pgfyip6y" path="res://Scripts/Commons/OOTAPlayerManager.cs" id="11_vs04g"]
+[ext_resource type="Script" uid="uid://epkvljjxe88u" path="res://Scripts/GameLogic/Rules.cs" id="11_yisvs"]
 [ext_resource type="PackedScene" uid="uid://2am2lupffi35" path="res://Scenes/HUD/HudWorldElements.tscn" id="12_0sclb"]
 [ext_resource type="PackedScene" uid="uid://dbofrojhhg7ws" path="res://Scenes/OOTAPlayer.tscn" id="12_6ehlx"]
 [ext_resource type="Script" uid="uid://612b6ecu667p" path="res://addons/MLobby/Nodes/LobbyManager.cs" id="12_sxkr1"]
 [ext_resource type="Script" uid="uid://bkpdn2eaegyir" path="res://Scripts/GameLogic/GameStats.cs" id="13_0sclb"]
-[ext_resource type="Script" uid="uid://rk2ggwbwc83k" path="res://Scripts/GameLogic/GameLogic.cs" id="15_3tgeq"]
+[ext_resource type="Script" uid="uid://bo5oidian2top" path="res://Scripts/Buildings/Tower.cs" id="14_3133c"]
+[ext_resource type="Material" uid="uid://dafyt7kexxmrp" path="res://Materials/Tower.tres" id="15_js5gh"]
 [ext_resource type="Script" uid="uid://cp8ximd1s3b04" path="res://Scripts/Spawners/AvatarSpawner.cs" id="15_jyqft"]
 [ext_resource type="PackedScene" uid="uid://qxksm15ggivu" path="res://Scenes/Units/RT1.tscn" id="15_xvtyr"]
-[ext_resource type="Script" uid="uid://dnk2xqg2o3t4m" path="res://Scripts/GameTimer.cs" id="16_aht7i"]
+[ext_resource type="Script" uid="uid://dnk2xqg2o3t4m" path="res://Scripts/GameLogic/GameTimer.cs" id="16_aht7i"]
 [ext_resource type="PackedScene" uid="uid://cx1xbaju338gj" path="res://Scenes/Units/ST1.tscn" id="16_u7mjy"]
+[ext_resource type="Material" uid="uid://clb8vxdgv3xw1" path="res://Materials/Hut.tres" id="16_vvjo1"]
 [ext_resource type="PackedScene" uid="uid://cjlqmhw2x3wuy" path="res://Scenes/PlayerAvatar.tscn" id="17_3tgeq"]
+[ext_resource type="Material" uid="uid://bgbya1ktllsfd" path="res://Materials/Barrel.tres" id="17_yisvs"]
 [ext_resource type="Script" uid="uid://b0ciamxuywagm" path="res://Scripts/Spawners/UnitSpawner.cs" id="18_c4ay3"]
+[ext_resource type="Script" uid="uid://c3qkbidk7pl64" path="res://Scripts/HUD/HUDLabelMaker.cs" id="18_rgw24"]
 [ext_resource type="Script" uid="uid://c08wprspm4bf" path="res://Scripts/Spawners/ProjectileSpawner.cs" id="20_kpo4j"]
 [ext_resource type="PackedScene" uid="uid://dksxlufpmucdu" path="res://Scenes/HUD/TopElement.tscn" id="20_sxkr1"]
-[ext_resource type="PackedScene" uid="uid://bwf2h6blppepx" path="res://Scenes/Projectiles/Projectile.tscn" id="21_4n42c"]
 [ext_resource type="Script" uid="uid://bqmsnui6f1p4t" path="res://Scripts/Spawners/PickupSpawner.cs" id="22_4n42c"]
 [ext_resource type="Script" uid="uid://bh6vusv8b7mi" path="res://Scripts/Spawners/BuildingSpawner.cs" id="23_c5snn"]
+[ext_resource type="Script" uid="uid://c4jnxg4n2he57" path="res://Scripts/GameLogic/Towers.cs" id="23_f7hdo"]
+[ext_resource type="Script" uid="uid://cpy4cj2fwebi7" path="res://Scripts/Resources/TowerResource.cs" id="24_d8m2u"]
+[ext_resource type="ArrayMesh" uid="uid://c65d4s7lt4chu" path="res://Meshes/bWallFoundation.res" id="24_lac6x"]
+[ext_resource type="PackedScene" uid="uid://c7cpur2jsjar1" path="res://Scenes/Buildings/Foundation.tscn" id="25_5psol"]
+[ext_resource type="ArrayMesh" uid="uid://ccv0wlgm8wc0j" path="res://Meshes/GhostBallista.res" id="28_off7b"]
+[ext_resource type="ArrayMesh" uid="uid://bl66d7kt3i72a" path="res://Meshes/GhostCannon.res" id="29_7sj7i"]
+[ext_resource type="PackedScene" uid="uid://ck3bhvhdsvhc5" path="res://Scenes/Buildings/Ballista.tscn" id="29_lfh1j"]
+[ext_resource type="PackedScene" uid="uid://cju5jokc7jpxi" path="res://Scenes/Buildings/Cannon.tscn" id="29_off7b"]
+[ext_resource type="Script" uid="uid://dh0hx50jiavuv" path="res://Scripts/Grid/GridManager.cs" id="30_utia5"]
 [ext_resource type="Script" uid="uid://c2ogmd33xllep" path="res://addons/MMenuSystem/HUDSystem.cs" id="30_vvnwx"]
 [ext_resource type="PackedScene" uid="uid://cacw3c477jwjv" path="res://Scenes/UI/UIMenus.tscn" id="32_qta6b"]
 [ext_resource type="PackedScene" uid="uid://15klytxgu1fl" path="res://Scenes/HUD/UiUnitHealthBar.tscn" id="34_6ehlx"]
+[ext_resource type="ArrayMesh" uid="uid://b8jf0cu8hagw3" path="res://Meshes/GhostTrebuchet.res" id="35_vvjo1"]
+[ext_resource type="PackedScene" uid="uid://ceh3oy34t0cq4" path="res://Scenes/Buildings/Trebuchet.tscn" id="36_yisvs"]
+[ext_resource type="Script" uid="uid://dn8byt8hoptha" path="res://Scripts/GameLogic/ArenaBuilder.cs" id="37_yisvs"]
 [ext_resource type="PackedScene" uid="uid://de1od7uc00qsf" path="res://addons/MConsole/DropinScene/GameConsole.tscn" id="38_utia5"]
 [ext_resource type="PackedScene" uid="uid://v4kptsufr618" path="res://addons/MConsole/DropinScene/FPSCounter.tscn" id="39_f7hdo"]
+[ext_resource type="Material" uid="uid://bsch310uncfdb" path="res://Materials/Ground.tres" id="44_m4llh"]
+[ext_resource type="Script" uid="uid://bwm6v2ycfwd0v" path="res://Scripts/Grid/GridNavigation.cs" id="55_yisvs"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_gaesr"]
+top_radius = 0.2
+height = 1.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4yjk7"]
+top_radius = 0.2
+bottom_radius = 0.395
+height = 0.3
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_4yjk7"]
+height = 1.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_tpt2e"]
+radius = 5.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_bypgs"]
+size = Vector3(0.115, 0.125, 0.48)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_bypgs"]
+properties/0/path = NodePath("WeaponPivot:rotation")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:health")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[sub_resource type="PackedScene" id="PackedScene_5gwyn"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("Tower", "StaticBody3D", "collision_layer", "collision_mask", "script", "towerType", "hasAttack", "maxHealth", "weaponPivot", "weaponMuzzle", "damage", "attackCoolDownMS", "area", "MeshInstance3D", "MeshInstance3D", "transform", "material_override", "mesh", "TeamMesh", "MeshInstance3D", "transform", "mesh", "surface_material_override/0", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "Area3D", "Area3D", "collision_layer", "collision_mask", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "debug_color", "WeaponPivot", "Node3D", "transform", "Barrel", "MeshInstance3D", "transform", "material_override", "mesh", "Muzzle", "Node3D", "transform", "LabelMaker", "Node3D", "transform", "script", "building", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode"),
+"node_count": 11,
+"node_ids": PackedInt32Array(1281713625, 1818366435, 791793649, 1347173250, 1894626626, 165295688, 1197676531, 1499651751, 1868989317, 960099250, 772288372),
+"node_paths": [NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath("./Area3D"), NodePath("."), NodePath("./WeaponPivot"), NodePath("./WeaponPivot/Barrel"), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 11, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 1073741832, 6, 1073741833, 7, 10, 8, 11, 9, 1073741836, 10, 0, 1073741824, 0, 14, 13, -1, 3, 15, 11, 16, 12, 17, 13, 0, 1073741825, 0, 19, 18, -1, 3, 20, 14, 21, 15, 22, 16, 0, 1073741826, 0, 24, 23, -1, 2, 25, 17, 26, 18, 0, 1073741827, 0, 28, 27, -1, 2, 29, 19, 30, 20, 0, 1073741828, 0, 32, 31, -1, 3, 33, 21, 34, 22, 35, 23, 0, 1073741829, 0, 37, 36, -1, 1, 38, 24, 0, 1073741830, 0, 40, 39, -1, 3, 41, 25, 42, 26, 43, 27, 0, 1073741831, 0, 45, 44, -1, 1, 46, 28, 0, 1073741832, 0, 48, 47, -1, 3, 49, 29, 50, 30, 1073741875, 31, 0, 1073741833, 0, 53, 52, -1, 2, 54, 32, 55, 33, 0),
+"variants": [8, 0, ExtResource("14_3133c"), 2, true, 1000.0, NodePath("WeaponPivot"), NodePath("WeaponPivot/Barrel/Muzzle"), 75, 750, NodePath("Area3D"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0), ExtResource("15_js5gh"), SubResource("CylinderMesh_gaesr"), Transform3D(1, 0, 0, 0, -1, -8.742278e-08, 0, 8.742278e-08, -1, 0, 0.68842363, 1.4327063e-08), SubResource("CylinderMesh_4yjk7"), ExtResource("16_vvjo1"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0), SubResource("CylinderShape3D_4yjk7"), 0, 6, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0), SubResource("CylinderShape3D_tpt2e"), Color(0, 0.4745098, 0, 0.8980392), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8564053, 0), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03959471, -0.245), ExtResource("17_yisvs"), SubResource("BoxMesh_bypgs"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.25884867), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2396566, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_bypgs"), 1],
+"version": 3
+}
 
 [sub_resource type="Resource" id="Resource_vvnwx"]
 script = ExtResource("10_346fj")
@@ -162,6 +219,38 @@ spawnsOnGameTick = 40
 spawns = Array[Object]([SubResource("Resource_utia5"), SubResource("Resource_c5snn"), SubResource("Resource_6heos")])
 metadata/_custom_type_script = "uid://cppk1p232dwwq"
 
+[sub_resource type="Resource" id="Resource_m4llh"]
+script = ExtResource("24_d8m2u")
+towerType = 1
+towerPrefab = ExtResource("25_5psol")
+cost = 2
+mesh = ExtResource("24_lac6x")
+metadata/_custom_type_script = "uid://cpy4cj2fwebi7"
+
+[sub_resource type="Resource" id="Resource_7sj7i"]
+script = ExtResource("24_d8m2u")
+towerType = 2
+towerPrefab = ExtResource("29_lfh1j")
+cost = 10
+mesh = ExtResource("28_off7b")
+metadata/_custom_type_script = "uid://cpy4cj2fwebi7"
+
+[sub_resource type="Resource" id="Resource_lfh1j"]
+script = ExtResource("24_d8m2u")
+towerType = 2
+towerPrefab = ExtResource("29_off7b")
+cost = 25
+mesh = ExtResource("29_7sj7i")
+metadata/_custom_type_script = "uid://cpy4cj2fwebi7"
+
+[sub_resource type="Resource" id="Resource_rgw24"]
+script = ExtResource("24_d8m2u")
+towerType = 2
+towerPrefab = ExtResource("36_yisvs")
+cost = 30
+mesh = ExtResource("35_vvjo1")
+metadata/_custom_type_script = "uid://cpy4cj2fwebi7"
+
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_kpo4j"]
 properties/0/path = NodePath("GameLogic/GameTimer:totalGameTime")
 properties/0/spawn = true
@@ -173,12 +262,34 @@ properties/2/path = NodePath("GameLogic/GameStats:BaseHealthRight")
 properties/2/spawn = true
 properties/2/replication_mode = 2
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5cjrv"]
+friction = 0.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_j0p05"]
+size = Vector3(100, 33, 7)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5nsto"]
+size = Vector3(12, 33, 45)
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_5cjrv"]
+vertices = PackedVector3Array(-19.75, 0.5, -9.75, -19.75, 0.5, 9.75, 19.75, 0.5, 9.75, 19.75, 0.5, -9.75)
+polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(3, 2, 0)]
+geometry_parsed_geometry_type = 1
+agent_height = 1.0
+agent_radius = 0.25
+agent_max_slope = 5.34
+vertices_per_polygon = 3.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5cjrv"]
+size = Vector3(40, 6, 20)
+
+[sub_resource type="QuadMesh" id="QuadMesh_j0p05"]
+size = Vector2(40, 20)
+
 [node name="Main" type="Node3D" unique_id=1609698201]
 
 [node name="Core" type="Node" parent="." unique_id=1977013728 node_paths=PackedStringArray("lobby", "players", "rules")]
 script = ExtResource("5_pbw6q")
-goldPrefab = ExtResource("6_jw32o")
-healthPrefab = ExtResource("3_bmxlf")
 lobby = NodePath("LobbyManager")
 players = NodePath("PlayerManager")
 rules = NodePath("GameLogic")
@@ -211,12 +322,14 @@ script = ExtResource("11_vs04g")
 lobby = NodePath("../LobbyManager")
 playerPrefab = ExtResource("12_6ehlx")
 
-[node name="GameLogic" type="Node" parent="Core" unique_id=1852553460 node_paths=PackedStringArray("baseLocationLeft", "baseLocationRight", "gameStats")]
-script = ExtResource("15_3tgeq")
-baseLocationLeft = NodePath("../../World/baseLeftLocation")
-baseLocationRight = NodePath("../../World/baseRightLocation")
+[node name="GameLogic" type="Node" parent="Core" unique_id=1852553460 node_paths=PackedStringArray("baseLocationLeft", "baseLocationRight", "gameStats", "towers", "arenaBuilder")]
+script = ExtResource("11_yisvs")
+baseLocationLeft = NodePath("../../baseLeftLocation")
+baseLocationRight = NodePath("../../baseRightLocation")
 gameStats = NodePath("GameStats")
-towerPrefab = ExtResource("3_50glp")
+towers = NodePath("Towers")
+towerPrefab = SubResource("PackedScene_5gwyn")
+arenaBuilder = NodePath("ArenaBuilder")
 leftTeamCollision = 2
 rightTeamCollision = 4
 
@@ -231,6 +344,19 @@ ticksPerSecond = 0.4
 [node name="GameStats" type="Node" parent="Core/GameLogic" unique_id=976334290]
 script = ExtResource("13_0sclb")
 
+[node name="Towers" type="Node" parent="Core/GameLogic" unique_id=1889090329]
+script = ExtResource("23_f7hdo")
+towers = Array[Object]([SubResource("Resource_m4llh"), SubResource("Resource_7sj7i"), SubResource("Resource_lfh1j"), SubResource("Resource_rgw24")])
+
+[node name="ArenaBuilder" type="Node" parent="Core/GameLogic" unique_id=940030585 node_paths=PackedStringArray("arenaFloor", "arenaFloorCollider", "wallNorth", "wallSouth", "wallEast", "wallWest")]
+script = ExtResource("37_yisvs")
+arenaFloor = NodePath("../../../NavigationRegion3D/MeshInstance3D")
+arenaFloorCollider = NodePath("../../../NavigationRegion3D/StaticBody3D/CollisionShape3D")
+wallNorth = NodePath("../../../WorldColliders/NorthWall")
+wallSouth = NodePath("../../../WorldColliders/SouthWall")
+wallEast = NodePath("../../../WorldColliders/EastWall")
+wallWest = NodePath("../../../WorldColliders/WestWall")
+
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Core" unique_id=751636681]
 replication_config = SubResource("SceneReplicationConfig_kpo4j")
 
@@ -240,8 +366,8 @@ replication_config = SubResource("SceneReplicationConfig_kpo4j")
 spawn_path = NodePath("../../../PlayerAvatars")
 script = ExtResource("15_jyqft")
 packedLevel = ExtResource("17_3tgeq")
-spawnLeft = NodePath("../../../World/SpawnLeft")
-spawnRight = NodePath("../../../World/SpawnRight")
+spawnLeft = NodePath("../../../SpawnLeft")
+spawnRight = NodePath("../../../SpawnRight")
 
 [node name="UnitSpawner" type="MultiplayerSpawner" parent="Core/Spawners" unique_id=1513468807]
 spawn_path = NodePath("../../../Units")
@@ -252,7 +378,6 @@ metadata/_custom_type_script = "uid://b0ciamxuywagm"
 spawn_path = NodePath("../../../Projectiles")
 script = ExtResource("20_kpo4j")
 debug = true
-packedLevel = ExtResource("21_4n42c")
 metadata/_custom_type_script = "uid://c08wprspm4bf"
 
 [node name="PickupSpawner" type="MultiplayerSpawner" parent="Core/Spawners" unique_id=58980480]
@@ -263,11 +388,16 @@ prefabHealth = ExtResource("3_bmxlf")
 metadata/_custom_type_script = "uid://bqmsnui6f1p4t"
 
 [node name="BuildingSpawner" type="MultiplayerSpawner" parent="Core/Spawners" unique_id=157883056]
-spawn_path = NodePath("../../../Buildings")
+spawn_path = NodePath("../../../NavigationRegion3D/Buildings")
 script = ExtResource("23_c5snn")
 prefabBase = ExtResource("10_bmxlf")
-prefabTower = ExtResource("3_50glp")
+prefabTower = SubResource("PackedScene_5gwyn")
 metadata/_custom_type_script = "uid://bh6vusv8b7mi"
+
+[node name="GridManager" type="Node" parent="Core" unique_id=1567185228]
+script = ExtResource("30_utia5")
+gridHeight = 20
+gridWidth = 40
 
 [node name="CanvasHUD" type="CanvasLayer" parent="." unique_id=1983381410 node_paths=PackedStringArray("persistent")]
 script = ExtResource("30_vvnwx")
@@ -312,19 +442,74 @@ metadata/_edit_group_ = true
 
 [node name="FPScounter" parent="CanvasLayer" unique_id=1918910941 instance=ExtResource("39_f7hdo")]
 
-[node name="World" parent="." unique_id=2113057013 instance=ExtResource("1_kln2b")]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1348774406]
+transform = Transform3D(1, 0, 0, 0, -0.25881907, 0.9659258, 0, -0.9659258, -0.25881907, 0, 5.4959974, 0)
+shadow_enabled = true
+directional_shadow_mode = 0
 
-[node name="SpawnLeft" type="Node3D" parent="World" unique_id=482879428]
-transform = Transform3D(-2.9802322e-08, 0, -1, 0, 1, 0, 1, 0, -2.9802322e-08, -28.213041, 0, 13.096056)
+[node name="WorldColliders" type="Node3D" parent="." unique_id=1776659032]
 
-[node name="SpawnRight" type="Node3D" parent="World" unique_id=2101850589]
-transform = Transform3D(1.172251e-07, 0, 1, 0, 1, 0, -1, 0, 1.172251e-07, 27.550863, 0, -12.369669)
+[node name="NorthWall" type="StaticBody3D" parent="WorldColliders" unique_id=1500382314]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
+physics_material_override = SubResource("PhysicsMaterial_5cjrv")
 
-[node name="baseLeftLocation" type="Node3D" parent="World" unique_id=1794628689]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -30.780245, 0, -0.36870384)
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldColliders/NorthWall" unique_id=1153549151]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.5, -3.5)
+shape = SubResource("BoxShape3D_j0p05")
 
-[node name="baseRightLocation" type="Node3D" parent="World" unique_id=2017474905]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 31.418005, 0, -0.36870384)
+[node name="SouthWall" type="StaticBody3D" parent="WorldColliders" unique_id=44459634]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+physics_material_override = SubResource("PhysicsMaterial_5cjrv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldColliders/SouthWall" unique_id=163705929]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.5, 3.5)
+shape = SubResource("BoxShape3D_j0p05")
+
+[node name="WestWall" type="StaticBody3D" parent="WorldColliders" unique_id=1827160435]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 0)
+physics_material_override = SubResource("PhysicsMaterial_5cjrv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldColliders/WestWall" unique_id=980247972]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 0)
+shape = SubResource("BoxShape3D_5nsto")
+
+[node name="EastWall" type="StaticBody3D" parent="WorldColliders" unique_id=517674575]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 0)
+physics_material_override = SubResource("PhysicsMaterial_5cjrv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldColliders/EastWall" unique_id=2065646648]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
+shape = SubResource("BoxShape3D_5nsto")
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=1305417993]
+navigation_mesh = SubResource("NavigationMesh_5cjrv")
+script = ExtResource("55_yisvs")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D" unique_id=737780758]
+physics_material_override = SubResource("PhysicsMaterial_5cjrv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/StaticBody3D" unique_id=819267075]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3, 0)
+shape = SubResource("BoxShape3D_5cjrv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavigationRegion3D" unique_id=1428836611]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+material_override = ExtResource("44_m4llh")
+mesh = SubResource("QuadMesh_j0p05")
+
+[node name="Buildings" type="Node3D" parent="NavigationRegion3D" unique_id=1446149746]
+
+[node name="SpawnLeft" type="Node3D" parent="." unique_id=482879428]
+transform = Transform3D(-2.9802322e-08, 0, -1, 0, 1, 0, 1, 0, -2.9802322e-08, -5, 0, 0)
+
+[node name="SpawnRight" type="Node3D" parent="." unique_id=2101850589]
+transform = Transform3D(1.172251e-07, 0, 1, 0, 1, 0, -1, 0, 1.172251e-07, 5, 0, 0)
+
+[node name="baseLeftLocation" type="Node3D" parent="." unique_id=1794628689]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -14.049309, 0, -4.3280318e-07)
+
+[node name="baseRightLocation" type="Node3D" parent="." unique_id=2017474905]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.239672, 0, 0)
 
 [node name="CameraTarget" parent="." unique_id=925498331 node_paths=PackedStringArray("avatarsContainer") instance=ExtResource("3_pbw6q")]
 physics_interpolation_mode = 2
@@ -337,5 +522,3 @@ avatarsContainer = NodePath("../PlayerAvatars")
 [node name="Projectiles" type="Node3D" parent="." unique_id=1024129859]
 
 [node name="Pickups" type="Node3D" parent="." unique_id=170036029]
-
-[node name="Buildings" type="Node3D" parent="." unique_id=1446149746]

@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://bwf2h6blppepx"]
 
-[ext_resource type="Script" uid="uid://ccn8nh85ga532" path="res://Scripts/Projectile.cs" id="1_k1cl8"]
+[ext_resource type="Script" uid="uid://ccn8nh85ga532" path="res://Scripts/Commons/Projectile.cs" id="1_k1cl8"]
 [ext_resource type="Material" uid="uid://cmi7xouarvcnb" path="res://Materials/Projectile.tres" id="1_lal66"]
-[ext_resource type="Script" uid="uid://cnxmhyihofeeq" path="res://Scripts/Commons/Trail.cs" id="3_vku8s"]
+[ext_resource type="Script" uid="uid://cnxmhyihofeeq" path="res://Scripts/Components/Trail.cs" id="3_vku8s"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_k1cl8"]
 size = Vector3(0.13, 0.13, 0.1)

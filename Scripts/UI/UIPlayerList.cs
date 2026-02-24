@@ -2,6 +2,8 @@ using Godot;
 using MLobby;
 using System;
 
+namespace OOTA.UI;
+
 public partial class UIPlayerList : GridContainer
 {
     [Export] Control playerList;

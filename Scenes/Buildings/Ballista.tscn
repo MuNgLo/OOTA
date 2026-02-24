@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://ck3bhvhdsvhc5"]
+
+[ext_resource type="PackedScene" uid="uid://1f0u31lnjgx6" path="res://Blends/Ballista.blend" id="1_vyvu3"]
+[ext_resource type="Script" uid="uid://cht2xaa7miiq6" path="res://Scripts/Buildings/RangedTower.cs" id="2_33u83"]
+[ext_resource type="PackedScene" uid="uid://cknfroylc4m5u" path="res://Scenes/Projectiles/BallistaBolt.tscn" id="3_qdwwe"]
+[ext_resource type="PackedScene" uid="uid://bdd36kaa4ccrl" path="res://Scenes/AwarenessArea3d.tscn" id="4_3ago1"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_33u83"]
+size = Vector3(0.328, 0.5, 0.321)
+
+[node name="Ballista2" unique_id=1187934347 node_paths=PackedStringArray("weaponPivot", "weaponMuzzle", "models") instance=ExtResource("1_vyvu3")]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("2_33u83")
+prefabProjectile = ExtResource("3_qdwwe")
+weaponPivot = NodePath("BallistaStand/WeaponPivot")
+weaponMuzzle = NodePath("BallistaStand/WeaponPivot/BallistaMuzzle")
+towerType = 2
+models = [NodePath("BallistaStand")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=647524695]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("BoxShape3D_33u83")
+
+[node name="AwarenessArea3D" parent="." index="2" unique_id=1941854259 instance=ExtResource("4_3ago1")]

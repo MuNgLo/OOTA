@@ -1,6 +1,7 @@
 using Godot;
 
-namespace Waves;
+namespace OOTA.Resources;
+
 [GlobalClass]
 public partial class WaveDefinition : Resource
 {

@@ -2,6 +2,8 @@ using Godot;
 using MLobby;
 using System;
 
+namespace OOTA.UI;
+
 public partial class UILobbyKey : Control
 {
     [Export] private LineEdit le_key;

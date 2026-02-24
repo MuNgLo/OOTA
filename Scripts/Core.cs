@@ -1,22 +1,22 @@
 using Godot;
 using MLobby;
 using MLogging;
+using OOTA.Enums;
+using OOTA.GameLogic;
 using System;
 using System.Diagnostics;
 
-public enum TEAM { NONE, LEFT, RIGHT }
-public enum PLAYERMODE { NONE, ATTACKING, BUILDING }
+namespace OOTA;
 
 public partial class Core : Node
 {
     private static Core ins;
-    [Export] PackedScene goldPrefab;
-    [Export] PackedScene healthPrefab;
+
 
     [Export] LobbyManager lobby;
     [Export] OOTAPlayerManager players;
-    [Export] GameLogic rules;
-    public static GameLogic Rules => ins.rules;
+    [Export] Rules rules;
+    public static Rules Rules => ins.rules;
     public static LobbyManager Lobby => ins.lobby;
 
     [ExportGroup("Team related")]
@@ -59,19 +59,7 @@ public partial class Core : Node
         return false;
     }
 
-    private void SpawnHealth(Vector3 globalPosition)
-    {
-        RigidBody3D gold = healthPrefab.Instantiate<RigidBody3D>();
-        gold.Position = globalPosition;
-        GetTree().Root.AddChild(gold, true);
-    }
-
-    private void SpawnGold(Vector3 globalPosition)
-    {
-        RigidBody3D gold = goldPrefab.Instantiate<RigidBody3D>();
-        gold.Position = globalPosition;
-        GetTree().Root.AddChild(gold, true);
-    }
+    
 
 
 
@@ -82,35 +70,7 @@ public partial class Core : Node
         return null;
     }
 
-    internal static void BuildingDied(BuildingBaseClass building)
-    {
-        GD.Print($"Core::BuildingDied() path[{building.GetPath()}]");
-
-        int roll = GD.RandRange(0, 100);
-        if (roll < 40)
-        {
-            ins.SpawnGold(building.GlobalPosition);
-        }
-        else if (roll < 60)
-        {
-            ins.SpawnHealth(building.GlobalPosition);
-        }
-        building.QueueFree();
-    }
-    internal static void UnitDied(UnitBaseClass unit)
-    {
-        if (!ins.Multiplayer.IsServer()) { return; }
-        int roll = GD.RandRange(0, 100);
-        if (roll < 40)
-        {
-            PickupSpawner.SpawnThisPickup(new PickupSpawner.SpawnPickupArgument(TEAM.NONE, PickupSpawner.PICKUPTYPE.GOLD, unit.GlobalRotation, unit.GlobalPosition));
-        }
-        else if (roll < 60)
-        {
-            PickupSpawner.SpawnThisPickup(new PickupSpawner.SpawnPickupArgument(TEAM.NONE, PickupSpawner.PICKUPTYPE.HEALTH, unit.GlobalRotation, unit.GlobalPosition));
-        }
-        unit.QueueFree();
-    }
+   
 
     #region Connection things
     public static string AddressAndPortToString(System.Net.IPAddress anIPAddress, int port)

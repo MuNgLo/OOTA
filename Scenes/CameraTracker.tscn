@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://evcej7t3o6vg"]
 
-[ext_resource type="Script" uid="uid://dwvoajupjnimd" path="res://Scripts/CameraTracker.cs" id="1_xdfgl"]
+[ext_resource type="Script" uid="uid://dwvoajupjnimd" path="res://Scripts/Commons/CameraTracker.cs" id="1_xdfgl"]
 
 [node name="CameraTarget" type="Node3D" unique_id=925498331]
 script = ExtResource("1_xdfgl")

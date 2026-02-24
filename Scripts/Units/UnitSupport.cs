@@ -1,7 +1,12 @@
 using Godot;
+using OOTA.Enums;
+using OOTA.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+namespace OOTA.Units;
+
 [GlobalClass]
 public partial class UnitSupport : UnitBaseClass, ISupporter
 {
@@ -12,31 +17,21 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
     [Export] float baseDamageBonus = 0.25f;
     [Export] float baseScaleBonus = 0.15f;
 
-    public override void _PhysicsProcess(double delta)
-    {
-        if (!Multiplayer.IsServer()) { return; }
-        PickTarget();
 
+    public override void ProcessHunting(float delta)
+    {
         inVec = Vector3.Zero;
         inVec = GlobalPosition.DirectionTo(target.GlobalPosition);
-
+        // apply break if moving in wrong direction 
         if (LinearVelocity.Dot(inVec) < 0.5f)
         {
             LinearVelocity *= 0.5f;
         }
+        // tweak velocity to stick harder on track
+        float angle = LinearVelocity.SignedAngleTo(inVec, Vector3.Up);
+        LinearVelocity = LinearVelocity.Rotated(Vector3.Up, angle);
 
-        if (TargetInRange())
-        {
-            if (TargetIsToClose())
-            {
-                ApplyForce(-inVec * Mass * acceleration * SpeedModifier());
-            }
-            else
-            {
-                if (LinearVelocity != Vector3.Zero) { LinearVelocity *= 0.5f; }
-            }
-        }
-        else
+        if (GlobalPosition.DistanceTo(target.GlobalPosition) > attackRange)
         {
             if (inVec != Vector3.Zero)
             {
@@ -47,14 +42,69 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
                 LinearVelocity *= 0.85f;
             }
         }
+        else
+        {
+            // within range so slow down
+            LinearVelocity *= 0.5f;
+        }
+
     }
 
+    public override void ProcessTraveling(float delta)
+    {
+        // if no path
+        if (pathState == PATHSTATE.IDLE)
+        {
+            GetPathToTarget();
+        }
+        // Skip if waiting for path
+        if (pathState == PATHSTATE.PENDING) { return; }
+
+        // move along path
+        if (pathState == PATHSTATE.EXECUTING)
+        {
+            //MGizmosCSharp.GizmoUtils.DrawLine(path, 5.0f, Colors.RebeccaPurple);
+
+            // tweak velocity to stick harder on path
+            float angle = LinearVelocity.SignedAngleTo(inVec, Vector3.Up);
+            LinearVelocity = LinearVelocity.Rotated(Vector3.Up, angle);
+
+            // Move along path
+            inVec = Vector3.Zero;
+            if (GlobalPosition.DistanceTo(nextPathPoint) < 0.2f) { pathIndex++; }
+
+            if (pathIndex < path.Count)
+            {
+                //MGizmosCSharp.GizmoUtils.DrawLine(GlobalPosition, nextPathPoint, 0.1f, Colors.Red);
+
+                inVec = GlobalPosition.DirectionTo(nextPathPoint);
+                if (LinearVelocity.Dot(inVec) < 0.5f)
+                {
+                    LinearVelocity *= 0.5f;
+                }
+
+                if (inVec != Vector3.Zero)
+                {
+                    ApplyForce(inVec * Mass * acceleration * SpeedModifier());
+                }
+                else
+                {
+                    LinearVelocity *= 0.85f;
+                }
+            }
+            else
+            {
+                // Arrived at end of path
+                LinearVelocity *= 0.5f;
+                pathState = PATHSTATE.FINISHED;
+            }
+        }
+    }
 
     public override void SetTeam(TEAM value)
     {
         GetNode<MeshInstance3D>("MeshInstance3D").SetSurfaceOverrideMaterial(0, Core.TeamMaterial(value));
         CollisionLayer = value == TEAM.LEFT ? Core.Rules.leftTeamCollision : Core.Rules.rightTeamCollision;
-        area.CollisionMask = value == TEAM.LEFT ? Core.Rules.leftTeamCollision : Core.Rules.rightTeamCollision;
         team = value;
     }
 
@@ -73,7 +123,7 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
         throw new NotImplementedException();
     }
 
-    public override void WhenBodyEntered(Node3D body)
+    public override void BodyEnteredAggroRange(Node3D body)
     {
         if (body is UnitBaseClass unitEntering && unitEntering.Team == Team && unitEntering is not UnitSupport)
         {
@@ -81,10 +131,11 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
             {
                 targets.Add(unitEntering);
                 unitEntering.AddSupporter(this);
+                ResetMind();
             }
         }
     }
-    public override void WhenBodyExited(Node3D body)
+    public override void BodyExitedAggroRange(Node3D body)
     {
         if (body is ITargetable targetable)
         {
@@ -95,11 +146,11 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
             }
             if (target is not null && target == body)
             {
-                PickTarget();
+                ResetMind();
             }
         }
     }
-    public override void PickTarget()
+    private protected override void PickTarget()
     {
         if (targets.Count > 0)
         {
@@ -119,6 +170,6 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
         {
             targetable.RemoveSupporter(this);
         }
-        Core.UnitDied(this);
+        base.Die();
     }
 }// EOF CLASS

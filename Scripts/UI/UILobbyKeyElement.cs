@@ -2,7 +2,7 @@ using Godot;
 using MLobby;
 using System;
 
-namespace UIAPI.Menus;
+namespace OOTA.UI;
 
 public partial class UILobbyKeyElement : Control
 {

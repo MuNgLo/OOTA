@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://cju5jokc7jpxi"]
+
+[ext_resource type="PackedScene" uid="uid://bdjyj7ppvbvum" path="res://Blends/Cannon.blend" id="1_jop0c"]
+[ext_resource type="Script" uid="uid://cht2xaa7miiq6" path="res://Scripts/Buildings/RangedTower.cs" id="2_q8556"]
+[ext_resource type="PackedScene" uid="uid://yoigwfaxc34a" path="res://Scenes/Projectiles/CannonBall.tscn" id="3_0hx4j"]
+[ext_resource type="PackedScene" uid="uid://bdd36kaa4ccrl" path="res://Scenes/AwarenessArea3d.tscn" id="4_yw1vg"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_jop0c"]
+size = Vector3(0.28735352, 0.5004883, 0.6123047)
+
+[node name="Cannon2" unique_id=71578167 node_paths=PackedStringArray("weaponPivot", "weaponMuzzle", "models") instance=ExtResource("1_jop0c")]
+script = ExtResource("2_q8556")
+prefabProjectile = ExtResource("3_0hx4j")
+weaponPivot = NodePath("Cannon")
+weaponMuzzle = NodePath("Cannon/Muzzle")
+towerType = 2
+models = [NodePath("Cannon")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=1879557597]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.24975586, 0)
+shape = SubResource("BoxShape3D_jop0c")
+
+[node name="AwarenessArea3D" parent="." index="2" unique_id=1941854259 instance=ExtResource("4_yw1vg")]

@@ -1,15 +1,32 @@
 using Godot;
+using OOTA.Resources;
+using OOTA.Spawners;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Waves;
+using OOTA.GameLogic;
+using OOTA.Enums;
+
+namespace OOTA.Buildings;
 
 public partial class Base : BuildingBaseClass
 {
     [ExportGroup("Spawns")]
     [Export] Node3D[] spawnPoints;
 
-    internal async void Spawn(WaveDefinition wave, Material teamMaterial)
+    public override void _Ready()
+    {
+        base._Ready();
+        Waves.OnWaveSpawned += WhenWaveSpawned;
+        TreeExiting += () => { Waves.OnWaveSpawned -= WhenWaveSpawned; };
+    }
+
+    private void WhenWaveSpawned(object sender, WaveDefinition e)
+    {
+        Spawn(e);
+    }
+
+    internal async void Spawn(WaveDefinition wave)
     {
         foreach (EnemySpawn spawns in wave.spawns)
         {
@@ -37,7 +54,7 @@ public partial class Base : BuildingBaseClass
                 {"rot", Vector3.Zero},
                 {"resourcePath", resourcePath}
             };
-        UnitSpawner.SpawnThisUnit(args).TargetEnemyBase();
+        UnitSpawner.SpawnThisUnit(args);
     }
 
     private Vector3 RNGSpawn()

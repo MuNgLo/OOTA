@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://ceh3oy34t0cq4"]
+
+[ext_resource type="PackedScene" uid="uid://dimisks0uvhjv" path="res://Blends/Trebuchet.blend" id="1_hdl73"]
+[ext_resource type="Script" uid="uid://cht2xaa7miiq6" path="res://Scripts/Buildings/RangedTower.cs" id="2_8igxr"]
+[ext_resource type="PackedScene" uid="uid://yoigwfaxc34a" path="res://Scenes/Projectiles/CannonBall.tscn" id="3_i6pne"]
+[ext_resource type="PackedScene" uid="uid://bdd36kaa4ccrl" path="res://Scenes/AwarenessArea3d.tscn" id="4_0fnpj"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_4h01i"]
+height = 0.5
+radius = 0.16992188
+
+[node name="Trebuchet" unique_id=148523869 node_paths=PackedStringArray("weaponPivot", "weaponMuzzle", "models") instance=ExtResource("1_hdl73")]
+script = ExtResource("2_8igxr")
+attackRange = 14.0
+baseDamage = 50
+attackCoolDownMS = 1200
+prefabProjectile = ExtResource("3_i6pne")
+projectileSpeed = 16.0
+projectileTTL = 0.5
+weaponPivot = NodePath("Trebuchet/Pivot")
+weaponMuzzle = NodePath("Trebuchet/Pivot/Muzzle")
+towerType = 2
+aggroRange = 15.0
+maxHealth = 250.0
+models = [NodePath("Trebuchet")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=639538522]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("CylinderShape3D_4h01i")
+
+[node name="AwarenessArea3D" parent="." index="2" unique_id=1941854259 instance=ExtResource("4_0fnpj")]

@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://dqskhyo1fhsn"]
+
+[ext_resource type="Script" uid="uid://djr1p3a6b5iwg" path="res://Scripts/Commons/GoalTrigger.cs" id="1_tnoe7"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xertq"]
+size = Vector3(1, 2.1241455, 1)
+
+[node name="GoalTrigger" type="Area3D" unique_id=1442528740]
+collision_layer = 0
+script = ExtResource("1_tnoe7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1674393577]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.56207275, 0)
+shape = SubResource("BoxShape3D_xertq")
+debug_color = Color(1.92523e-07, 0.7361329, 0.4846087, 1)

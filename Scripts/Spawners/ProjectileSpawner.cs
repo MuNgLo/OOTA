@@ -1,6 +1,10 @@
 using System;
 using Godot;
 using MLogging;
+using OOTA.Enums;
+
+namespace OOTA.Spawners;
+
 [GlobalClass]
 public partial class ProjectileSpawner : MultiplayerSpawner
 {

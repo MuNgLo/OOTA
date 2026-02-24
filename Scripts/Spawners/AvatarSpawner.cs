@@ -1,6 +1,10 @@
 using Godot;
 using MLobby;
 using MLogging;
+using OOTA.Enums;
+
+namespace OOTA.Spawners;
+
 [GlobalClass]
 public partial class AvatarSpawner : MultiplayerSpawner
 {

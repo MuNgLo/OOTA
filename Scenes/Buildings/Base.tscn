@@ -1,150 +1,78 @@
 [gd_scene format=3 uid="uid://bgcalbv5r35bg"]
 
 [ext_resource type="Script" uid="uid://d1cvqk7vcfmad" path="res://Scripts/Buildings/Base.cs" id="1_56fhp"]
-[ext_resource type="Material" uid="uid://dafyt7kexxmrp" path="res://Materials/Tower.tres" id="3_lmatm"]
-[ext_resource type="Material" uid="uid://clb8vxdgv3xw1" path="res://Materials/Hut.tres" id="3_yqxv0"]
-[ext_resource type="Material" uid="uid://bgbya1ktllsfd" path="res://Materials/Barrel.tres" id="4_h4vhd"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_56fhp"]
-size = Vector3(5, 1, 5)
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_k34hx"]
+height = 0.23913574
 
-[sub_resource type="BoxMesh" id="BoxMesh_ospri"]
-size = Vector3(5, 1, 5)
-
-[sub_resource type="BoxMesh" id="BoxMesh_h4vhd"]
-size = Vector3(4, 0.1, 4)
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_ospri"]
-height = 1.0
-radius = 7.0
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_k34hx"]
-height = 0.2
-
-[sub_resource type="BoxMesh" id="BoxMesh_lmatm"]
-size = Vector3(0.545, 0.535, 0.455)
-
-[sub_resource type="BoxMesh" id="BoxMesh_ihcm5"]
-size = Vector3(0.2, 0.2, 0.485)
-
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_lmatm"]
-properties/0/path = NodePath("MeshInstance3D2/WeaponPivot:rotation")
-properties/0/spawn = true
-properties/0/replication_mode = 2
-
-[node name="Base" type="StaticBody3D" unique_id=1105242929 node_paths=PackedStringArray("spawnPoints", "weaponPivot", "weaponMuzzle", "area")]
+[node name="Base" type="StaticBody3D" unique_id=1105242929 node_paths=PackedStringArray("spawnPoints", "models")]
 collision_layer = 8
 collision_mask = 0
 script = ExtResource("1_56fhp")
 spawnPoints = [NodePath("SpawnPoint"), NodePath("SpawnPoint2"), NodePath("SpawnPoint3"), NodePath("SpawnPoint4"), NodePath("SpawnPoint5"), NodePath("SpawnPoint6"), NodePath("SpawnPoint7"), NodePath("SpawnPoint8"), NodePath("SpawnPoint9"), NodePath("SpawnPoint10"), NodePath("SpawnPoint11"), NodePath("SpawnPoint12"), NodePath("SpawnPoint13"), NodePath("SpawnPoint14"), NodePath("SpawnPoint15"), NodePath("SpawnPoint16"), NodePath("SpawnPoint17"), NodePath("SpawnPoint18"), NodePath("SpawnPoint19"), NodePath("SpawnPoint20")]
-range = 8.5
-projectileSpeed = 10.0
-weaponPivot = NodePath("MeshInstance3D2/WeaponPivot")
-weaponMuzzle = NodePath("MeshInstance3D2/WeaponPivot/WeaponBarrel/Muzzle")
-damage = 100
-attackCoolDownMS = 1000
-area = NodePath("Area3D")
+towerType = 2
+models = []
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1498953792]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-shape = SubResource("BoxShape3D_56fhp")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1666750002]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-material_override = ExtResource("3_yqxv0")
-mesh = SubResource("BoxMesh_ospri")
-
-[node name="TeamMesh" type="MeshInstance3D" parent="." unique_id=980592440]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
-mesh = SubResource("BoxMesh_h4vhd")
-
-[node name="Area3D" type="Area3D" parent="." unique_id=1009048695]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9458742, 0, 0)
-collision_layer = 0
-collision_mask = 6
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=23189609]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-shape = SubResource("CylinderShape3D_ospri")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1138958585]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8804321, 0)
+shape = SubResource("CylinderShape3D_k34hx")
 
 [node name="SpawnPoint" type="Node3D" parent="." unique_id=2015738725]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8553379, 0, 0)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.2969461, 0, -0.37046748)
 
 [node name="SpawnPoint2" type="Node3D" parent="." unique_id=388301570]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8553379, 0, 0.7148504)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -1.0117965, 0, -0.37046754)
 
 [node name="SpawnPoint3" type="Node3D" parent="." unique_id=901533667]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8553379, 0, 1.4960406)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -1.7929866, 0, -0.37046754)
 
 [node name="SpawnPoint4" type="Node3D" parent="." unique_id=991057317]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8553379, 0, 2.1631634)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -2.4601095, 0, -0.3704676)
 
 [node name="SpawnPoint5" type="Node3D" parent="." unique_id=399914028]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8553379, 0, 2.9223335)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -3.2192795, 0, -0.37046766)
 
 [node name="SpawnPoint6" type="Node3D" parent="." unique_id=836209318]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8553379, 0, -0.51371646)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0.21677037, 0, -0.37046748)
 
 [node name="SpawnPoint7" type="Node3D" parent="." unique_id=2100966069]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8553379, 0, -1.3048458)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 1.0078998, 0, -0.37046742)
 
 [node name="SpawnPoint8" type="Node3D" parent="." unique_id=1495067846]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8553379, 0, -2.1182413)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 1.8212953, 0, -0.37046742)
 
 [node name="SpawnPoint9" type="Node3D" parent="." unique_id=1590056006]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8553379, 0, -2.93069)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 2.633744, 0, -0.37046736)
 
 [node name="SpawnPoint10" type="Node3D" parent="." unique_id=213932099]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8553379, 0, -3.7411652)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.444219, 0, -0.3704673)
 
 [node name="SpawnPoint11" type="Node3D" parent="." unique_id=1668194358]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2139966, 0, 0)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.2969461, 0, 0.27087373)
 
 [node name="SpawnPoint12" type="Node3D" parent="." unique_id=1873677511]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2139966, 0, 0.7148504)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -1.0117965, 0, 0.27087367)
 
 [node name="SpawnPoint13" type="Node3D" parent="." unique_id=248625917]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2139966, 0, 1.4960406)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -1.7929866, 0, 0.27087364)
 
 [node name="SpawnPoint14" type="Node3D" parent="." unique_id=1084221466]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2139966, 0, 2.1631634)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -2.4601095, 0, 0.2708736)
 
 [node name="SpawnPoint15" type="Node3D" parent="." unique_id=1361104178]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2139966, 0, 2.9223335)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -3.2192795, 0, 0.27087358)
 
 [node name="SpawnPoint16" type="Node3D" parent="." unique_id=888190988]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2139966, 0, -0.51371646)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0.21677034, 0, 0.27087373)
 
 [node name="SpawnPoint17" type="Node3D" parent="." unique_id=1253324229]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2139966, 0, -1.3048458)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 1.0078998, 0, 0.27087376)
 
 [node name="SpawnPoint18" type="Node3D" parent="." unique_id=454770485]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2139966, 0, -2.1182413)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 1.8212953, 0, 0.2708738)
 
 [node name="SpawnPoint19" type="Node3D" parent="." unique_id=305938308]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2139966, 0, -2.93069)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 2.633744, 0, 0.27087384)
 
 [node name="SpawnPoint20" type="Node3D" parent="." unique_id=1716714805]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.2139966, 0, -3.7411652)
-
-[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=2122053152]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9534781, 1.0999999, 0)
-material_override = ExtResource("3_lmatm")
-mesh = SubResource("CylinderMesh_k34hx")
-
-[node name="WeaponPivot" type="MeshInstance3D" parent="MeshInstance3D2" unique_id=1047155682]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0.20183492, 0)
-material_override = ExtResource("3_lmatm")
-mesh = SubResource("BoxMesh_lmatm")
-
-[node name="WeaponBarrel" type="MeshInstance3D" parent="MeshInstance3D2/WeaponPivot" unique_id=2097968420]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.19975722, -0.27408278)
-material_override = ExtResource("4_h4vhd")
-mesh = SubResource("BoxMesh_ihcm5")
-
-[node name="Muzzle" type="Node3D" parent="MeshInstance3D2/WeaponPivot/WeaponBarrel" unique_id=1378306812]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.28590035)
-
-[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1897591650]
-replication_config = SubResource("SceneReplicationConfig_lmatm")
-visibility_update_mode = 1
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 3.444219, 0, 0.27087387)

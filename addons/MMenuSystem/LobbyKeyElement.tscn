@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://b6hvboivp4ir6" path="res://Scripts/UI/UILobbyKeyElement.cs" id="1_neos7"]
 [ext_resource type="StyleBox" uid="uid://c16ngu5djull5" path="res://Theme/style_box_backdrop.tres" id="1_qwfwi"]
-[ext_resource type="Texture2D" uid="uid://bjn7065aapivj" path="res://PWEye.png" id="2_fxpx5"]
+[ext_resource type="Texture2D" uid="uid://bjn7065aapivj" path="res://Images/Icons/PWEye.png" id="2_fxpx5"]
 
 [node name="LobbyKeyElement" type="Panel" unique_id=1673920690 node_paths=PackedStringArray("le_key", "btn_Copy", "btn_Secret")]
 anchors_preset = 5

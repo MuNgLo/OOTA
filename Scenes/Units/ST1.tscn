@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cq8x2gspwwg23" path="res://Scripts/Units/UnitSupport.cs" id="1_71np4"]
 [ext_resource type="Material" uid="uid://dkpna8lky50kd" path="res://Materials/Support.tres" id="2_k5uun"]
 [ext_resource type="Script" uid="uid://c3qkbidk7pl64" path="res://Scripts/HUD/HUDLabelMaker.cs" id="3_mqulg"]
+[ext_resource type="PackedScene" uid="uid://bdd36kaa4ccrl" path="res://Scenes/AwarenessArea3d.tscn" id="4_k5uun"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gvmvp"]
 friction = 0.0
@@ -16,10 +17,6 @@ size = Vector3(0.135, 0.205, 0.135)
 [sub_resource type="BoxShape3D" id="BoxShape3D_33ws7"]
 size = Vector3(0.2, 0.4, 0.2)
 
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_axtxo"]
-height = 1.0
-radius = 3.0
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_en7ll"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
@@ -28,7 +25,7 @@ properties/1/path = NodePath(".:health")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 
-[node name="ST1" type="RigidBody3D" unique_id=852337211 node_paths=PackedStringArray("area")]
+[node name="ST1" type="RigidBody3D" unique_id=852337211]
 collision_layer = 2
 collision_mask = 15
 axis_lock_angular_x = true
@@ -40,9 +37,7 @@ baseDamageBonus = 0.5
 baseScaleBonus = 0.05
 moveSpeed = 6.0
 attackRange = 2.0
-range = 10.0
 targetMinDistance = 1.0
-area = NodePath("Area3D")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=917551841]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
@@ -57,14 +52,6 @@ mesh = SubResource("BoxMesh_i0lqr")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
 shape = SubResource("BoxShape3D_33ws7")
 
-[node name="Area3D" type="Area3D" parent="." unique_id=279177486]
-collision_layer = 0
-collision_mask = 14
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=2133194914]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-shape = SubResource("CylinderShape3D_axtxo")
-
 [node name="LabelMaker" type="Node3D" parent="." unique_id=409128245 node_paths=PackedStringArray("unit")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0)
 script = ExtResource("3_mqulg")
@@ -73,3 +60,6 @@ unit = NodePath("..")
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=2132295127]
 replication_config = SubResource("SceneReplicationConfig_en7ll")
 visibility_update_mode = 1
+
+[node name="AwarenessArea3D" parent="." unique_id=1941854259 instance=ExtResource("4_k5uun")]
+flipCollisionMask = true

@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-namespace HUD;
+namespace OOTA.HUD;
 
 public class HUDWorldLabel
 {

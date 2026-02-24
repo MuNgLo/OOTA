@@ -1,8 +1,9 @@
 using Godot;
 using Godot.Collections;
+using OOTA.Resources;
 using System;
 
-namespace Waves;
+namespace OOTA.GameLogic;
 
 public partial class Waves : Node
 {
@@ -12,6 +13,8 @@ public partial class Waves : Node
     WaveDefinition[] waves;
 
     int lastWaveIndexSpawned = -1;
+
+    public static event EventHandler<WaveDefinition> OnWaveSpawned;
 
     public override void _Ready()
     {
@@ -29,7 +32,7 @@ public partial class Waves : Node
         WaveDefinition wave = GetWaveByIndex(lastWaveIndexSpawned + 1);
         if (wave.spawnsOnGameTick + tickOffset <= tick)
         {
-            Core.Rules.SpawnWave(wave);
+            OnWaveSpawned?.Invoke(this, wave);
             lastWaveIndexSpawned++;
         }
     }

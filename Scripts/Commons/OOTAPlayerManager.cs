@@ -1,8 +1,11 @@
 using Godot;
 using MLobby;
 using MLogging;
+using OOTA.Spawners;
 using System;
 using System.Threading.Tasks;
+
+namespace OOTA;
 
 partial class OOTAPlayerManager : PlayerManager
 {

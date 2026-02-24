@@ -1,6 +1,11 @@
 using System;
 using Godot;
 using MLogging;
+using OOTA.Buildings;
+using OOTA.Enums;
+using OOTA.Resources;
+
+namespace OOTA.Spawners;
 
 [GlobalClass]
 public partial class BuildingSpawner : MultiplayerSpawner
@@ -24,26 +29,25 @@ public partial class BuildingSpawner : MultiplayerSpawner
 
     private Node SpawnBuilding(Godot.Collections.Dictionary<string, Variant> args)
     {
-        BuildingBaseClass building = CreateBuilding((BUILDINGTYPE)args["type"].AsInt32());
+        BuildingBaseClass building;
+        if (args["towerIndex"].AsInt32() != -1)
+        {
+            TowerResource tw = Core.Rules.towers.GetTowerByIndex(args["towerIndex"].AsInt32());
+            building = tw.towerPrefab.Instantiate<BuildingBaseClass>();
+        }
+        else
+        {
+            building = GD.Load<PackedScene>(args["resourcePath"].AsString()).Instantiate<BuildingBaseClass>();
+        }
+
+
         building.Team = (TEAM)args["team"].AsInt32();
         building.Position = args["pos"].AsVector3();
-        building.Rotation = args["rot"].AsVector3();
+        building.Rotation = building.towerType == TOWERTYPE.FOUNDATION ? Vector3.Zero : args["rot"].AsVector3();
         if (debug) { MLog.LogInfo($"BuildingSpawner::SpawnBuilding() Position[{args["pos"].AsVector3()}]"); }
         return building;
     }
-
-    private BuildingBaseClass CreateBuilding(BUILDINGTYPE type)
-    {
-        switch (type)
-        {
-            case BUILDINGTYPE.BASE:
-                return prefabBase.Instantiate<BuildingBaseClass>();
-            case BUILDINGTYPE.TOWER:
-            default:
-                return prefabTower.Instantiate<BuildingBaseClass>();
-        }
-    }
-   internal static void CleanUp()
+    internal static void CleanUp()
     {
         foreach (Node child in ins.GetNode(ins.SpawnPath).GetChildren())
         {
@@ -53,24 +57,27 @@ public partial class BuildingSpawner : MultiplayerSpawner
     public struct SpawnBuildingArgument
     {
         public TEAM team;
-        public BUILDINGTYPE type;
+        public int towerIndex;
         public Vector3 rotation;
         public Vector3 position;
 
-        public SpawnBuildingArgument(TEAM team, BUILDINGTYPE type, Vector3 rotation, Vector3 position)
+        public string resourcePath;
+
+        public SpawnBuildingArgument(TEAM team, int towerIndex, Vector3 position)
         {
             this.team = team;
-            this.type = type;
-            this.rotation = rotation;
+            this.towerIndex = towerIndex;
+            this.rotation = team == TEAM.LEFT ? new Vector3(0, Mathf.Pi * -0.5f, 0) : new Vector3(0, Mathf.Pi * 0.5f, 0);
             this.position = position;
         }
 
         public Godot.Collections.Dictionary<string, Variant> AsSpawnArgs => new Godot.Collections.Dictionary<string, Variant>()
         {
             {"team", (int)team },
-            {"type", (int)type},
+            {"towerIndex", towerIndex},
             {"rot", rotation},
-            {"pos", position}
+            {"pos", position},
+            {"resourcePath", resourcePath}
         };
     }// EOF STRUCT
 }// EOF CLASS

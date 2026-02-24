@@ -1,6 +1,7 @@
 using Godot;
 using System;
-namespace UI.Menus;
+
+namespace OOTA.UI;
 
 [GlobalClass]
 public partial class UIMainMenuFlipper : GridContainer

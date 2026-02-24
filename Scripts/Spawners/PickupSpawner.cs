@@ -1,6 +1,11 @@
 using System;
 using Godot;
 using MLogging;
+using OOTA.Enums;
+using OOTA.Units;
+
+namespace OOTA.Spawners;
+
 
 [GlobalClass]
 public partial class PickupSpawner : MultiplayerSpawner
@@ -45,7 +50,7 @@ public partial class PickupSpawner : MultiplayerSpawner
         }
     }
 
-   internal static void CleanUp()
+    internal static void CleanUp()
     {
         foreach (Node child in ins.GetNode(ins.SpawnPath).GetChildren())
         {
@@ -56,14 +61,13 @@ public partial class PickupSpawner : MultiplayerSpawner
     {
         public TEAM team;
         public PICKUPTYPE type;
-        public Vector3 rotation;
+        public Vector3 rotation = Vector3.Zero;
         public Vector3 position;
 
-        public SpawnPickupArgument(TEAM team, PICKUPTYPE type, Vector3 rotation, Vector3 position)
+        public SpawnPickupArgument(TEAM team, PICKUPTYPE type, Vector3 position)
         {
             this.team = team;
             this.type = type;
-            this.rotation = rotation;
             this.position = position;
         }
 

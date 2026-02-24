@@ -1,6 +1,7 @@
 using Godot;
 using System;
-namespace HUD;
+
+namespace OOTA.HUD;
 
 public partial class HUDHealthBar : ProgressBar
 {

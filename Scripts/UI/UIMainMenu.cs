@@ -1,7 +1,8 @@
 using Godot;
+using OOTA.GameLogic;
 using System;
 
-namespace UI.Menus;
+namespace OOTA.UI;
 
 public enum MENUSTATE { NONE, START, HOST, JOIN, HOSTING, CONNECTED, PLAYING }
 [GlobalClass]
@@ -43,15 +44,15 @@ public partial class UIMainMenu : PanelContainer
         OnMenuStateChanged?.Invoke(null, MENUSTATE.START);
         // Hook up buttons
         btnHost.ButtonDown += () => State = MENUSTATE.HOST;
-        btnStartHost.ButtonDown += () => { State = MENUSTATE.HOSTING; UIAPI.UIAPICalls.HostStart(); };
-        btnStopHost.ButtonDown += () => { State = MENUSTATE.HOST; UIAPI.UIAPICalls.DisconnectFromGame(); };
+        btnStartHost.ButtonDown += () => { State = MENUSTATE.HOSTING; UIAPICalls.HostStart(); };
+        btnStopHost.ButtonDown += () => { State = MENUSTATE.HOST; UIAPICalls.DisconnectFromGame(); };
 
         btnJoin.ButtonDown += () => State = MENUSTATE.JOIN;
-        btnConnect.ButtonDown += () => { State = MENUSTATE.CONNECTED; UIAPI.UIAPICalls.JoinHost(lobbyKey.Text); };
-        btnDisConnect.ButtonDown += () => { State = MENUSTATE.START; UIAPI.UIAPICalls.DisconnectFromGame(); };
+        btnConnect.ButtonDown += () => { State = MENUSTATE.CONNECTED; UIAPICalls.JoinHost(lobbyKey.Text); };
+        btnDisConnect.ButtonDown += () => { State = MENUSTATE.START; UIAPICalls.DisconnectFromGame(); };
 
         btnResume.ButtonDown += () => MMenuSystem.MenuSystem.HideMenu();
-        btnExit.ButtonDown += () => UIAPI.UIAPICalls.CloseGame();
+        btnExit.ButtonDown += () => UIAPICalls.CloseGame();
 
         btnCloseMenu.ButtonDown += () => MMenuSystem.MenuSystem.HideMenu();
 

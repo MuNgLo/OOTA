@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-namespace HUD;
+namespace OOTA.HUD;
 
 public partial class HUDWorldElements : Control
 {

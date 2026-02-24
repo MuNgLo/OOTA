@@ -1,6 +1,10 @@
 using Godot;
+using OOTA.Enums;
+using OOTA.GameLogic;
 using System;
-namespace HUD;
+
+namespace OOTA.HUD;
+
 public partial class HUDBaseHealthBar : ProgressBar
 {
     [Export] TEAM team;

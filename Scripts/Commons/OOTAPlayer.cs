@@ -1,6 +1,10 @@
 using System;
 using Godot;
 using MLobby;
+using OOTA.Enums;
+
+namespace OOTA;
+
 [GlobalClass]
 public partial class OOTAPlayer : MLobbyPlayer
 {

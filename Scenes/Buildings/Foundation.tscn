@@ -1,0 +1,90 @@
+[gd_scene format=3 uid="uid://c7cpur2jsjar1"]
+
+[ext_resource type="Script" uid="uid://wdb53soj2tdv" path="res://Scripts/Buildings/Foundation.cs" id="1_yaekp"]
+[ext_resource type="ArrayMesh" uid="uid://c65d4s7lt4chu" path="res://Meshes/bWallFoundation.res" id="2_4f53v"]
+[ext_resource type="ArrayMesh" uid="uid://4u4ltfjew88x" path="res://Meshes/bWallConnector.res" id="3_yaekp"]
+[ext_resource type="Script" uid="uid://c3qkbidk7pl64" path="res://Scripts/HUD/HUDLabelMaker.cs" id="5_j1pu8"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yaekp"]
+size = Vector3(0.41601563, 1, 0.17822266)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yxj02"]
+size = Vector3(0.640625, 1, 0.5888672)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_bypgs"]
+properties/0/path = NodePath(".:health")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+
+[node name="Blocker" type="StaticBody3D" unique_id=1281713625 node_paths=PackedStringArray("connSouth", "connWest", "connNorth", "connEast", "models")]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_yaekp")
+connSouth = NodePath("ConnSouth")
+connWest = NodePath("ConnWest")
+connNorth = NodePath("ConnNorth")
+connEast = NodePath("ConnEast")
+towerType = 1
+health = 500.0
+models = [NodePath("MeshInstance3D")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1818366435]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.07445872, 0)
+layers = 512
+mesh = ExtResource("2_4f53v")
+
+[node name="ConnSouth" type="StaticBody3D" parent="." unique_id=1646704899]
+
+[node name="ConnSouth" type="MeshInstance3D" parent="ConnSouth" unique_id=74436878]
+layers = 512
+mesh = ExtResource("3_yaekp")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="ConnSouth" unique_id=116390429]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.40844727)
+shape = SubResource("BoxShape3D_yaekp")
+
+[node name="ConnWest" type="StaticBody3D" parent="." unique_id=1403809558]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="ConnSouth" type="MeshInstance3D" parent="ConnWest" unique_id=1609631111]
+layers = 512
+mesh = ExtResource("3_yaekp")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="ConnWest" unique_id=395233799]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.40844727)
+shape = SubResource("BoxShape3D_yaekp")
+
+[node name="ConnNorth" type="StaticBody3D" parent="." unique_id=1317020213]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+
+[node name="ConnSouth" type="MeshInstance3D" parent="ConnNorth" unique_id=1544008760]
+layers = 512
+mesh = ExtResource("3_yaekp")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="ConnNorth" unique_id=1375110913]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.40844727)
+shape = SubResource("BoxShape3D_yaekp")
+
+[node name="ConnEast" type="StaticBody3D" parent="." unique_id=640961152]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="ConnSouth" type="MeshInstance3D" parent="ConnEast" unique_id=808467006]
+layers = 512
+mesh = ExtResource("3_yaekp")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="ConnEast" unique_id=1198142581]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.40844727)
+shape = SubResource("BoxShape3D_yaekp")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1347173250]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("BoxShape3D_yxj02")
+
+[node name="LabelMaker" type="Node3D" parent="." unique_id=960099250 node_paths=PackedStringArray("building")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2396566, 0)
+script = ExtResource("5_j1pu8")
+building = NodePath("..")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=772288372]
+replication_config = SubResource("SceneReplicationConfig_bypgs")
+visibility_update_mode = 1

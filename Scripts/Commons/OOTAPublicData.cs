@@ -1,6 +1,10 @@
 using Godot;
 using System;
 using MLobby;
+using OOTA.Enums;
+
+namespace OOTA;
+
 /// <summary>
 /// This class should hold all the player info shared with everyone on the network.<br/>
 /// Using a MultiPlayerSynchronizer Node the exported Properties down here replicates across network.<br/>
