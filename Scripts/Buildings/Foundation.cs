@@ -11,10 +11,10 @@ public partial class Foundation : BuildingBaseClass
 
 
     [ExportGroup("Connectors")]
-    [Export] StaticBody3D connSouth;
-    [Export] StaticBody3D connWest;
-    [Export] StaticBody3D connNorth;
-    [Export] StaticBody3D connEast;
+    [Export] MeshInstance3D connSouth;
+    [Export] MeshInstance3D connWest;
+    [Export] MeshInstance3D connNorth;
+    [Export] MeshInstance3D connEast;
 
     Vector2I coord;
 
@@ -28,6 +28,7 @@ public partial class Foundation : BuildingBaseClass
         connWest.Hide();
         connNorth.Hide();
         connEast.Hide();
+        WhenTileChanges(null, coord + Vector2I.Up);
     }
 
 

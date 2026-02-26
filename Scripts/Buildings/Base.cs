@@ -37,8 +37,8 @@ public partial class Base : BuildingBaseClass
             }
         }
     }
-
-    public override void TakeDamage(int amount)
+    [Obsolete("Verify this overrides the interface default method")]
+    public void TakeDamage(float amount)
     {
         if(!Multiplayer.IsServer()){return;}
         if (amount < 1) { return; }

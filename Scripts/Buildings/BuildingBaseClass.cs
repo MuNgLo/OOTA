@@ -28,6 +28,11 @@ public partial class BuildingBaseClass : StaticBody3D, ITargetable
     public double NormalizedHealth => Math.Clamp(health / maxHealth, 0.0, 1.0);
     public Node3D Body => this;
 
+    public float Health { get => health; set => health = value; }
+    public float MaxHealth { get => maxHealth; set => maxHealth = value; }
+    public bool CanTakeDamage { get => canTakeDamage; set => canTakeDamage = value; }
+
+
     [ExportGroup("Team Meshes")]
     [Export] protected MeshInstance3D[] models;
 
@@ -41,22 +46,12 @@ public partial class BuildingBaseClass : StaticBody3D, ITargetable
             health = maxHealth;
         }
     }
-
     #region BaseClass Public Virtual
-    public virtual void AddHealth(int amount)
+       public virtual void Die()
     {
-        if (amount < 1) { return; }
-        health = Mathf.Clamp(health + amount, 0, maxHealth);
-    }
-    public virtual void TakeDamage(int amount)
-    {
-        if (amount < 1 || !canTakeDamage) { return; }
-        health -= amount;
-        if (health <= 0.0f) { Die(); }
+        Core.Rules.BuildingDied(this);
     }
     #endregion
-
-
 
     #region BaseClass Public
     public void AddSupporter(ISupporter supporter)
@@ -79,10 +74,7 @@ public partial class BuildingBaseClass : StaticBody3D, ITargetable
     #endregion
 
     #region BaseClass Private Virtual
-    private protected virtual void Die()
-    {
-        Core.Rules.BuildingDied(this);
-    }
+ 
     private protected virtual void PickTarget()
     {
         if (targets.Count > 0)

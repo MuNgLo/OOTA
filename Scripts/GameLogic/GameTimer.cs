@@ -15,18 +15,32 @@ public partial class GameTimer : Node
     float nextTickIn = 0.0f;
 
     public static float TotalGameTime => ins.totalGameTime;
+    public static bool RunningTimer => ins.runningTimer;
     public static event EventHandler<int> OnGameTick;
+    /// <summary>
+    /// Carries gameSpeed,ticksPerSecond
+    /// </summary>
+    public static event EventHandler<float[]> OnGameTimingDecided;
 
     public override void _EnterTree()
     {
         ins = this;
+    }
+    public override void _Ready()
+    {
+        Core.Rules.OnGameStart += WhenGameStart;
+    }
+
+    private void WhenGameStart(object sender, EventArgs e)
+    {
+        OnGameTimingDecided?.Invoke(this, [gameSpeed, ticksPerSecond]);
     }
 
     public override void _Process(double delta)
     {
         if (runningTimer)
         {
-            RunningTimer((float)delta);
+            RunTimer((float)delta);
         }
     }
     public static void StartTimer()
@@ -36,7 +50,7 @@ public partial class GameTimer : Node
         ins.nextTickIn = 0.0f;
         ins.runningTimer = true;
     }
-    private void RunningTimer(float delta)
+    private void RunTimer(float delta)
     {
         totalGameTime += delta;
         nextTickIn -= delta;

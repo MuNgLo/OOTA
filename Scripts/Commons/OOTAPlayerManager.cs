@@ -1,6 +1,7 @@
 using Godot;
 using MLobby;
 using MLogging;
+using OOTA.Enums;
 using OOTA.Spawners;
 using System;
 using System.Threading.Tasks;
@@ -9,6 +10,19 @@ namespace OOTA;
 
 partial class OOTAPlayerManager : PlayerManager
 {
+    private OOTAPlayer localPlayer;
+    public OOTAPlayer LocalPlayer { get => localPlayer; }
+
+    private protected override void WhenChildEnterTree(Node node)
+    {
+        base.WhenChildEnterTree(node);
+        if (node is OOTAPlayer ootaPlayer && ootaPlayer.PeerID == Multiplayer.GetUniqueId())
+        {
+            localPlayer = ootaPlayer;
+        }
+    }
+
+
     public bool GetPlayer(long peerID, out OOTAPlayer player)
     {
         return GetPlayer((int)peerID, out player);
@@ -74,6 +88,17 @@ partial class OOTAPlayerManager : PlayerManager
         if (GetPlayer(peerID, out MLobbyPlayer player))
         {
             SpawnPlayer(player as OOTAPlayer);
+        }
+    }
+
+    internal void GiveTeamGold(TEAM team, int amount)
+    {
+        foreach (MLobbyPlayer player in players)
+        {
+            if ((player as OOTAPlayer).Team == team)
+            {
+                (player as OOTAPlayer).AddGold(amount);
+            }
         }
     }
     #endregion

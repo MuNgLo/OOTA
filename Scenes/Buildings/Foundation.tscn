@@ -5,16 +5,16 @@
 [ext_resource type="ArrayMesh" uid="uid://4u4ltfjew88x" path="res://Meshes/bWallConnector.res" id="3_yaekp"]
 [ext_resource type="Script" uid="uid://c3qkbidk7pl64" path="res://Scripts/HUD/HUDLabelMaker.cs" id="5_j1pu8"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_yaekp"]
-size = Vector3(0.41601563, 1, 0.17822266)
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_yxj02"]
-size = Vector3(0.640625, 1, 0.5888672)
+size = Vector3(0.8, 0.669, 0.8)
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_bypgs"]
 properties/0/path = NodePath(".:health")
 properties/0/spawn = true
 properties/0/replication_mode = 2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rfqov"]
+size = Vector3(1, 3, 1)
 
 [node name="Blocker" type="StaticBody3D" unique_id=1281713625 node_paths=PackedStringArray("connSouth", "connWest", "connNorth", "connEast", "models")]
 collision_layer = 8
@@ -26,6 +26,7 @@ connNorth = NodePath("ConnNorth")
 connEast = NodePath("ConnEast")
 towerType = 1
 health = 500.0
+maxHealth = 500.0
 models = [NodePath("MeshInstance3D")]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1818366435]
@@ -33,52 +34,28 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.07445872, 0)
 layers = 512
 mesh = ExtResource("2_4f53v")
 
-[node name="ConnSouth" type="StaticBody3D" parent="." unique_id=1646704899]
-
-[node name="ConnSouth" type="MeshInstance3D" parent="ConnSouth" unique_id=74436878]
-layers = 512
-mesh = ExtResource("3_yaekp")
-
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="ConnSouth" unique_id=116390429]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.40844727)
-shape = SubResource("BoxShape3D_yaekp")
-
-[node name="ConnWest" type="StaticBody3D" parent="." unique_id=1403809558]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
-
-[node name="ConnSouth" type="MeshInstance3D" parent="ConnWest" unique_id=1609631111]
-layers = 512
-mesh = ExtResource("3_yaekp")
-
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="ConnWest" unique_id=395233799]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.40844727)
-shape = SubResource("BoxShape3D_yaekp")
-
-[node name="ConnNorth" type="StaticBody3D" parent="." unique_id=1317020213]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
-
-[node name="ConnSouth" type="MeshInstance3D" parent="ConnNorth" unique_id=1544008760]
-layers = 512
-mesh = ExtResource("3_yaekp")
-
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="ConnNorth" unique_id=1375110913]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.40844727)
-shape = SubResource("BoxShape3D_yaekp")
-
-[node name="ConnEast" type="StaticBody3D" parent="." unique_id=640961152]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
-
-[node name="ConnSouth" type="MeshInstance3D" parent="ConnEast" unique_id=808467006]
-layers = 512
-mesh = ExtResource("3_yaekp")
-
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="ConnEast" unique_id=1198142581]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.40844727)
-shape = SubResource("BoxShape3D_yaekp")
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1347173250]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33459473, 0)
 shape = SubResource("BoxShape3D_yxj02")
+
+[node name="ConnSouth" type="MeshInstance3D" parent="." unique_id=74436878]
+layers = 512
+mesh = ExtResource("3_yaekp")
+
+[node name="ConnWest" type="MeshInstance3D" parent="." unique_id=1609631111]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+layers = 512
+mesh = ExtResource("3_yaekp")
+
+[node name="ConnNorth" type="MeshInstance3D" parent="." unique_id=1544008760]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+layers = 512
+mesh = ExtResource("3_yaekp")
+
+[node name="ConnEast" type="MeshInstance3D" parent="." unique_id=808467006]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+layers = 512
+mesh = ExtResource("3_yaekp")
 
 [node name="LabelMaker" type="Node3D" parent="." unique_id=960099250 node_paths=PackedStringArray("building")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2396566, 0)
@@ -88,3 +65,13 @@ building = NodePath("..")
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=772288372]
 replication_config = SubResource("SceneReplicationConfig_bypgs")
 visibility_update_mode = 1
+
+[node name="NavBlock" type="StaticBody3D" parent="." unique_id=1256041457]
+visible = false
+collision_layer = 512
+collision_mask = 0
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="NavBlock" unique_id=1985620191]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_rfqov")
+debug_color = Color(0.63109064, 0.5288405, 0, 1)

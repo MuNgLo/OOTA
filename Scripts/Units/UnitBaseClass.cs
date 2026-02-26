@@ -12,13 +12,6 @@ namespace OOTA.Units;
 [GlobalClass]
 public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
 {
-    /// <summary>
-    /// None: Not doing anything<br/>
-    /// Traveling: Moving along a path<br/>
-    /// Hunting: Moving relative to target
-    /// </summary>
-    public enum MINDSTATE { NONE, TRAVELING, HUNTING }
-    public enum PATHSTATE { IDLE, PENDING, EXECUTING, FINISHED }
     [Export] protected TEAM team = TEAM.NONE;
 
     [ExportGroup("States")]
@@ -41,6 +34,7 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
 
 
     [ExportGroup("Health")]
+    [Export] public bool canTakeDamage = true;
     [Export] float health = 100;
     [Export] float maxHealth = 100;
 
@@ -58,6 +52,11 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
     public Node3D Body => this;
     private protected Vector3 nextPathPoint => path[pathIndex] + Vector3.Down * 0.5f;
 
+
+    public float Health { get => health; set => health = value; }
+    public float MaxHealth { get => maxHealth; set => maxHealth = value; }
+    public bool CanTakeDamage { get => canTakeDamage; set => canTakeDamage = value; }
+
     public override void _Ready()
     {
         if (Multiplayer.IsServer())
@@ -73,6 +72,8 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
     {
         // Skip on non Host
         if (!Multiplayer.IsServer()) { return; }
+
+        if (target is null) { ResetMind(); }
 
         switch (mindState)
         {
@@ -96,15 +97,13 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
     }
     public virtual void AttackTarget()
     {
-        if (target is UnitBaseClass unit) { unit.TakeDamage(BuildDamage(damage)); return; }
-        if (target is BuildingBaseClass building) { building.TakeDamage(BuildDamage(damage)); return; }
-        if (target is PlayerAvatar avatar) { avatar.TakeDamage(BuildDamage(damage)); return; }
+        (target as ITargetable).TakeDamage(BuildDamage(damage));
     }
     public virtual void BodyEnteredAggroRange(Node3D body)
     {
         if (body is ITargetable t && t.Team != team)
         {
-            if(body is BuildingBaseClass && !canAttackBuildings) { return; }
+            if (body is BuildingBaseClass && !canAttackBuildings) { return; }
             if (!targets.Contains(t))
             {
                 targets.Add(t);
@@ -175,17 +174,27 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
     public virtual void ProcessNone(float delta)
     {
         PickTarget();
-        if (target is Base)
+        if (target is Goal)
         {
             mindState = MINDSTATE.TRAVELING;
             return;
         }
-        mindState = MINDSTATE.HUNTING;
+        //mindState = MINDSTATE.HUNTING;
+        mindState = MINDSTATE.TRAVELING;
     }
     public virtual void ProcessTraveling(float delta)
     {
+        if (target is not Goal)
+        {
+            if (SightToTargetIsFree())
+            {
+                mindState = MINDSTATE.HUNTING;
+                return;
+            }
+        }
+
         // if no path
-        if (pathState == PATHSTATE.IDLE)
+        if (pathState == PATHSTATE.IDLE || path.Last().DistanceTo(target.GlobalPosition) > 0.2f)
         {
             GetPathToTarget();
         }
@@ -235,12 +244,6 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
         GetNode<MeshInstance3D>("MeshInstance3D").SetSurfaceOverrideMaterial(0, Core.TeamMaterial(value));
         CollisionLayer = value == TEAM.LEFT ? Core.Rules.leftTeamCollision : Core.Rules.rightTeamCollision;
         team = value;
-    }
-    public virtual void TakeDamage(int amount)
-    {
-        if (amount < 1) { return; }
-        health -= amount;
-        if (health <= 0.0f) { Die(); }
     }
     #endregion
 
@@ -389,7 +392,8 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
     }
     private void UpdateUnitScale()
     {
-        if (!IsInstanceValid(this) || !Multiplayer.HasMultiplayerPeer()) { return; }
+        if (!IsInstanceValid(this)) { return; }
+        if (!Multiplayer.HasMultiplayerPeer()) { return; }
         float totalScale = 1.0f;
         foreach (ISupporter supporter in supporters)
         {
@@ -421,7 +425,22 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
 
 
 
-
+    private protected bool SightToTargetIsFree()
+    {
+        Vector3 origin = GlobalPosition + Vector3.Up * 0.5f;
+        Vector3 direction = GlobalPosition.DirectionTo(target.GlobalPosition + Vector3.Up * 0.5f);
+        Vector3 rayEnd = origin + direction * aggroRange;
+        PhysicsDirectSpaceState3D spaceState = GetWorld3D().DirectSpaceState;
+        PhysicsRayQueryParameters3D query = PhysicsRayQueryParameters3D.Create(origin, rayEnd, Core.Rules.unitSightBlockLayer);
+        Godot.Collections.Dictionary result = spaceState.IntersectRay(query);
+        if (result is not null && result.ContainsKey("position"))
+        {
+            //MGizmosCSharp.GizmoUtils.DrawLine(origin, result["position"].AsVector3(), 0.1f, Colors.Red);
+            return false;
+        }
+        //MGizmosCSharp.GizmoUtils.DrawLine(origin, rayEnd, 0.1f, Colors.Green);
+        return true;
+    }
 
 
 

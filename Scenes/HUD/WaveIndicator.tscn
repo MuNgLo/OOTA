@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://0kfyxhol16wp"]
+
+[ext_resource type="Script" uid="uid://c1qeubxc52j7l" path="res://Scripts/HUD/HUDWaveIndicator.cs" id="1_3wlhw"]
+[ext_resource type="PackedScene" uid="uid://cpdayi2ir3du0" path="res://Scenes/HUD/Dash.tscn" id="2_akw0s"]
+[ext_resource type="PackedScene" uid="uid://lkcqulnsl1dx" path="res://Scenes/HUD/WaveIcon.tscn" id="3_jhlil"]
+
+[node name="WaveIndicator" type="Control" unique_id=664188516 node_paths=PackedStringArray("flowContainer")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -817.0
+offset_bottom = -618.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3wlhw")
+flowContainer = NodePath("Control/HFlowContainer")
+prefabDash = ExtResource("2_akw0s")
+prefabWave = ExtResource("3_jhlil")
+
+[node name="Control" type="Control" parent="." unique_id=938867924]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HFlowContainer" type="HFlowContainer" parent="Control" unique_id=769729915]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -15.0
+offset_right = 1665.0
+offset_bottom = 9.0
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0

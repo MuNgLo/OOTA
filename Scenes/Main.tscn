@@ -39,10 +39,17 @@
 [ext_resource type="Script" uid="uid://bqmsnui6f1p4t" path="res://Scripts/Spawners/PickupSpawner.cs" id="22_4n42c"]
 [ext_resource type="Script" uid="uid://bh6vusv8b7mi" path="res://Scripts/Spawners/BuildingSpawner.cs" id="23_c5snn"]
 [ext_resource type="Script" uid="uid://c4jnxg4n2he57" path="res://Scripts/GameLogic/Towers.cs" id="23_f7hdo"]
+[ext_resource type="Script" uid="uid://cq8x2gspwwg23" path="res://Scripts/Units/UnitSupport.cs" id="23_y2ulj"]
 [ext_resource type="Script" uid="uid://cpy4cj2fwebi7" path="res://Scripts/Resources/TowerResource.cs" id="24_d8m2u"]
 [ext_resource type="ArrayMesh" uid="uid://c65d4s7lt4chu" path="res://Meshes/bWallFoundation.res" id="24_lac6x"]
+[ext_resource type="Material" uid="uid://dkpna8lky50kd" path="res://Materials/Support.tres" id="24_t3x2a"]
+[ext_resource type="PackedScene" uid="uid://bdd36kaa4ccrl" path="res://Scenes/AwarenessArea3d.tscn" id="25_1bbis"]
 [ext_resource type="PackedScene" uid="uid://c7cpur2jsjar1" path="res://Scenes/Buildings/Foundation.tscn" id="25_5psol"]
+[ext_resource type="PhysicsMaterial" uid="uid://dr8slojgt6lyu" path="res://Materials/Physics/UnitsDefault.tres" id="26_yn2g2"]
+[ext_resource type="Script" uid="uid://btxk033l7oxdm" path="res://Scripts/Units/UnitMelee.cs" id="27_yic5e"]
+[ext_resource type="Script" uid="uid://dsbsydafqkpqf" path="res://Scripts/Units/UnitRanged.cs" id="28_ex7s8"]
 [ext_resource type="ArrayMesh" uid="uid://ccv0wlgm8wc0j" path="res://Meshes/GhostBallista.res" id="28_off7b"]
+[ext_resource type="Material" uid="uid://cppy5eut1v0ry" path="res://Materials/Weapon.tres" id="29_4clwk"]
 [ext_resource type="ArrayMesh" uid="uid://bl66d7kt3i72a" path="res://Meshes/GhostCannon.res" id="29_7sj7i"]
 [ext_resource type="PackedScene" uid="uid://ck3bhvhdsvhc5" path="res://Scenes/Buildings/Ballista.tscn" id="29_lfh1j"]
 [ext_resource type="PackedScene" uid="uid://cju5jokc7jpxi" path="res://Scenes/Buildings/Cannon.tscn" id="29_off7b"]
@@ -56,7 +63,10 @@
 [ext_resource type="PackedScene" uid="uid://de1od7uc00qsf" path="res://addons/MConsole/DropinScene/GameConsole.tscn" id="38_utia5"]
 [ext_resource type="PackedScene" uid="uid://v4kptsufr618" path="res://addons/MConsole/DropinScene/FPSCounter.tscn" id="39_f7hdo"]
 [ext_resource type="Material" uid="uid://bsch310uncfdb" path="res://Materials/Ground.tres" id="44_m4llh"]
+[ext_resource type="Script" uid="uid://ckgv4qp8fmgcj" path="res://Scripts/GameLogic/Placer.cs" id="53_t3x2a"]
 [ext_resource type="Script" uid="uid://bwm6v2ycfwd0v" path="res://Scripts/Grid/GridNavigation.cs" id="55_yisvs"]
+[ext_resource type="Script" uid="uid://coo10xkki8sph" path="res://Scripts/UnitDeathTrigger.cs" id="63_yn2g2"]
+[ext_resource type="Material" uid="uid://ch7ne8nwbxk4q" path="res://Materials/TowerGhost.tres" id="66_1bbis"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_gaesr"]
 top_radius = 0.2
@@ -99,30 +109,6 @@ _bundled = {
 "version": 3
 }
 
-[sub_resource type="Resource" id="Resource_vvnwx"]
-script = ExtResource("10_346fj")
-enemyPrefab = ExtResource("16_u7mjy")
-amount = 1
-metadata/_custom_type_script = "uid://c1efn3impdgid"
-
-[sub_resource type="Resource" id="Resource_0sclb"]
-script = ExtResource("10_346fj")
-enemyPrefab = ExtResource("9_2w5on")
-amount = 5
-metadata/_custom_type_script = "uid://c1efn3impdgid"
-
-[sub_resource type="Resource" id="Resource_x3rx7"]
-script = ExtResource("10_346fj")
-enemyPrefab = ExtResource("15_xvtyr")
-amount = 5
-metadata/_custom_type_script = "uid://c1efn3impdgid"
-
-[sub_resource type="Resource" id="Resource_sxkr1"]
-script = ExtResource("8_erwvk")
-spawnsOnGameTick = 1
-spawns = Array[Object]([SubResource("Resource_vvnwx"), SubResource("Resource_0sclb"), SubResource("Resource_x3rx7")])
-metadata/_custom_type_script = "uid://cppk1p232dwwq"
-
 [sub_resource type="Resource" id="Resource_btbly"]
 script = ExtResource("10_346fj")
 enemyPrefab = ExtResource("16_u7mjy")
@@ -132,7 +118,7 @@ metadata/_custom_type_script = "uid://c1efn3impdgid"
 [sub_resource type="Resource" id="Resource_fq0cl"]
 script = ExtResource("10_346fj")
 enemyPrefab = ExtResource("9_2w5on")
-amount = 5
+amount = 3
 metadata/_custom_type_script = "uid://c1efn3impdgid"
 
 [sub_resource type="Resource" id="Resource_u7mjy"]
@@ -156,7 +142,7 @@ metadata/_custom_type_script = "uid://c1efn3impdgid"
 [sub_resource type="Resource" id="Resource_3tgeq"]
 script = ExtResource("10_346fj")
 enemyPrefab = ExtResource("9_2w5on")
-amount = 5
+amount = 4
 metadata/_custom_type_script = "uid://c1efn3impdgid"
 
 [sub_resource type="Resource" id="Resource_4yxf6"]
@@ -219,6 +205,681 @@ spawnsOnGameTick = 40
 spawns = Array[Object]([SubResource("Resource_utia5"), SubResource("Resource_c5snn"), SubResource("Resource_6heos")])
 metadata/_custom_type_script = "uid://cppk1p232dwwq"
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_gvmvp"]
+friction = 0.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_pqfs0"]
+size = Vector3(0.23, 0.4, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_i0lqr"]
+size = Vector3(0.135, 0.205, 0.135)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_33ws7"]
+size = Vector3(0.2, 0.4, 0.2)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_en7ll"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:health")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[sub_resource type="PackedScene" id="PackedScene_h2tpa"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("ST1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "baseDamageBonus", "baseScaleBonus", "moveSpeed", "attackRange", "targetMinDistance", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D", "flipCollisionMask"),
+"node_count": 7,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 12, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 12, 10, 13, 11, 0, 1073741824, 0, 15, 14, -1, 2, 16, 12, 17, 13, 0, 1073741825, 0, 19, 18, -1, 3, 20, 14, 21, 15, 22, 16, 0, 1073741826, 0, 24, 23, -1, 2, 25, 17, 26, 18, 0, 1073741827, 0, 28, 27, -1, 3, 29, 19, 30, 20, 1073741855, 21, 0, 1073741828, 0, 33, 32, -1, 2, 34, 22, 35, 23, 0, 1073741829, 0, 2147483647, 36, 24, 1, 37, 25, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_gvmvp"), ExtResource("23_y2ulj"), 0.5, 0.05, 6.0, 2.0, 1.0, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_pqfs0"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("24_t3x2a"), SubResource("BoxMesh_i0lqr"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_33ws7"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_en7ll"), 1, ExtResource("25_1bbis"), true],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_nkjwg"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_h2tpa")
+amount = 3
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="BoxMesh" id="BoxMesh_8n4h5"]
+size = Vector3(0.2, 0.4, 0.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_as1io"]
+size = Vector3(0.2, 0.4, 0.2)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_xd5mi"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:health")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[sub_resource type="PackedScene" id="PackedScene_tt1x2"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("MT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "moveSpeed", "damage", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D"),
+"node_count": 6,
+"node_ids": PackedInt32Array(852337211, 917551841, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 11, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 1073741836, 10, 0, 1073741824, 0, 14, 13, -1, 2, 15, 11, 16, 12, 0, 1073741825, 0, 18, 17, -1, 2, 19, 13, 20, 14, 0, 1073741826, 0, 22, 21, -1, 3, 23, 15, 24, 16, 1073741849, 17, 0, 1073741827, 0, 27, 26, -1, 2, 28, 18, 29, 19, 0, 1073741828, 0, 2147483647, 30, 20, 0, 0),
+"variants": [0, 7, true, true, true, ExtResource("26_yn2g2"), ExtResource("27_yic5e"), 4.0, 20, 0.5, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_8n4h5"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_as1io"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_xd5mi"), 1, ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_2wrh7"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_tt1x2")
+amount = 6
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_atu2d"]
+friction = 0.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_x5wht"]
+size = Vector3(0.23, 0.4, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tbeql"]
+size = Vector3(0.135, 0.205, 0.135)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c5nnb"]
+size = Vector3(0.2, 0.4, 0.2)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_fsd2l"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:health")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+
+[sub_resource type="PackedScene" id="PackedScene_8kgcr"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("RT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "projectileSpeed", "projectileTTL", "weaponMuzzle", "moveSpeed", "damage", "attackCoolDownMS", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "Muzzle", "Node3D", "transform", "AwarenessArea3D"),
+"node_count": 8,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1548434956, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 15, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 1073741835, 9, 12, 10, 13, 11, 14, 12, 15, 13, 1073741840, 14, 0, 1073741824, 0, 18, 17, -1, 2, 19, 15, 20, 16, 0, 1073741825, 0, 22, 21, -1, 3, 23, 17, 24, 18, 25, 19, 0, 1073741826, 0, 27, 26, -1, 2, 28, 20, 29, 21, 0, 1073741827, 0, 31, 30, -1, 3, 32, 22, 33, 23, 1073741858, 24, 0, 1073741828, 0, 36, 35, -1, 2, 37, 25, 38, 26, 0, 1073741829, 0, 40, 39, -1, 1, 41, 27, 0, 1073741830, 0, 2147483647, 42, 28, 0, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_atu2d"), ExtResource("28_ex7s8"), 8.0, 3.0, NodePath("Muzzle"), 4.0, 35, 500, 4.0, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_x5wht"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("29_4clwk"), SubResource("BoxMesh_tbeql"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_c5nnb"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_fsd2l"), 1, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4339093, 0), ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_52a0j"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_8kgcr")
+amount = 4
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_mx20r"]
+script = ExtResource("8_erwvk")
+spawnsOnGameTick = 50
+spawns = Array[Object]([SubResource("Resource_nkjwg"), SubResource("Resource_2wrh7"), SubResource("Resource_52a0j")])
+metadata/_custom_type_script = "uid://cppk1p232dwwq"
+
+[sub_resource type="PackedScene" id="PackedScene_rpc3w"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("ST1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "baseDamageBonus", "baseScaleBonus", "moveSpeed", "attackRange", "targetMinDistance", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D", "flipCollisionMask"),
+"node_count": 7,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 12, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 12, 10, 13, 11, 0, 1073741824, 0, 15, 14, -1, 2, 16, 12, 17, 13, 0, 1073741825, 0, 19, 18, -1, 3, 20, 14, 21, 15, 22, 16, 0, 1073741826, 0, 24, 23, -1, 2, 25, 17, 26, 18, 0, 1073741827, 0, 28, 27, -1, 3, 29, 19, 30, 20, 1073741855, 21, 0, 1073741828, 0, 33, 32, -1, 2, 34, 22, 35, 23, 0, 1073741829, 0, 2147483647, 36, 24, 1, 37, 25, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_gvmvp"), ExtResource("23_y2ulj"), 0.5, 0.05, 6.0, 2.0, 1.0, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_pqfs0"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("24_t3x2a"), SubResource("BoxMesh_i0lqr"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_33ws7"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_en7ll"), 1, ExtResource("25_1bbis"), true],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_3k6d1"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_rpc3w")
+amount = 3
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_fq6d3"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("MT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "moveSpeed", "damage", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D"),
+"node_count": 6,
+"node_ids": PackedInt32Array(852337211, 917551841, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 11, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 1073741836, 10, 0, 1073741824, 0, 14, 13, -1, 2, 15, 11, 16, 12, 0, 1073741825, 0, 18, 17, -1, 2, 19, 13, 20, 14, 0, 1073741826, 0, 22, 21, -1, 3, 23, 15, 24, 16, 1073741849, 17, 0, 1073741827, 0, 27, 26, -1, 2, 28, 18, 29, 19, 0, 1073741828, 0, 2147483647, 30, 20, 0, 0),
+"variants": [0, 7, true, true, true, ExtResource("26_yn2g2"), ExtResource("27_yic5e"), 4.0, 20, 0.5, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_8n4h5"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_as1io"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_xd5mi"), 1, ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_he124"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_fq6d3")
+amount = 6
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_478hk"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("RT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "projectileSpeed", "projectileTTL", "weaponMuzzle", "moveSpeed", "damage", "attackCoolDownMS", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "Muzzle", "Node3D", "transform", "AwarenessArea3D"),
+"node_count": 8,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1548434956, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 15, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 1073741835, 9, 12, 10, 13, 11, 14, 12, 15, 13, 1073741840, 14, 0, 1073741824, 0, 18, 17, -1, 2, 19, 15, 20, 16, 0, 1073741825, 0, 22, 21, -1, 3, 23, 17, 24, 18, 25, 19, 0, 1073741826, 0, 27, 26, -1, 2, 28, 20, 29, 21, 0, 1073741827, 0, 31, 30, -1, 3, 32, 22, 33, 23, 1073741858, 24, 0, 1073741828, 0, 36, 35, -1, 2, 37, 25, 38, 26, 0, 1073741829, 0, 40, 39, -1, 1, 41, 27, 0, 1073741830, 0, 2147483647, 42, 28, 0, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_atu2d"), ExtResource("28_ex7s8"), 8.0, 3.0, NodePath("Muzzle"), 4.0, 35, 500, 4.0, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_x5wht"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("29_4clwk"), SubResource("BoxMesh_tbeql"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_c5nnb"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_fsd2l"), 1, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4339093, 0), ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_othpo"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_478hk")
+amount = 4
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_s0riu"]
+script = ExtResource("8_erwvk")
+spawnsOnGameTick = 60
+spawns = Array[Object]([SubResource("Resource_3k6d1"), SubResource("Resource_he124"), SubResource("Resource_othpo")])
+metadata/_custom_type_script = "uid://cppk1p232dwwq"
+
+[sub_resource type="PackedScene" id="PackedScene_hjjnx"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("ST1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "baseDamageBonus", "baseScaleBonus", "moveSpeed", "attackRange", "targetMinDistance", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D", "flipCollisionMask"),
+"node_count": 7,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 12, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 12, 10, 13, 11, 0, 1073741824, 0, 15, 14, -1, 2, 16, 12, 17, 13, 0, 1073741825, 0, 19, 18, -1, 3, 20, 14, 21, 15, 22, 16, 0, 1073741826, 0, 24, 23, -1, 2, 25, 17, 26, 18, 0, 1073741827, 0, 28, 27, -1, 3, 29, 19, 30, 20, 1073741855, 21, 0, 1073741828, 0, 33, 32, -1, 2, 34, 22, 35, 23, 0, 1073741829, 0, 2147483647, 36, 24, 1, 37, 25, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_gvmvp"), ExtResource("23_y2ulj"), 0.5, 0.05, 6.0, 2.0, 1.0, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_pqfs0"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("24_t3x2a"), SubResource("BoxMesh_i0lqr"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_33ws7"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_en7ll"), 1, ExtResource("25_1bbis"), true],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_ok4ge"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_hjjnx")
+amount = 3
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_e2umn"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("MT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "moveSpeed", "damage", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D"),
+"node_count": 6,
+"node_ids": PackedInt32Array(852337211, 917551841, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 11, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 1073741836, 10, 0, 1073741824, 0, 14, 13, -1, 2, 15, 11, 16, 12, 0, 1073741825, 0, 18, 17, -1, 2, 19, 13, 20, 14, 0, 1073741826, 0, 22, 21, -1, 3, 23, 15, 24, 16, 1073741849, 17, 0, 1073741827, 0, 27, 26, -1, 2, 28, 18, 29, 19, 0, 1073741828, 0, 2147483647, 30, 20, 0, 0),
+"variants": [0, 7, true, true, true, ExtResource("26_yn2g2"), ExtResource("27_yic5e"), 4.0, 20, 0.5, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_8n4h5"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_as1io"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_xd5mi"), 1, ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_k6daw"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_e2umn")
+amount = 6
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_05y1e"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("RT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "projectileSpeed", "projectileTTL", "weaponMuzzle", "moveSpeed", "damage", "attackCoolDownMS", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "Muzzle", "Node3D", "transform", "AwarenessArea3D"),
+"node_count": 8,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1548434956, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 15, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 1073741835, 9, 12, 10, 13, 11, 14, 12, 15, 13, 1073741840, 14, 0, 1073741824, 0, 18, 17, -1, 2, 19, 15, 20, 16, 0, 1073741825, 0, 22, 21, -1, 3, 23, 17, 24, 18, 25, 19, 0, 1073741826, 0, 27, 26, -1, 2, 28, 20, 29, 21, 0, 1073741827, 0, 31, 30, -1, 3, 32, 22, 33, 23, 1073741858, 24, 0, 1073741828, 0, 36, 35, -1, 2, 37, 25, 38, 26, 0, 1073741829, 0, 40, 39, -1, 1, 41, 27, 0, 1073741830, 0, 2147483647, 42, 28, 0, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_atu2d"), ExtResource("28_ex7s8"), 8.0, 3.0, NodePath("Muzzle"), 4.0, 35, 500, 4.0, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_x5wht"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("29_4clwk"), SubResource("BoxMesh_tbeql"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_c5nnb"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_fsd2l"), 1, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4339093, 0), ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_tjlwc"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_05y1e")
+amount = 4
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_5ltlj"]
+script = ExtResource("8_erwvk")
+spawnsOnGameTick = 70
+spawns = Array[Object]([SubResource("Resource_ok4ge"), SubResource("Resource_k6daw"), SubResource("Resource_tjlwc")])
+metadata/_custom_type_script = "uid://cppk1p232dwwq"
+
+[sub_resource type="PackedScene" id="PackedScene_om687"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("ST1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "baseDamageBonus", "baseScaleBonus", "moveSpeed", "attackRange", "targetMinDistance", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D", "flipCollisionMask"),
+"node_count": 7,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 12, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 12, 10, 13, 11, 0, 1073741824, 0, 15, 14, -1, 2, 16, 12, 17, 13, 0, 1073741825, 0, 19, 18, -1, 3, 20, 14, 21, 15, 22, 16, 0, 1073741826, 0, 24, 23, -1, 2, 25, 17, 26, 18, 0, 1073741827, 0, 28, 27, -1, 3, 29, 19, 30, 20, 1073741855, 21, 0, 1073741828, 0, 33, 32, -1, 2, 34, 22, 35, 23, 0, 1073741829, 0, 2147483647, 36, 24, 1, 37, 25, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_gvmvp"), ExtResource("23_y2ulj"), 0.5, 0.05, 6.0, 2.0, 1.0, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_pqfs0"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("24_t3x2a"), SubResource("BoxMesh_i0lqr"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_33ws7"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_en7ll"), 1, ExtResource("25_1bbis"), true],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_a5sy2"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_om687")
+amount = 3
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_ulc4m"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("MT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "moveSpeed", "damage", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D"),
+"node_count": 6,
+"node_ids": PackedInt32Array(852337211, 917551841, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 11, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 1073741836, 10, 0, 1073741824, 0, 14, 13, -1, 2, 15, 11, 16, 12, 0, 1073741825, 0, 18, 17, -1, 2, 19, 13, 20, 14, 0, 1073741826, 0, 22, 21, -1, 3, 23, 15, 24, 16, 1073741849, 17, 0, 1073741827, 0, 27, 26, -1, 2, 28, 18, 29, 19, 0, 1073741828, 0, 2147483647, 30, 20, 0, 0),
+"variants": [0, 7, true, true, true, ExtResource("26_yn2g2"), ExtResource("27_yic5e"), 4.0, 20, 0.5, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_8n4h5"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_as1io"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_xd5mi"), 1, ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_eef1t"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_ulc4m")
+amount = 6
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_siwj1"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("RT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "projectileSpeed", "projectileTTL", "weaponMuzzle", "moveSpeed", "damage", "attackCoolDownMS", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "Muzzle", "Node3D", "transform", "AwarenessArea3D"),
+"node_count": 8,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1548434956, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 15, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 1073741835, 9, 12, 10, 13, 11, 14, 12, 15, 13, 1073741840, 14, 0, 1073741824, 0, 18, 17, -1, 2, 19, 15, 20, 16, 0, 1073741825, 0, 22, 21, -1, 3, 23, 17, 24, 18, 25, 19, 0, 1073741826, 0, 27, 26, -1, 2, 28, 20, 29, 21, 0, 1073741827, 0, 31, 30, -1, 3, 32, 22, 33, 23, 1073741858, 24, 0, 1073741828, 0, 36, 35, -1, 2, 37, 25, 38, 26, 0, 1073741829, 0, 40, 39, -1, 1, 41, 27, 0, 1073741830, 0, 2147483647, 42, 28, 0, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_atu2d"), ExtResource("28_ex7s8"), 8.0, 3.0, NodePath("Muzzle"), 4.0, 35, 500, 4.0, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_x5wht"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("29_4clwk"), SubResource("BoxMesh_tbeql"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_c5nnb"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_fsd2l"), 1, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4339093, 0), ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_w1ool"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_siwj1")
+amount = 4
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_cbpwj"]
+script = ExtResource("8_erwvk")
+spawnsOnGameTick = 79
+spawns = Array[Object]([SubResource("Resource_a5sy2"), SubResource("Resource_eef1t"), SubResource("Resource_w1ool")])
+metadata/_custom_type_script = "uid://cppk1p232dwwq"
+
+[sub_resource type="PackedScene" id="PackedScene_jw3lw"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("ST1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "baseDamageBonus", "baseScaleBonus", "moveSpeed", "attackRange", "targetMinDistance", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D", "flipCollisionMask"),
+"node_count": 7,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 12, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 12, 10, 13, 11, 0, 1073741824, 0, 15, 14, -1, 2, 16, 12, 17, 13, 0, 1073741825, 0, 19, 18, -1, 3, 20, 14, 21, 15, 22, 16, 0, 1073741826, 0, 24, 23, -1, 2, 25, 17, 26, 18, 0, 1073741827, 0, 28, 27, -1, 3, 29, 19, 30, 20, 1073741855, 21, 0, 1073741828, 0, 33, 32, -1, 2, 34, 22, 35, 23, 0, 1073741829, 0, 2147483647, 36, 24, 1, 37, 25, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_gvmvp"), ExtResource("23_y2ulj"), 0.5, 0.05, 6.0, 2.0, 1.0, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_pqfs0"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("24_t3x2a"), SubResource("BoxMesh_i0lqr"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_33ws7"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_en7ll"), 1, ExtResource("25_1bbis"), true],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_h7ft5"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_jw3lw")
+amount = 3
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_cchgx"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("MT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "moveSpeed", "damage", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D"),
+"node_count": 6,
+"node_ids": PackedInt32Array(852337211, 917551841, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 11, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 1073741836, 10, 0, 1073741824, 0, 14, 13, -1, 2, 15, 11, 16, 12, 0, 1073741825, 0, 18, 17, -1, 2, 19, 13, 20, 14, 0, 1073741826, 0, 22, 21, -1, 3, 23, 15, 24, 16, 1073741849, 17, 0, 1073741827, 0, 27, 26, -1, 2, 28, 18, 29, 19, 0, 1073741828, 0, 2147483647, 30, 20, 0, 0),
+"variants": [0, 7, true, true, true, ExtResource("26_yn2g2"), ExtResource("27_yic5e"), 4.0, 20, 0.5, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_8n4h5"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_as1io"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_xd5mi"), 1, ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_6jw1o"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_cchgx")
+amount = 6
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_mhc43"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("RT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "projectileSpeed", "projectileTTL", "weaponMuzzle", "moveSpeed", "damage", "attackCoolDownMS", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "Muzzle", "Node3D", "transform", "AwarenessArea3D"),
+"node_count": 8,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1548434956, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 15, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 1073741835, 9, 12, 10, 13, 11, 14, 12, 15, 13, 1073741840, 14, 0, 1073741824, 0, 18, 17, -1, 2, 19, 15, 20, 16, 0, 1073741825, 0, 22, 21, -1, 3, 23, 17, 24, 18, 25, 19, 0, 1073741826, 0, 27, 26, -1, 2, 28, 20, 29, 21, 0, 1073741827, 0, 31, 30, -1, 3, 32, 22, 33, 23, 1073741858, 24, 0, 1073741828, 0, 36, 35, -1, 2, 37, 25, 38, 26, 0, 1073741829, 0, 40, 39, -1, 1, 41, 27, 0, 1073741830, 0, 2147483647, 42, 28, 0, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_atu2d"), ExtResource("28_ex7s8"), 8.0, 3.0, NodePath("Muzzle"), 4.0, 35, 500, 4.0, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_x5wht"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("29_4clwk"), SubResource("BoxMesh_tbeql"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_c5nnb"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_fsd2l"), 1, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4339093, 0), ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_qpal1"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_mhc43")
+amount = 4
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_har0a"]
+script = ExtResource("8_erwvk")
+spawnsOnGameTick = 87
+spawns = Array[Object]([SubResource("Resource_h7ft5"), SubResource("Resource_6jw1o"), SubResource("Resource_qpal1")])
+metadata/_custom_type_script = "uid://cppk1p232dwwq"
+
+[sub_resource type="PackedScene" id="PackedScene_r8bee"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("ST1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "baseDamageBonus", "baseScaleBonus", "moveSpeed", "attackRange", "targetMinDistance", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D", "flipCollisionMask"),
+"node_count": 7,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 12, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 12, 10, 13, 11, 0, 1073741824, 0, 15, 14, -1, 2, 16, 12, 17, 13, 0, 1073741825, 0, 19, 18, -1, 3, 20, 14, 21, 15, 22, 16, 0, 1073741826, 0, 24, 23, -1, 2, 25, 17, 26, 18, 0, 1073741827, 0, 28, 27, -1, 3, 29, 19, 30, 20, 1073741855, 21, 0, 1073741828, 0, 33, 32, -1, 2, 34, 22, 35, 23, 0, 1073741829, 0, 2147483647, 36, 24, 1, 37, 25, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_gvmvp"), ExtResource("23_y2ulj"), 0.5, 0.05, 6.0, 2.0, 1.0, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_pqfs0"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("24_t3x2a"), SubResource("BoxMesh_i0lqr"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_33ws7"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_en7ll"), 1, ExtResource("25_1bbis"), true],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_rwa6c"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_r8bee")
+amount = 3
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_yhlxv"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("MT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "moveSpeed", "damage", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D"),
+"node_count": 6,
+"node_ids": PackedInt32Array(852337211, 917551841, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 11, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 1073741836, 10, 0, 1073741824, 0, 14, 13, -1, 2, 15, 11, 16, 12, 0, 1073741825, 0, 18, 17, -1, 2, 19, 13, 20, 14, 0, 1073741826, 0, 22, 21, -1, 3, 23, 15, 24, 16, 1073741849, 17, 0, 1073741827, 0, 27, 26, -1, 2, 28, 18, 29, 19, 0, 1073741828, 0, 2147483647, 30, 20, 0, 0),
+"variants": [0, 7, true, true, true, ExtResource("26_yn2g2"), ExtResource("27_yic5e"), 4.0, 20, 0.5, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_8n4h5"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_as1io"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_xd5mi"), 1, ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_ry2vk"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_yhlxv")
+amount = 6
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_3d2lr"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("RT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "projectileSpeed", "projectileTTL", "weaponMuzzle", "moveSpeed", "damage", "attackCoolDownMS", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "Muzzle", "Node3D", "transform", "AwarenessArea3D"),
+"node_count": 8,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1548434956, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 15, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 1073741835, 9, 12, 10, 13, 11, 14, 12, 15, 13, 1073741840, 14, 0, 1073741824, 0, 18, 17, -1, 2, 19, 15, 20, 16, 0, 1073741825, 0, 22, 21, -1, 3, 23, 17, 24, 18, 25, 19, 0, 1073741826, 0, 27, 26, -1, 2, 28, 20, 29, 21, 0, 1073741827, 0, 31, 30, -1, 3, 32, 22, 33, 23, 1073741858, 24, 0, 1073741828, 0, 36, 35, -1, 2, 37, 25, 38, 26, 0, 1073741829, 0, 40, 39, -1, 1, 41, 27, 0, 1073741830, 0, 2147483647, 42, 28, 0, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_atu2d"), ExtResource("28_ex7s8"), 8.0, 3.0, NodePath("Muzzle"), 4.0, 35, 500, 4.0, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_x5wht"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("29_4clwk"), SubResource("BoxMesh_tbeql"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_c5nnb"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_fsd2l"), 1, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4339093, 0), ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_onym5"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_3d2lr")
+amount = 4
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_3pqs5"]
+script = ExtResource("8_erwvk")
+spawnsOnGameTick = 94
+spawns = Array[Object]([SubResource("Resource_rwa6c"), SubResource("Resource_ry2vk"), SubResource("Resource_onym5")])
+metadata/_custom_type_script = "uid://cppk1p232dwwq"
+
+[sub_resource type="PackedScene" id="PackedScene_lxea5"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("ST1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "baseDamageBonus", "baseScaleBonus", "moveSpeed", "attackRange", "targetMinDistance", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D", "flipCollisionMask"),
+"node_count": 7,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 12, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 12, 10, 13, 11, 0, 1073741824, 0, 15, 14, -1, 2, 16, 12, 17, 13, 0, 1073741825, 0, 19, 18, -1, 3, 20, 14, 21, 15, 22, 16, 0, 1073741826, 0, 24, 23, -1, 2, 25, 17, 26, 18, 0, 1073741827, 0, 28, 27, -1, 3, 29, 19, 30, 20, 1073741855, 21, 0, 1073741828, 0, 33, 32, -1, 2, 34, 22, 35, 23, 0, 1073741829, 0, 2147483647, 36, 24, 1, 37, 25, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_gvmvp"), ExtResource("23_y2ulj"), 0.5, 0.05, 6.0, 2.0, 1.0, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_pqfs0"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("24_t3x2a"), SubResource("BoxMesh_i0lqr"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_33ws7"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_en7ll"), 1, ExtResource("25_1bbis"), true],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_0y6do"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_lxea5")
+amount = 3
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_28d8q"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("MT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "moveSpeed", "damage", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D"),
+"node_count": 6,
+"node_ids": PackedInt32Array(852337211, 917551841, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 11, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 1073741836, 10, 0, 1073741824, 0, 14, 13, -1, 2, 15, 11, 16, 12, 0, 1073741825, 0, 18, 17, -1, 2, 19, 13, 20, 14, 0, 1073741826, 0, 22, 21, -1, 3, 23, 15, 24, 16, 1073741849, 17, 0, 1073741827, 0, 27, 26, -1, 2, 28, 18, 29, 19, 0, 1073741828, 0, 2147483647, 30, 20, 0, 0),
+"variants": [0, 7, true, true, true, ExtResource("26_yn2g2"), ExtResource("27_yic5e"), 4.0, 20, 0.5, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_8n4h5"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_as1io"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_xd5mi"), 1, ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_ljb7l"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_28d8q")
+amount = 6
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_pqonn"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("RT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "projectileSpeed", "projectileTTL", "weaponMuzzle", "moveSpeed", "damage", "attackCoolDownMS", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "Muzzle", "Node3D", "transform", "AwarenessArea3D"),
+"node_count": 8,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1548434956, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 15, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 1073741835, 9, 12, 10, 13, 11, 14, 12, 15, 13, 1073741840, 14, 0, 1073741824, 0, 18, 17, -1, 2, 19, 15, 20, 16, 0, 1073741825, 0, 22, 21, -1, 3, 23, 17, 24, 18, 25, 19, 0, 1073741826, 0, 27, 26, -1, 2, 28, 20, 29, 21, 0, 1073741827, 0, 31, 30, -1, 3, 32, 22, 33, 23, 1073741858, 24, 0, 1073741828, 0, 36, 35, -1, 2, 37, 25, 38, 26, 0, 1073741829, 0, 40, 39, -1, 1, 41, 27, 0, 1073741830, 0, 2147483647, 42, 28, 0, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_atu2d"), ExtResource("28_ex7s8"), 8.0, 3.0, NodePath("Muzzle"), 4.0, 35, 500, 4.0, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_x5wht"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("29_4clwk"), SubResource("BoxMesh_tbeql"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_c5nnb"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_fsd2l"), 1, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4339093, 0), ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_y7h6l"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_pqonn")
+amount = 4
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_7ikoh"]
+script = ExtResource("8_erwvk")
+spawnsOnGameTick = 100
+spawns = Array[Object]([SubResource("Resource_0y6do"), SubResource("Resource_ljb7l"), SubResource("Resource_y7h6l")])
+metadata/_custom_type_script = "uid://cppk1p232dwwq"
+
+[sub_resource type="PackedScene" id="PackedScene_lt6nf"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("ST1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "baseDamageBonus", "baseScaleBonus", "moveSpeed", "attackRange", "targetMinDistance", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D", "flipCollisionMask"),
+"node_count": 7,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 12, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 12, 10, 13, 11, 0, 1073741824, 0, 15, 14, -1, 2, 16, 12, 17, 13, 0, 1073741825, 0, 19, 18, -1, 3, 20, 14, 21, 15, 22, 16, 0, 1073741826, 0, 24, 23, -1, 2, 25, 17, 26, 18, 0, 1073741827, 0, 28, 27, -1, 3, 29, 19, 30, 20, 1073741855, 21, 0, 1073741828, 0, 33, 32, -1, 2, 34, 22, 35, 23, 0, 1073741829, 0, 2147483647, 36, 24, 1, 37, 25, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_gvmvp"), ExtResource("23_y2ulj"), 0.5, 0.05, 6.0, 2.0, 1.0, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_pqfs0"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("24_t3x2a"), SubResource("BoxMesh_i0lqr"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_33ws7"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_en7ll"), 1, ExtResource("25_1bbis"), true],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_ggkpb"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_lt6nf")
+amount = 3
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_48o01"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("MT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "moveSpeed", "damage", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D"),
+"node_count": 6,
+"node_ids": PackedInt32Array(852337211, 917551841, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 11, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 1073741836, 10, 0, 1073741824, 0, 14, 13, -1, 2, 15, 11, 16, 12, 0, 1073741825, 0, 18, 17, -1, 2, 19, 13, 20, 14, 0, 1073741826, 0, 22, 21, -1, 3, 23, 15, 24, 16, 1073741849, 17, 0, 1073741827, 0, 27, 26, -1, 2, 28, 18, 29, 19, 0, 1073741828, 0, 2147483647, 30, 20, 0, 0),
+"variants": [0, 7, true, true, true, ExtResource("26_yn2g2"), ExtResource("27_yic5e"), 4.0, 20, 0.5, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_8n4h5"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_as1io"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_xd5mi"), 1, ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_tnt7p"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_48o01")
+amount = 6
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_hwg2s"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("RT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "projectileSpeed", "projectileTTL", "weaponMuzzle", "moveSpeed", "damage", "attackCoolDownMS", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "Muzzle", "Node3D", "transform", "AwarenessArea3D"),
+"node_count": 8,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1548434956, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 15, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 1073741835, 9, 12, 10, 13, 11, 14, 12, 15, 13, 1073741840, 14, 0, 1073741824, 0, 18, 17, -1, 2, 19, 15, 20, 16, 0, 1073741825, 0, 22, 21, -1, 3, 23, 17, 24, 18, 25, 19, 0, 1073741826, 0, 27, 26, -1, 2, 28, 20, 29, 21, 0, 1073741827, 0, 31, 30, -1, 3, 32, 22, 33, 23, 1073741858, 24, 0, 1073741828, 0, 36, 35, -1, 2, 37, 25, 38, 26, 0, 1073741829, 0, 40, 39, -1, 1, 41, 27, 0, 1073741830, 0, 2147483647, 42, 28, 0, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_atu2d"), ExtResource("28_ex7s8"), 8.0, 3.0, NodePath("Muzzle"), 4.0, 35, 500, 4.0, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_x5wht"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("29_4clwk"), SubResource("BoxMesh_tbeql"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_c5nnb"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_fsd2l"), 1, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4339093, 0), ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_bposm"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_hwg2s")
+amount = 4
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_0j4c6"]
+script = ExtResource("8_erwvk")
+spawnsOnGameTick = 105
+spawns = Array[Object]([SubResource("Resource_ggkpb"), SubResource("Resource_tnt7p"), SubResource("Resource_bposm")])
+metadata/_custom_type_script = "uid://cppk1p232dwwq"
+
+[sub_resource type="PackedScene" id="PackedScene_qmo2n"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("ST1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "baseDamageBonus", "baseScaleBonus", "moveSpeed", "attackRange", "targetMinDistance", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D", "flipCollisionMask"),
+"node_count": 7,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 12, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 12, 10, 13, 11, 0, 1073741824, 0, 15, 14, -1, 2, 16, 12, 17, 13, 0, 1073741825, 0, 19, 18, -1, 3, 20, 14, 21, 15, 22, 16, 0, 1073741826, 0, 24, 23, -1, 2, 25, 17, 26, 18, 0, 1073741827, 0, 28, 27, -1, 3, 29, 19, 30, 20, 1073741855, 21, 0, 1073741828, 0, 33, 32, -1, 2, 34, 22, 35, 23, 0, 1073741829, 0, 2147483647, 36, 24, 1, 37, 25, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_gvmvp"), ExtResource("23_y2ulj"), 0.5, 0.05, 6.0, 2.0, 1.0, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_pqfs0"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("24_t3x2a"), SubResource("BoxMesh_i0lqr"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_33ws7"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_en7ll"), 1, ExtResource("25_1bbis"), true],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_mjyee"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_qmo2n")
+amount = 3
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_fend5"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("MT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "moveSpeed", "damage", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "AwarenessArea3D"),
+"node_count": 6,
+"node_ids": PackedInt32Array(852337211, 917551841, 378679345, 409128245, 2132295127, 1941854259),
+"node_paths": [NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 11, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 11, 9, 1073741836, 10, 0, 1073741824, 0, 14, 13, -1, 2, 15, 11, 16, 12, 0, 1073741825, 0, 18, 17, -1, 2, 19, 13, 20, 14, 0, 1073741826, 0, 22, 21, -1, 3, 23, 15, 24, 16, 1073741849, 17, 0, 1073741827, 0, 27, 26, -1, 2, 28, 18, 29, 19, 0, 1073741828, 0, 2147483647, 30, 20, 0, 0),
+"variants": [0, 7, true, true, true, ExtResource("26_yn2g2"), ExtResource("27_yic5e"), 4.0, 20, 0.5, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_8n4h5"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_as1io"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_xd5mi"), 1, ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_qxwff"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_fend5")
+amount = 6
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="PackedScene" id="PackedScene_dwns0"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("RT1", "RigidBody3D", "collision_layer", "collision_mask", "axis_lock_angular_x", "axis_lock_angular_y", "axis_lock_angular_z", "physics_material_override", "script", "projectileSpeed", "projectileTTL", "weaponMuzzle", "moveSpeed", "damage", "attackCoolDownMS", "attackRange", "area", "MeshInstance3D", "MeshInstance3D", "transform", "mesh", "MeshInstance3D2", "MeshInstance3D", "transform", "material_override", "mesh", "CollisionShape3D", "CollisionShape3D", "transform", "shape", "LabelMaker", "Node3D", "transform", "script", "unit", "MultiplayerSynchronizer", "MultiplayerSynchronizer", "replication_config", "visibility_update_mode", "Muzzle", "Node3D", "transform", "AwarenessArea3D"),
+"node_count": 8,
+"node_ids": PackedInt32Array(852337211, 917551841, 1323105922, 378679345, 409128245, 2132295127, 1548434956, 1941854259),
+"node_paths": [NodePath("."), NodePath("./MeshInstance3D"), NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 15, 2, 0, 3, 1, 4, 2, 5, 3, 6, 4, 7, 5, 8, 6, 9, 7, 10, 8, 1073741835, 9, 12, 10, 13, 11, 14, 12, 15, 13, 1073741840, 14, 0, 1073741824, 0, 18, 17, -1, 2, 19, 15, 20, 16, 0, 1073741825, 0, 22, 21, -1, 3, 23, 17, 24, 18, 25, 19, 0, 1073741826, 0, 27, 26, -1, 2, 28, 20, 29, 21, 0, 1073741827, 0, 31, 30, -1, 3, 32, 22, 33, 23, 1073741858, 24, 0, 1073741828, 0, 36, 35, -1, 2, 37, 25, 38, 26, 0, 1073741829, 0, 40, 39, -1, 1, 41, 27, 0, 1073741830, 0, 2147483647, 42, 28, 0, 0),
+"variants": [2, 15, true, true, true, SubResource("PhysicsMaterial_atu2d"), ExtResource("28_ex7s8"), 8.0, 3.0, NodePath("Muzzle"), 4.0, 35, 500, 4.0, NodePath(""), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxMesh_x5wht"), Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 0, 0.22470315, 0), ExtResource("29_4clwk"), SubResource("BoxMesh_tbeql"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0), SubResource("BoxShape3D_c5nnb"), Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7168137, 0), ExtResource("18_rgw24"), NodePath(".."), SubResource("SceneReplicationConfig_fsd2l"), 1, Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4339093, 0), ExtResource("25_1bbis")],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_ghvh6"]
+script = ExtResource("10_346fj")
+enemyPrefab = SubResource("PackedScene_dwns0")
+amount = 4
+metadata/_custom_type_script = "uid://c1efn3impdgid"
+
+[sub_resource type="Resource" id="Resource_ogxyq"]
+script = ExtResource("8_erwvk")
+spawnsOnGameTick = 109
+spawns = Array[Object]([SubResource("Resource_mjyee"), SubResource("Resource_qxwff"), SubResource("Resource_ghvh6")])
+metadata/_custom_type_script = "uid://cppk1p232dwwq"
+
 [sub_resource type="Resource" id="Resource_m4llh"]
 script = ExtResource("24_d8m2u")
 towerType = 1
@@ -239,7 +900,7 @@ metadata/_custom_type_script = "uid://cpy4cj2fwebi7"
 script = ExtResource("24_d8m2u")
 towerType = 2
 towerPrefab = ExtResource("29_off7b")
-cost = 25
+cost = 20
 mesh = ExtResource("29_7sj7i")
 metadata/_custom_type_script = "uid://cpy4cj2fwebi7"
 
@@ -262,6 +923,12 @@ properties/2/path = NodePath("GameLogic/GameStats:BaseHealthRight")
 properties/2/spawn = true
 properties/2/replication_mode = 2
 
+[sub_resource type="NavigationMesh" id="NavigationMesh_1bbis"]
+geometry_parsed_geometry_type = 1
+agent_height = 1.0
+agent_radius = 0.25
+agent_max_slope = 5.0
+
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5cjrv"]
 friction = 0.0
 
@@ -277,7 +944,7 @@ polygons = [PackedInt32Array(2, 1, 0), PackedInt32Array(3, 2, 0)]
 geometry_parsed_geometry_type = 1
 agent_height = 1.0
 agent_radius = 0.25
-agent_max_slope = 5.34
+agent_max_slope = 5.0
 vertices_per_polygon = 3.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5cjrv"]
@@ -285,6 +952,19 @@ size = Vector3(40, 6, 20)
 
 [sub_resource type="QuadMesh" id="QuadMesh_j0p05"]
 size = Vector2(40, 20)
+
+[sub_resource type="SphereMesh" id="SphereMesh_yn2g2"]
+radius = 0.2
+height = 0.4
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rfqov"]
+size = Vector3(1, 3, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1bbis"]
+size = Vector3(1, 0.3, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yn2g2"]
+albedo_color = Color(1, 0, 0.654902, 1)
 
 [node name="Main" type="Node3D" unique_id=1609698201]
 
@@ -305,7 +985,7 @@ metadata/_custom_type_script = "uid://b7rdr5kjto5tm"
 script = ExtResource("7_4yxf6")
 metadata/_custom_type_script = "uid://v2b41f1yds24"
 
-[node name="LogicLogic" type="Node" parent="Core" unique_id=2056196228 node_paths=PackedStringArray("lobbyManager", "avatarContainer")]
+[node name="LocalLogic" type="Node" parent="Core" unique_id=2056196228 node_paths=PackedStringArray("lobbyManager", "avatarContainer")]
 script = ExtResource("8_x3rx7")
 lobbyManager = NodePath("../LobbyManager")
 avatarContainer = NodePath("../../PlayerAvatars")
@@ -332,14 +1012,16 @@ towerPrefab = SubResource("PackedScene_5gwyn")
 arenaBuilder = NodePath("ArenaBuilder")
 leftTeamCollision = 2
 rightTeamCollision = 4
+unitSightBlockLayer = 1536
 
 [node name="Waves" type="Node" parent="Core/GameLogic" unique_id=1893195776]
 script = ExtResource("5_4kpch")
-waves = Array[Resource]([SubResource("Resource_sxkr1"), SubResource("Resource_hwpts"), SubResource("Resource_c4ay3"), SubResource("Resource_kpo4j"), SubResource("Resource_xvtyr")])
+finalWaveTiming = 3
+waves = Array[Resource]([SubResource("Resource_hwpts"), SubResource("Resource_c4ay3"), SubResource("Resource_kpo4j"), SubResource("Resource_xvtyr"), SubResource("Resource_mx20r"), SubResource("Resource_s0riu"), SubResource("Resource_5ltlj"), SubResource("Resource_cbpwj"), SubResource("Resource_har0a"), SubResource("Resource_3pqs5"), SubResource("Resource_7ikoh"), SubResource("Resource_0j4c6"), SubResource("Resource_ogxyq")])
 
 [node name="GameTimer" type="Node" parent="Core/GameLogic" unique_id=1803392230]
 script = ExtResource("16_aht7i")
-ticksPerSecond = 0.4
+ticksPerSecond = 0.5
 
 [node name="GameStats" type="Node" parent="Core/GameLogic" unique_id=976334290]
 script = ExtResource("13_0sclb")
@@ -399,6 +1081,13 @@ script = ExtResource("30_utia5")
 gridHeight = 20
 gridWidth = 40
 
+[node name="Placer" type="Node" parent="Core" unique_id=618206794 node_paths=PackedStringArray("placeGhost", "worldRoot", "placeBlocker")]
+script = ExtResource("53_t3x2a")
+placeGhost = NodePath("../../PlaceGhost")
+worldRoot = NodePath("../../NavigationRegion3D")
+placeBlocker = NodePath("../../NavBlock")
+navMesh = SubResource("NavigationMesh_1bbis")
+
 [node name="CanvasHUD" type="CanvasLayer" parent="." unique_id=1983381410 node_paths=PackedStringArray("persistent")]
 script = ExtResource("30_vvnwx")
 persistent = []
@@ -443,8 +1132,9 @@ metadata/_edit_group_ = true
 [node name="FPScounter" parent="CanvasLayer" unique_id=1918910941 instance=ExtResource("39_f7hdo")]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1348774406]
-transform = Transform3D(1, 0, 0, 0, -0.25881907, 0.9659258, 0, -0.9659258, -0.25881907, 0, 5.4959974, 0)
+transform = Transform3D(1, 0, 0, 0, -0.8865107, 0.46270815, 0, -0.46270815, -0.8865107, 0, 5.4959974, 0)
 shadow_enabled = true
+shadow_bias = 0.046
 directional_shadow_mode = 0
 
 [node name="WorldColliders" type="Node3D" parent="." unique_id=1776659032]
@@ -473,6 +1163,15 @@ physics_material_override = SubResource("PhysicsMaterial_5cjrv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 0, 0)
 shape = SubResource("BoxShape3D_5nsto")
 
+[node name="WestDeathTrigger" type="Area3D" parent="WorldColliders/WestWall" unique_id=1481460674]
+collision_layer = 0
+collision_mask = 6
+script = ExtResource("63_yn2g2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldColliders/WestWall/WestDeathTrigger" unique_id=296656596]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 0, 0)
+shape = SubResource("BoxShape3D_5nsto")
+
 [node name="EastWall" type="StaticBody3D" parent="WorldColliders" unique_id=517674575]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 0)
 physics_material_override = SubResource("PhysicsMaterial_5cjrv")
@@ -481,8 +1180,18 @@ physics_material_override = SubResource("PhysicsMaterial_5cjrv")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0, 0)
 shape = SubResource("BoxShape3D_5nsto")
 
+[node name="EastDeathTrigger" type="Area3D" parent="WorldColliders/EastWall" unique_id=1566252099]
+collision_layer = 0
+collision_mask = 6
+script = ExtResource("63_yn2g2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldColliders/EastWall/EastDeathTrigger" unique_id=1500829810]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 0, 0)
+shape = SubResource("BoxShape3D_5nsto")
+
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=1305417993]
 navigation_mesh = SubResource("NavigationMesh_5cjrv")
+navigation_layers = 513
 script = ExtResource("55_yisvs")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D" unique_id=737780758]
@@ -522,3 +1231,22 @@ avatarsContainer = NodePath("../PlayerAvatars")
 [node name="Projectiles" type="Node3D" parent="." unique_id=1024129859]
 
 [node name="Pickups" type="Node3D" parent="." unique_id=170036029]
+
+[node name="PlaceGhost" type="MeshInstance3D" parent="." unique_id=1706616224]
+material_override = ExtResource("66_1bbis")
+mesh = SubResource("SphereMesh_yn2g2")
+
+[node name="NavBlock" type="StaticBody3D" parent="." unique_id=1256041457]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -20, 0)
+collision_layer = 512
+collision_mask = 0
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="NavBlock" unique_id=1985620191]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_rfqov")
+debug_color = Color(0.63109064, 0.5288405, 0, 1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="NavBlock" unique_id=1351990989]
+visible = false
+mesh = SubResource("BoxMesh_1bbis")
+surface_material_override/0 = SubResource("StandardMaterial3D_yn2g2")

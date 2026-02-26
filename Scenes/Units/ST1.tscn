@@ -31,12 +31,13 @@ collision_mask = 15
 axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
+mass = 0.1
 physics_material_override = SubResource("PhysicsMaterial_gvmvp")
 script = ExtResource("1_71np4")
 baseDamageBonus = 0.5
 baseScaleBonus = 0.05
 moveSpeed = 6.0
-attackRange = 2.0
+attackRange = 6.0
 targetMinDistance = 1.0
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=917551841]

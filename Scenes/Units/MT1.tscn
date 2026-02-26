@@ -19,7 +19,7 @@ properties/1/path = NodePath(".:health")
 properties/1/spawn = true
 properties/1/replication_mode = 2
 
-[node name="MT1" type="RigidBody3D" unique_id=852337211 node_paths=PackedStringArray("area")]
+[node name="MT1" type="RigidBody3D" unique_id=852337211]
 collision_layer = 0
 collision_mask = 7
 axis_lock_angular_x = true
@@ -30,7 +30,6 @@ script = ExtResource("1_33ws7")
 moveSpeed = 4.0
 damage = 20
 attackRange = 0.5
-area = NodePath("")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=917551841]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)

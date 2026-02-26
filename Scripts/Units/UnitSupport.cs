@@ -1,4 +1,5 @@
 using Godot;
+using OOTA.Buildings;
 using OOTA.Enums;
 using OOTA.Interfaces;
 using System;
@@ -18,8 +19,9 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
     [Export] float baseScaleBonus = 0.15f;
 
 
-    public override void ProcessHunting(float delta)
+    /*public override void ProcessHunting(float delta)
     {
+        GD.Print($"UnitSupport::ProcessHunting() UnitName[{Name}]");
         inVec = Vector3.Zero;
         inVec = GlobalPosition.DirectionTo(target.GlobalPosition);
         // apply break if moving in wrong direction 
@@ -48,12 +50,22 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
             LinearVelocity *= 0.5f;
         }
 
-    }
+    }*/
 
     public override void ProcessTraveling(float delta)
     {
+        //if (target is not Goal)
+        //{
+        //    if (SightToTargetIsFree())
+        //    {
+        //        mindState = MINDSTATE.HUNTING;
+        //        return;
+        //    }
+        //}
+
+
         // if no path
-        if (pathState == PATHSTATE.IDLE)
+        if (pathState == PATHSTATE.IDLE || path.Last().DistanceTo(target.GlobalPosition) > 0.2f)
         {
             GetPathToTarget();
         }

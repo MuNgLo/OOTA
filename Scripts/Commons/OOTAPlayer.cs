@@ -14,6 +14,11 @@ public partial class OOTAPlayer : MLobbyPlayer
     public float MaxHealth => (publicData as OOTAPublicData).MaxHealth;
     public bool IsReady => (publicData as OOTAPublicData).IsReady;
     public double NormalizedHealth => Math.Clamp(Health / MaxHealth, 0.0, 1.0);
+
+    [Obsolete("Should probably be moved to public data")]
+    public bool CanTakeDamage = true;
+
+
     PlayerAvatar avatar;
     public PlayerAvatar Avatar { get => avatar; set => SetAvatar(value); }
 
@@ -37,9 +42,10 @@ public partial class OOTAPlayer : MLobbyPlayer
         (publicData as OOTAPublicData).Health += amount;
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
-        if (amount < 1) { return; }
+        if (amount <= 0.0f) { return; }
+        //GD.Print($"OOTAPlayer::TakeDamage({amount}) called and CanTakeDamage is {CanTakeDamage} health is [{(publicData as OOTAPublicData).Health}]");
         (publicData as OOTAPublicData).Health = (publicData as OOTAPublicData).Health - amount;
         if ((publicData as OOTAPublicData).Health <= 0)
         {
@@ -96,7 +102,7 @@ public partial class OOTAPlayer : MLobbyPlayer
         (publicData as OOTAPublicData).PeerID = peerID;
     }
 
-    internal void SetMaxHealth(int playerStartHealth)
+    internal void SetMaxHealth(float playerStartHealth)
     {
         (publicData as OOTAPublicData).MaxHealth = playerStartHealth;
     }
@@ -104,6 +110,11 @@ public partial class OOTAPlayer : MLobbyPlayer
     internal void SetFullHealth()
     {
         (publicData as OOTAPublicData).Health = (publicData as OOTAPublicData).MaxHealth;
+    }
+
+      internal void SetHealth(float health)
+    {
+        (publicData as OOTAPublicData).Health = health;
     }
 
 }// EOF CLASS

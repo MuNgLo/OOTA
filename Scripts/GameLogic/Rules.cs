@@ -44,6 +44,11 @@ public partial class Rules : Node
     [Export(PropertyHint.Layers3DPhysics)]
     public uint rightTeamCollision;
 
+    [ExportGroup("Unit sight blocking")]
+    [Export(PropertyHint.Layers3DPhysics)]
+    public uint unitSightBlockLayer;
+
+
     public event EventHandler OnGameStart;
 
     public override void _Ready()
@@ -67,8 +72,11 @@ public partial class Rules : Node
     {
         if (!Multiplayer.IsServer()) { return; }
         RollForPickup(unit.GlobalPosition);
+        Core.Players.GiveTeamGold(unit.Team == TEAM.LEFT ? TEAM.RIGHT : TEAM.LEFT, 1);
         unit.QueueFree();
     }
+
+
 
     public void BuildingDied(BuildingBaseClass building)
     {
@@ -143,8 +151,6 @@ public partial class Rules : Node
     public void RPCPlaceTower(long peerID, int team, int towerIndex, Vector3 placerPoint)
     {
         if (!Multiplayer.IsServer()) { return; }
-
-
 
         if (Core.Players.GetPlayer(peerID, out OOTAPlayer player))
         {
@@ -252,12 +258,36 @@ public partial class Rules : Node
     {
         if (unit.Team == TEAM.LEFT)
         {
+            Core.Players.GiveTeamGold(TEAM.LEFT, 1);
             gameStats.BaseDamage(TEAM.RIGHT, 1);
         }
         else if (unit.Team == TEAM.RIGHT)
         {
+            Core.Players.GiveTeamGold(TEAM.RIGHT, 1);
             gameStats.BaseDamage(TEAM.LEFT, 1);
         }
         unit.QueueFree();
+    }
+
+    internal void RequestPlaceTower(int towerIDX, Vector2I coord)
+    {
+        RpcId(1, nameof(RPCRequestPlaceTower), towerIDX, coord);
+    }
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    internal void RPCRequestPlaceTower(int towerIDX, Vector2I coord)
+    {
+        long peerID = Multiplayer.GetRemoteSenderId() == 0 ? 1 : Multiplayer.GetRemoteSenderId();
+        if (Core.Players.GetPlayer(peerID, out OOTAPlayer player))
+        {
+            TowerResource tw = Core.Rules.towers.GetTowerByIndex(towerIDX);
+            GridLocation gridLocation = GridManager.GetGridLocation(coord);
+            if (gridLocation.CanFit(tw))
+            {
+                if (player.CanPay(tw.cost))
+                {
+                    PlaceTower(peerID, player.Team, towerIDX, GridManager.CoordToWorld(coord));
+                }
+            }
+        }
     }
 }// EOF CLASS

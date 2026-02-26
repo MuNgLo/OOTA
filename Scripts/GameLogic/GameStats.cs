@@ -34,7 +34,7 @@ public partial class GameStats : Node
         OnBaseDamage?.Invoke(null, [BaseNormalizedHealthLeft, BaseNormalizedHealthRight]);
     }
 
-    internal void BaseDamage(TEAM team, int amount)
+    internal void BaseDamage(TEAM team, float amount)
     {
         if(team == TEAM.LEFT)
         {

@@ -35,6 +35,10 @@ public static class GizmoUtils
         gizmo.AddSegments(path);
         gizmo.UpdateGizmo(duration);
     }
+    public static void DrawLine(Vector3[] path, float duration, Color col)
+    {
+        DrawLine(new List<Vector3>(path), duration, col);
+    }
 
     public static void DrawLine(List<Vector3> path, float duration, Color col)
     {

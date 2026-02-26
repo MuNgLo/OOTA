@@ -10,10 +10,16 @@ size = Vector3(0.28735352, 0.5004883, 0.6123047)
 
 [node name="Cannon2" unique_id=71578167 node_paths=PackedStringArray("weaponPivot", "weaponMuzzle", "models") instance=ExtResource("1_jop0c")]
 script = ExtResource("2_q8556")
+attackRange = 8.0
+attackCoolDownMS = 600
 prefabProjectile = ExtResource("3_0hx4j")
+projectileSpeed = 16.0
+projectileTTL = 0.5
 weaponPivot = NodePath("Cannon")
 weaponMuzzle = NodePath("Cannon/Muzzle")
 towerType = 2
+aggroRange = 10.0
+health = 100.0
 models = [NodePath("Cannon")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=1879557597]

@@ -15,11 +15,19 @@ public partial class Waves : Node
     int lastWaveIndexSpawned = -1;
 
     public static event EventHandler<WaveDefinition> OnWaveSpawned;
+    public static event EventHandler<WaveDefinition[]> OnWavesDecided;
+
 
     public override void _Ready()
     {
         base._Ready();
         GameTimer.OnGameTick += WhenGameTick;
+        Core.Rules.OnGameStart += WhenGameStart;
+    }
+
+    private void WhenGameStart(object sender, EventArgs e)
+    {
+        OnWavesDecided?.Invoke(this, waves);
     }
 
     private void WhenGameTick(object sender, int tick)

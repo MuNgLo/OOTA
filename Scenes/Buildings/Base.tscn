@@ -11,10 +11,11 @@ collision_mask = 0
 script = ExtResource("1_56fhp")
 spawnPoints = [NodePath("SpawnPoint"), NodePath("SpawnPoint2"), NodePath("SpawnPoint3"), NodePath("SpawnPoint4"), NodePath("SpawnPoint5"), NodePath("SpawnPoint6"), NodePath("SpawnPoint7"), NodePath("SpawnPoint8"), NodePath("SpawnPoint9"), NodePath("SpawnPoint10"), NodePath("SpawnPoint11"), NodePath("SpawnPoint12"), NodePath("SpawnPoint13"), NodePath("SpawnPoint14"), NodePath("SpawnPoint15"), NodePath("SpawnPoint16"), NodePath("SpawnPoint17"), NodePath("SpawnPoint18"), NodePath("SpawnPoint19"), NodePath("SpawnPoint20")]
 towerType = 2
+canTakeDamage = false
 models = []
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1138958585]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.8804321, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.9636927, 0)
 shape = SubResource("CylinderShape3D_k34hx")
 
 [node name="SpawnPoint" type="Node3D" parent="." unique_id=2015738725]

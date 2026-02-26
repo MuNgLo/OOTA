@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://cpdayi2ir3du0"]
+
+[node name="Dash" type="Label" unique_id=649593350]
+text = "-"

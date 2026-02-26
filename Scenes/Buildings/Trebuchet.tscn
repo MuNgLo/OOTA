@@ -12,8 +12,8 @@ radius = 0.16992188
 [node name="Trebuchet" unique_id=148523869 node_paths=PackedStringArray("weaponPivot", "weaponMuzzle", "models") instance=ExtResource("1_hdl73")]
 script = ExtResource("2_8igxr")
 attackRange = 14.0
-baseDamage = 50
-attackCoolDownMS = 1200
+baseDamage = 250
+attackCoolDownMS = 500
 prefabProjectile = ExtResource("3_i6pne")
 projectileSpeed = 16.0
 projectileTTL = 0.5
@@ -21,6 +21,7 @@ weaponPivot = NodePath("Trebuchet/Pivot")
 weaponMuzzle = NodePath("Trebuchet/Pivot/Muzzle")
 towerType = 2
 aggroRange = 15.0
+health = 250.0
 maxHealth = 250.0
 models = [NodePath("Trebuchet")]
 

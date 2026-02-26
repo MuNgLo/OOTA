@@ -2,8 +2,21 @@
 
 [ext_resource type="Script" uid="uid://dwvoajupjnimd" path="res://Scripts/Commons/CameraTracker.cs" id="1_xdfgl"]
 
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_xdfgl"]
+ground_bottom_color = Color(0.13333334, 0.16078432, 0.16470589, 1)
+
+[sub_resource type="Sky" id="Sky_nkxwh"]
+sky_material = SubResource("ProceduralSkyMaterial_xdfgl")
+
+[sub_resource type="Environment" id="Environment_n5na5"]
+background_mode = 2
+sky = SubResource("Sky_nkxwh")
+tonemap_mode = 2
+glow_bloom = 0.24
+
 [node name="CameraTarget" type="Node3D" unique_id=925498331]
 script = ExtResource("1_xdfgl")
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=880259235]
 transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 8.2651615, 4.216813)
+environment = SubResource("Environment_n5na5")
