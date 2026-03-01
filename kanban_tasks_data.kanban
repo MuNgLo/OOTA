@@ -1,0 +1,74 @@
+{
+	"categories": [
+		{
+			"uuid": "650d186a-7fd6-4501-8918-6071c592f186",
+			"title": "Task",
+			"color": "569eff"
+		}
+	],
+	"stages": [
+		{
+			"uuid": "8e12376e-c5f7-4d9c-9891-ccb12a3703ac",
+			"title": "Todo",
+			"tasks": []
+		},
+		{
+			"uuid": "2b9f4e05-1ce5-49f1-ac28-40d38b511a0e",
+			"title": "Doing",
+			"tasks": []
+		},
+		{
+			"uuid": "9e405e4f-f1b5-4694-b496-a478fdc96a82",
+			"title": "0.7",
+			"tasks": [
+				"348d57a2-443e-4dab-b39e-2d0838834362",
+				"ae979152-b212-4767-ae13-e9269053f379",
+				"ecadf2ad-7815-499c-a666-45609ad404d8",
+				"caa16bda-5dbe-491a-8f4c-312bd81d6084"
+			]
+		}
+	],
+	"tasks": [
+		{
+			"uuid": "caa16bda-5dbe-491a-8f4c-312bd81d6084",
+			"title": "gamestate",
+			"description": "",
+			"category": "650d186a-7fd6-4501-8918-6071c592f186",
+			"steps": []
+		},
+		{
+			"uuid": "ecadf2ad-7815-499c-a666-45609ad404d8",
+			"title": "playerstate",
+			"description": "",
+			"category": "650d186a-7fd6-4501-8918-6071c592f186",
+			"steps": []
+		},
+		{
+			"uuid": "ae979152-b212-4767-ae13-e9269053f379",
+			"title": "spectatorcontrols",
+			"description": "",
+			"category": "650d186a-7fd6-4501-8918-6071c592f186",
+			"steps": []
+		},
+		{
+			"uuid": "348d57a2-443e-4dab-b39e-2d0838834362",
+			"title": "end game screen",
+			"description": "",
+			"category": "650d186a-7fd6-4501-8918-6071c592f186",
+			"steps": []
+		}
+	],
+	"layout": {
+		"columns": [
+			[
+				"8e12376e-c5f7-4d9c-9891-ccb12a3703ac"
+			],
+			[
+				"2b9f4e05-1ce5-49f1-ac28-40d38b511a0e"
+			],
+			[
+				"9e405e4f-f1b5-4694-b496-a478fdc96a82"
+			]
+		]
+	}
+}

@@ -1,10 +1,14 @@
 
 namespace OOTA.Enums;
 
+public enum GAMESTATE { NONE, SETUP, PLAYING, POST }
+
 public enum TOWERTYPE { NONE, FOUNDATION, ATTACK };
 
 public enum TEAM { NONE, LEFT, RIGHT }
 
+
+public enum PLAYERSTATE { NONE, LOBBY, SPECTATING, ALIVE, DEAD }
 public enum PLAYERMODE { NONE, ATTACKING, BUILDING }
 
 

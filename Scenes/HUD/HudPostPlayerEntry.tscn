@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://ddl7c03f4ivxi"]
+
+[sub_resource type="Gradient" id="Gradient_am84n"]
+offsets = PackedFloat32Array(0.43424317, 0.6650124)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_7t5iv"]
+gradient = SubResource("Gradient_am84n")
+width = 20
+height = 20
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[node name="HUDPostPlayerEntry" type="HFlowContainer" unique_id=1366179560]
+offset_right = 160.0
+offset_bottom = 16.0
+size_flags_horizontal = 3
+
+[node name="txtrTeamColor" type="TextureRect" parent="." unique_id=1571722251]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+texture = SubResource("GradientTexture2D_7t5iv")
+expand_mode = 1
+
+[node name="rlblPlayerName" type="RichTextLabel" parent="." unique_id=1734603937]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"playername"
+text = "PLAYERNAME"
+fit_content = true
+scroll_active = false

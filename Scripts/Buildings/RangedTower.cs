@@ -9,6 +9,7 @@ public partial class RangedTower : BuildingBaseClass, IMind
 
     [ExportGroup("Attack")]
     [Export] protected float attackRange = 5.0f;
+    [Export] protected bool canAttackBuildings = false;
     [Export] protected int baseDamage = 5;
     [Export] protected ulong attackCoolDownMS = 450;
 
@@ -50,6 +51,10 @@ public partial class RangedTower : BuildingBaseClass, IMind
     {
         if (body is ITargetable t && t.Team != team)
         {
+            if (t is BuildingBaseClass && canAttackBuildings == false)
+            {
+                return;
+            }
             if (!targets.Contains(t))
             {
                 targets.Add(t);

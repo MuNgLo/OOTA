@@ -14,6 +14,7 @@ public partial class BuildingBaseClass : StaticBody3D, ITargetable
 
     [ExportGroup("Stats")]
     [Export] public bool canTakeDamage = true;
+    [Export] protected int maxNBofSupporters = 4;
     [Export] protected float aggroRange = 5.0f;
     [Export] protected float health = 5;
     [Export] protected float maxHealth = 100;
@@ -31,6 +32,9 @@ public partial class BuildingBaseClass : StaticBody3D, ITargetable
     public float Health { get => health; set => health = value; }
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
     public bool CanTakeDamage { get => canTakeDamage; set => canTakeDamage = value; }
+    public List<ISupporter> Supporters => supporters;
+    public bool CanBeSupported => supporters.Count < maxNBofSupporters;
+    public float CurrentSpeed => 0.0f;
 
 
     [ExportGroup("Team Meshes")]

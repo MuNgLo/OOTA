@@ -17,9 +17,13 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
     /// </summary>
     public OOTAPlayer player;
 
-    [Export] public PLAYERMODE mode = PLAYERMODE.NONE;
     [Export] float moveSpeed = 5.0f;
     [Export] float acceleration = 40.0f;
+    [Export] protected int maxNBofSupporters = 4;
+
+
+    public bool CanTakeDamage { get => player.CanTakeDamage; set => player.CanTakeDamage = value; }
+
 
 
     [ExportGroup("Jump")]
@@ -51,7 +55,10 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
 
     public float Health { get => player.Health; set => player.SetHealth(value); }
     public float MaxHealth { get => player.MaxHealth; set => player.SetMaxHealth(value); }
-    public bool CanTakeDamage { get => player.CanTakeDamage; set => player.CanTakeDamage = value; }
+    public List<ISupporter> Supporters => supporters;
+    public bool CanBeSupported => supporters.Count < maxNBofSupporters;
+    public float CurrentSpeed => LinearVelocity.Length();
+
 
     private void SetTeam(TEAM value)
     {
@@ -62,11 +69,23 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
     public override void _EnterTree()
     {
         Core.Rules.OnGameStart += WhenGameStarts;
+        if (IsMultiplayerAuthority())
+        {
+            LocalLogic.OnPlayerModeChanged += WhenPlayerModeChanged;
+        }
+    }
+
+    private void WhenPlayerModeChanged(object sender, PLAYERMODE mode)
+    {
+        if (mode == PLAYERMODE.ATTACKING)
+        { weaponMuzzle.GetParent<Node3D>().Show(); }
+        else
+        { weaponMuzzle.GetParent<Node3D>().Hide(); }
     }
 
     private void WhenGameStarts(object sender, EventArgs e)
     {
-        mode = PLAYERMODE.ATTACKING;
+        player.Mode = PLAYERMODE.ATTACKING;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -84,19 +103,14 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
         inRightStick += Vector3.Back * Input.GetAxis("RSUp", "RSDown");
 
 
-        // Read toggle mode
-        if (Input.IsActionJustPressed("TogglePlayerMode"))
-        {
-            mode = mode == PLAYERMODE.ATTACKING ? PLAYERMODE.BUILDING : PLAYERMODE.ATTACKING;
-            if (mode == PLAYERMODE.ATTACKING) { weaponMuzzle.Show(); } else { weaponMuzzle.Hide(); }
-        }
+
 
         // Mode dependent Controller
         if (inRightStick != Vector3.Zero)
         {
             // Rotate player
             weaponPivot.LookAt(GlobalPosition + inRightStick.Normalized() * 10.0f, Vector3.Up);
-            if (mode != PLAYERMODE.BUILDING)
+            if (player.Mode != PLAYERMODE.BUILDING)
             {
                 if (!Multiplayer.IsServer()) { RpcId(1, nameof(RPCRunAttack)); } else { RPCRunAttack(); }
             }
@@ -107,7 +121,7 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
             // Rotate player
             cursorWorldPosition.Y = GlobalPosition.Y;
             weaponPivot.LookAt(cursorWorldPosition, Vector3.Up);
-            if (mode != PLAYERMODE.BUILDING)
+            if (player.Mode != PLAYERMODE.BUILDING)
             {
                 if (Input.IsActionPressed("Attack"))
                 {
@@ -119,7 +133,7 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
         {
             // Rotate player
             weaponPivot.LookAt(GlobalPosition + inRightStick.Normalized() * 10.0f, Vector3.Up);
-            if (mode != PLAYERMODE.BUILDING)
+            if (player.Mode != PLAYERMODE.BUILDING)
             {
                 if (!Multiplayer.IsServer()) { RpcId(1, nameof(RPCRunAttack)); } else { RPCRunAttack(); }
             }
@@ -155,7 +169,7 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
 
 
 
-    
+
 
     //[Obsolete("Verify this overrides the interface default method")]
     public virtual void TakeDamage(float damage)
@@ -227,7 +241,7 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
             ));
         }
     }
-  
+
 
 
 

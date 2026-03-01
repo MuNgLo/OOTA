@@ -15,9 +15,34 @@ public partial class OOTAPlayer : MLobbyPlayer
     public bool IsReady => (publicData as OOTAPublicData).IsReady;
     public double NormalizedHealth => Math.Clamp(Health / MaxHealth, 0.0, 1.0);
 
-    [Obsolete("Should probably be moved to public data")]
-    public bool CanTakeDamage = true;
+    public bool CanTakeDamage
+    {
+        get => (publicData as OOTAPublicData).CanTakeDamage;
+        set => (publicData as OOTAPublicData).CanTakeDamage = value;
+    }
+    public PLAYERMODE Mode
+    {
+        get => (publicData as OOTAPublicData).Mode;
+        set => RequestSetMode(value);
+    }
+    public PLAYERSTATE State
+    {
+        get => (publicData as OOTAPublicData).State;
+        set => SetState(value);
+    }
 
+    private void RequestSetMode(PLAYERMODE value)
+    {
+        RpcId(1, nameof(RPCHandleSetMode), (int)value);
+    }
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void RPCHandleSetMode(int modeAsInt)
+    {
+        if (Multiplayer.IsServer())
+        {
+            (publicData as OOTAPublicData).Mode = (PLAYERMODE)modeAsInt;
+        }
+    }
 
     PlayerAvatar avatar;
     public PlayerAvatar Avatar { get => avatar; set => SetAvatar(value); }
@@ -91,6 +116,10 @@ public partial class OOTAPlayer : MLobbyPlayer
     {
         (publicData as OOTAPublicData).IsReady = true;
     }
+    internal void SetToNotReady()
+    {
+        (publicData as OOTAPublicData).IsReady = false;
+    }
 
     internal void SetTeam(TEAM assignment)
     {
@@ -112,9 +141,19 @@ public partial class OOTAPlayer : MLobbyPlayer
         (publicData as OOTAPublicData).Health = (publicData as OOTAPublicData).MaxHealth;
     }
 
-      internal void SetHealth(float health)
+    internal void SetHealth(float health)
     {
         (publicData as OOTAPublicData).Health = health;
     }
 
+    internal void SetState(PLAYERSTATE newState)
+    {
+        if (Multiplayer.IsServer())
+        {
+            if ((publicData as OOTAPublicData).State != newState)
+            {
+                (publicData as OOTAPublicData).State = newState;
+            }
+        }
+    }
 }// EOF CLASS

@@ -31,7 +31,7 @@ naming/script_name_casing=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/MGizmoCSharp/plugin.cfg")
+enabled=PackedStringArray("res://addons/MGizmoCSharp/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg", "res://addons/kenyoni/plugin_reloader/plugin.cfg")
 
 [gui]
 

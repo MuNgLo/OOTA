@@ -14,6 +14,7 @@ namespace OOTA.GameLogic;
 [GlobalClass]
 public partial class Rules : Node
 {
+    [Export] int reSpawnTimerMS = 5000;
     [ExportGroup("Player Start Resources")]
     [Export] int startGold = 10;
     [Export] int startHealth = 1000;
@@ -48,14 +49,24 @@ public partial class Rules : Node
     [Export(PropertyHint.Layers3DPhysics)]
     public uint unitSightBlockLayer;
 
+    public float MaxLeft => arenaBuilder.MaxLeft;
+    public float MaxRight => arenaBuilder.MaxRight;
+    public float MaxTop => arenaBuilder.MaxTop;
+    public float MaxBottom => arenaBuilder.MaxBottom;
 
     public event EventHandler OnGameStart;
 
     public override void _Ready()
     {
         LobbyEvents.OnHostClosed += Cleanup;
+        LobbyEvents.OnHostSetupReady += WhenHostSetupReady;
         LobbyEvents.OnServerDisconnected += Cleanup;
         LobbyEvents.OnLeavingHost += Cleanup;
+    }
+
+    private void WhenHostSetupReady(object sender, ConnectedEventArguments e)
+    {
+        gameStats.GameState = GAMESTATE.SETUP;
     }
 
     private void Cleanup(object sender, EventArgs e)
@@ -75,8 +86,6 @@ public partial class Rules : Node
         Core.Players.GiveTeamGold(unit.Team == TEAM.LEFT ? TEAM.RIGHT : TEAM.LEFT, 1);
         unit.QueueFree();
     }
-
-
 
     public void BuildingDied(BuildingBaseClass building)
     {
@@ -99,22 +108,17 @@ public partial class Rules : Node
     }
 
 
-    private async void DelayedStart()
-    {
-        await Task.Delay(50);
-        StartGame();
-    }
-
     private async void StartGame()
     {
         //GD.Print($"GameLogic::StartGame()");
         AssignTeams();
+        arenaBuilder.BuildArena(arenaWidth, arenaDepth);
         await Task.Delay(500);
         Core.Players.SpawnPlayers();
-        arenaBuilder.BuildArena(arenaWidth, arenaDepth);
 
-        GameTimer.StartTimer();
+        gameStats.GameState = GAMESTATE.PLAYING;
         Core.Players.SetStartResourcesOnAll(startGold, startHealth);
+        Core.Players.SetAllAsNotReady();
         Rpc(nameof(RPCRaiseOnGameStart));
     }
 
@@ -139,7 +143,9 @@ public partial class Rules : Node
     }
     public void TeamWin(TEAM team)
     {
-        //GD.Print($"Team WIN! [{team}]");
+        gameStats.GameState = GAMESTATE.POST;
+        Cleanup(null, null);
+        GD.Print($"Team WIN! [{team}]");
     }
 
 
@@ -175,6 +181,7 @@ public partial class Rules : Node
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void RPCHandleReadyUp()
     {
+        GD.Print($"RPCHandleReadyUp");
         long peerID = Multiplayer.GetRemoteSenderId() == 0 ? 1 : Multiplayer.GetRemoteSenderId();
         if (Core.Players.GetPlayer(peerID, out MLobbyPlayer player))
         {
@@ -182,7 +189,15 @@ public partial class Rules : Node
         }
         if (Core.Players.IsEveryoneReady())
         {
-            DelayedStart();
+            if(gameStats.GameState == GAMESTATE.SETUP)
+            {
+                StartGame();
+            }
+            else
+            {
+                Core.Players.SetAllAsNotReady();
+                gameStats.GameState = GAMESTATE.SETUP;
+            }
         }
     }
 
@@ -190,7 +205,6 @@ public partial class Rules : Node
     {
         if (!Multiplayer.IsServer()) { return; }
         RpcId(node.GetMultiplayerAuthority(), nameof(RPCHandOverAvatar), node.GetPath());
-
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void RPCHandOverAvatar(string nodePath)
@@ -206,12 +220,13 @@ public partial class Rules : Node
     private void RPCAvatarHandedOver(string nodePath)
     {
         long peerID = Multiplayer.GetRemoteSenderId() == 0 ? 1 : Multiplayer.GetRemoteSenderId();
-        if (Core.Players.GetPlayer(peerID, out MLobbyPlayer player))
+        if (Core.Players.GetPlayer(peerID, out OOTAPlayer player))
         {
-            (player as OOTAPlayer).Avatar.QueueFree();
-            (player as OOTAPlayer).Avatar = null;
+            player.Avatar.QueueFree();
+            player.Avatar = null;
+            player.SetState(PLAYERSTATE.DEAD);
         }
-        Core.Players.SpawnPlayerWithDelay(1000, peerID);
+        Core.Players.SpawnPlayerWithDelay(reSpawnTimerMS, peerID);
     }
 
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Godot;
 using OOTA.Enums;
 using OOTA.Units;
@@ -11,14 +12,20 @@ public interface ITargetable
 
     public float Health { get; set; }
     public float MaxHealth { get; set; }
+    public float CurrentSpeed { get; }
 
     public bool CanTakeDamage { get; set; }
+    public bool IsSupported => HasSupporters();
+    public bool CanBeSupported { get; }
 
     public void AddSupporter(ISupporter supporter);
     public void RemoveSupporter(ISupporter supporter);
+    public List<ISupporter> Supporters { get; }
+
 
     public void Die();
 
+    public bool HasSupporters() { return Supporters.Count > 0; }
 
     /// <summary>
     /// Sets Health to the specified amount, and checks for death.<br/>

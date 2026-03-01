@@ -28,6 +28,15 @@ properties/4/replication_mode = 2
 properties/5/path = NodePath(".:PlayerName")
 properties/5/spawn = true
 properties/5/replication_mode = 2
+properties/6/path = NodePath(".:CanTakeDamage")
+properties/6/spawn = true
+properties/6/replication_mode = 2
+properties/7/path = NodePath(".:Mode")
+properties/7/spawn = true
+properties/7/replication_mode = 2
+properties/8/path = NodePath(".:State")
+properties/8/spawn = true
+properties/8/replication_mode = 2
 
 [node name="Player" type="Node" unique_id=276271352 node_paths=PackedStringArray("privateData", "publicData")]
 script = ExtResource("2_t6kih")

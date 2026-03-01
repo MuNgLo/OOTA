@@ -11,14 +11,29 @@ namespace OOTA;
 partial class OOTAPlayerManager : PlayerManager
 {
     private OOTAPlayer localPlayer;
+    /// <summary>
+    /// The local game instance OOTAPlayer instance
+    /// </summary>
     public OOTAPlayer LocalPlayer { get => localPlayer; }
+    public string ReadyTextForContinueButton => ReadyPlayersAsText();
 
     private protected override void WhenChildEnterTree(Node node)
     {
         base.WhenChildEnterTree(node);
-        if (node is OOTAPlayer ootaPlayer && ootaPlayer.PeerID == Multiplayer.GetUniqueId())
+        if (node is OOTAPlayer ootaPlayer)
         {
-            localPlayer = ootaPlayer;
+            if(Core.Rules.gameStats.GameState == GAMESTATE.PLAYING)
+            {
+                ootaPlayer.SetState(PLAYERSTATE.SPECTATING);
+            }
+            else
+            {
+                ootaPlayer.SetState(PLAYERSTATE.LOBBY);
+            }
+            if (ootaPlayer.PeerID == Multiplayer.GetUniqueId())
+            {
+                localPlayer = ootaPlayer;
+            }
         }
     }
 
@@ -53,6 +68,11 @@ partial class OOTAPlayerManager : PlayerManager
         return true;
     }
 
+    private string ReadyPlayersAsText()
+    {
+        return $"{players.FindAll(p => (p as OOTAPlayer).IsReady).Count}/{players.Count}";
+    }
+
     internal void SetStartResourcesOnAll(int startGold, int playerStartHealth)
     {
         foreach (MLobbyPlayer player in players)
@@ -80,6 +100,7 @@ partial class OOTAPlayerManager : PlayerManager
             return;
         }
         player.Avatar = AvatarSpawner.SpawnThisAvatar(new AvatarSpawner.SpawnAvatarArgument(player)); // WARNING MIGHT BE RACE CONDITION BETWEEN GAME INSTANCES
+        player.SetState(PLAYERSTATE.ALIVE);
     }
     internal async void SpawnPlayerWithDelay(int delay, long peerID)
     {
@@ -99,6 +120,14 @@ partial class OOTAPlayerManager : PlayerManager
             {
                 (player as OOTAPlayer).AddGold(amount);
             }
+        }
+    }
+
+    internal void SetAllAsNotReady()
+    {
+        foreach (MLobbyPlayer player in players)
+        {
+            (player as OOTAPlayer).SetToNotReady();
         }
     }
     #endregion

@@ -7,6 +7,7 @@ using OOTA.UI;
 using System;
 
 namespace OOTA;
+
 public partial class LocalLogic : Node
 {
     private static LocalLogic ins;
@@ -97,6 +98,19 @@ public partial class LocalLogic : Node
 
     #region Local Events from PlayerData
 
+    public static event EventHandler<PLAYERMODE> OnPlayerModeChanged;
+
+    internal static void PlayerModeChanged(PLAYERMODE mode)
+    {
+        OnPlayerModeChanged?.Invoke(null, mode);
+    }
+
+    public static event EventHandler<PLAYERSTATE> OnPlayerStateChanged;
+
+    internal static void PlayerStateChanged(PLAYERSTATE state)
+    {
+        OnPlayerStateChanged?.Invoke(null, state);
+    }
     public static event EventHandler<bool> OnReadyChanged;
 
     internal static void ReadyChanged(bool value)
@@ -117,5 +131,7 @@ public partial class LocalLogic : Node
     {
         OnHealthChanged?.Invoke(null, values);
     }
+
+
     #endregion
 }// EOF CLASS

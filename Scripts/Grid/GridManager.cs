@@ -170,6 +170,28 @@ public partial class GridManager : Node
             }
         }
         OnTileChanged?.Invoke(null, tile.Coord);
+        ins.Rpc(nameof(RPCPlaceStructure), (int)building.Team, building.GetPath());
+    }
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void RPCPlaceStructure(int teamAsInt, string nodePath)
+    {
+        BuildingBaseClass building = GetNode<BuildingBaseClass>(nodePath);
+
+        GridLocation tile = GetGridLocation(WorldToCoord(building.GlobalPosition));
+        tile.SetBuilding(building);
+
+        if(building is Goal goal)
+        {
+            if(goal.Team == TEAM.RIGHT)
+            {
+                ins.rightTeamGoal = goal;
+            }
+            else
+            {
+                ins.leftTeamGoal = goal;
+            }
+        }
+        OnTileChanged?.Invoke(null, tile.Coord);
     }
 
     internal static void RemoveStructure(BuildingBaseClass building)

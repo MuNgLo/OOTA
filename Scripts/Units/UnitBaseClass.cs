@@ -13,6 +13,8 @@ namespace OOTA.Units;
 public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
 {
     [Export] protected TEAM team = TEAM.NONE;
+    [Export] protected int maxNBofSupporters = 4;
+
 
     [ExportGroup("States")]
     [Export] protected MINDSTATE mindState = MINDSTATE.NONE;
@@ -39,7 +41,7 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
     [Export] float maxHealth = 100;
 
 
-    protected Node3D target;
+    protected ITargetable target;
     protected int pathIndex = 0;
     protected Vector3 inVec;
     protected List<ITargetable> targets;
@@ -56,6 +58,11 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
     public float Health { get => health; set => health = value; }
     public float MaxHealth { get => maxHealth; set => maxHealth = value; }
     public bool CanTakeDamage { get => canTakeDamage; set => canTakeDamage = value; }
+    public List<ISupporter> Supporters => supporters;
+    public bool CanBeSupported => supporters.Count < maxNBofSupporters;
+    public float CurrentSpeed => LinearVelocity.Length();
+
+
 
     public override void _Ready()
     {
@@ -346,7 +353,7 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
         target = null;
         pathState = PATHSTATE.IDLE;
     }
-    private protected void ResetMind()
+    private protected virtual void ResetMind()
     {
         mindState = MINDSTATE.NONE;
         pathState = PATHSTATE.IDLE;
@@ -354,11 +361,11 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
         pathIndex = 0;
         target = null;
     }
-    private protected void SetTarget(ITargetable targetable)
+    private protected virtual void SetTarget(ITargetable newTarget)
     {
-        if (targetable is UnitBaseClass) { target = targetable as UnitBaseClass; path.Clear(); pathState = PATHSTATE.IDLE; return; }
-        if (targetable is BuildingBaseClass) { target = targetable as StaticBody3D; path.Clear(); pathState = PATHSTATE.IDLE; return; }
-        if (targetable is PlayerAvatar) { target = targetable as RigidBody3D; path.Clear(); pathState = PATHSTATE.IDLE; return; }
+        target = newTarget;
+        path.Clear();
+        pathState = PATHSTATE.IDLE;
     }
     private protected float SpeedModifier()
     {
@@ -399,7 +406,7 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
         {
             totalScale += supporter.BaseScaleBonus();
         }
-        Rpc(nameof(RPCSetUnitScale), totalScale);
+        //Rpc(nameof(RPCSetUnitScale), totalScale);
     }
 
     private protected void WhenNavMeshRebuilt(object sender, EventArgs e)

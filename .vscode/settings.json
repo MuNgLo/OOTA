@@ -30,6 +30,7 @@
         "PATHSTATE",
         "PICKUPTYPE",
         "PLAYERMODE",
+        "PLAYERSTATE",
         "Reparent",
         "Shapecast",
         "spawnable",

@@ -52,7 +52,15 @@ public partial class Placer : Node
     public override void _PhysicsProcess(double delta)
     {
         if (avatar is null) { return; }
-        if (avatar.mode == PLAYERMODE.BUILDING)
+
+        // Read toggle mode
+        if (Input.IsActionJustPressed("TogglePlayerMode"))
+        {
+            Core.Players.LocalPlayer.Mode = Core.Players.LocalPlayer.Mode == PLAYERMODE.ATTACKING ? PLAYERMODE.BUILDING : PLAYERMODE.ATTACKING;
+        }
+
+
+        if (Core.Players.LocalPlayer.Mode == PLAYERMODE.BUILDING)
         {
             TowerResource tw = Core.Rules.towers.GetTowerByIndex(towerIDX);
             if (!Core.Players.LocalPlayer.CanPay(tw.cost))
@@ -63,6 +71,8 @@ public partial class Placer : Node
             ConstructInputVector();
             GridLocation gridLocation = ProjectPlacerPosition();
 
+            //GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::_PhysicsProcess() gridLocation[{gridLocation.Coord}].CanFit[{gridLocation.CanFit(tw)}] isBlocked[{isBlocked}]");
+            
             if (gridLocation is null || !gridLocation.CanFit(tw))
             {
                 HidePlacement();
@@ -108,7 +118,7 @@ public partial class Placer : Node
     private void IsPathBlocked(Vector2I coord)
     {
         if (blockCheckLastCoord == coord) { return; }
-        GD.Print($"Placer::IsPathBlocked() Updating block check for coord[{coord}]");
+        //GD.Print($"Placer::IsPathBlocked() Updating block check for coord[{coord}]");
         blockCheckLastCoord = coord;
         placeBlocker.Reparent(worldRoot);
         placeBlocker.GlobalPosition = GridManager.CoordToWorld(coord);
@@ -123,15 +133,17 @@ public partial class Placer : Node
     }
     private void RebuildDone()
     {
-        GD.Print($"Placer::RebuildDone()");
+        GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::RebuildDone()");
         NavigationServer3D.RegionSetNavigationMesh(region, navMesh);
         placeBlocker.Reparent(GetTree().Root, true);
         placeBlocker.GlobalPosition = Vector3.Down * 20.0f;
-
     }
 
     private void WhenMapChanged(Rid mapThatChanged)
     {
+        if(!Multiplayer.HasMultiplayerPeer()) { return; }
+        //GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::WhenMapChanged() GridManager.LeftTeamGoal is null[{GridManager.LeftTeamGoal is null}]");
+
         if(GridManager.LeftTeamGoal is null) {return;}
         if(map == mapThatChanged)
         {
@@ -144,7 +156,7 @@ public partial class Placer : Node
     {
         //if (isCheckingPath) { return; }
         //isCheckingPath = true;
-        GD.Print($"CheckPath");
+        //GD.Print($"CheckPath");
         // This one probably is the ticket for a calm mind
         //GD.Print($"NavigationServer3D region iteration ID?[{NavigationServer3D.RegionGetIterationId(region)}]");
 
@@ -165,8 +177,11 @@ public partial class Placer : Node
             //MGizmosCSharp.GizmoUtils.DrawShape(GridManager.RightTeamGoal.GlobalPosition + Vector3.Up, MGizmosCSharp.GSHAPES.DIAMOND, 0.5f, 0.5f, Colors.Blue);
             //MGizmosCSharp.GizmoUtils.DrawLine(arr, 0.5f, Colors.Red);
         }
-        GD.Print($"Placer::CheckPath() arr.Length[{arr.Length}] blocked[{isBlocked}]");
+        //GD.Print($"Placer::CheckPath() arr.Length[{arr.Length}] blocked[{isBlocked}]");
         //isCheckingPath = false;
+
+        //GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::CheckPath() arr.Length[{arr.Length}] blocked[{isBlocked}]");
+
     }
 
 

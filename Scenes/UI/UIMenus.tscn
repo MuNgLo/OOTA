@@ -102,6 +102,7 @@ custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 placeholder_text = "duuhh"
 alignment = 1
+select_all_on_focus = true
 
 [node name="RichTextLabel2" type="RichTextLabel" parent="Control/PlayerList/GridContainer/PanelContainer/MarginContainer/GridContainer" unique_id=1959965798]
 custom_minimum_size = Vector2(0, 20)

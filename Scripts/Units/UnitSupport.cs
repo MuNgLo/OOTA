@@ -97,7 +97,14 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
 
                 if (inVec != Vector3.Zero)
                 {
-                    ApplyForce(inVec * Mass * acceleration * SpeedModifier());
+                    if (TargetIsToClose())
+                    {
+                        ApplyForce(-inVec * Mass * acceleration * SpeedModifier());
+                    }
+                    else
+                    {
+                        ApplyForce(inVec * Mass * acceleration * SpeedModifier());
+                    }
                 }
                 else
                 {
@@ -111,6 +118,15 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
                 pathState = PATHSTATE.FINISHED;
             }
         }
+
+        // Clamp speed to be at max same as target current speed
+        if(target is not Goal)
+        {
+            LinearVelocity = LinearVelocity.Normalized() * Math.Min(LinearVelocity.Length(), target.CurrentSpeed);
+        }
+
+        // Show current target gizmo
+        //MGizmosCSharp.GizmoUtils.DrawLine(GlobalPosition, target.GlobalPosition, 0.02f, Colors.Bisque);
     }
 
     public override void SetTeam(TEAM value)
@@ -142,8 +158,7 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
             if (!targets.Contains(unitEntering))
             {
                 targets.Add(unitEntering);
-                unitEntering.AddSupporter(this);
-                ResetMind();
+                if(target is Goal){ ResetMind(); }
             }
         }
     }
@@ -166,10 +181,21 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
     {
         if (targets.Count > 0)
         {
-            List<ITargetable> candidates = targets.OrderBy(p => p.GlobalPosition.DistanceTo(GlobalPosition)).ToList();
+            List<ITargetable> candidates = targets.FindAll(p => p.IsSupported == false);
+            if (candidates.Count < 1)
+            {
+                candidates = targets.FindAll(p => p.CanBeSupported);
+            }
             if (candidates.Count > 0)
             {
-                SetTarget(candidates[0]);
+                if (candidates[0].IsSupported)
+                {
+                    SetTarget(candidates.OrderBy(p => p.Supporters.Count).First());
+                }
+                else
+                {
+                    SetTarget(candidates.OrderBy(p => p.GlobalPosition.DistanceTo(GlobalPosition)).First());
+                }
                 return;
             }
         }
@@ -184,4 +210,18 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
         }
         base.Die();
     }
+    private protected override void SetTarget(ITargetable newTarget)
+    {
+        newTarget.AddSupporter(this);
+        base.SetTarget(newTarget);
+    }
+    private protected override void ResetMind()
+    {
+        if (target is not null)
+        {
+            target.RemoveSupporter(this);
+        }
+        base.ResetMind();
+    }
+
 }// EOF CLASS

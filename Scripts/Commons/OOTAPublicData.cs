@@ -17,7 +17,16 @@ public partial class OOTAPublicData : PublicData
     [Export] public float Health { get => health; set => SetHealth(value); }
     [Export] public float MaxHealth = 100;
 
+    [Export] public bool CanTakeDamage { get => canTakeDamage; set => SetCanTakeDamage(value); }
+    [Export] public PLAYERMODE Mode { get => mode; set => SetPlayerMode(value); }
+    [Export] public PLAYERSTATE State { get => state; set => SetPlayerState(value); }
+
+  
+
+    PLAYERSTATE state = PLAYERSTATE.NONE;
+    PLAYERMODE mode = PLAYERMODE.NONE;
     bool isReady = false;
+    bool canTakeDamage = false;
     float health = 100;
     [Export] public TEAM Team { get => team; set => SetTeam(value); }
     TEAM team = TEAM.NONE;
@@ -31,7 +40,10 @@ public partial class OOTAPublicData : PublicData
             LocalLogic.TeamChanged(team);
         }
     }
-
+    private void SetCanTakeDamage(bool value)
+    {
+        canTakeDamage = value;
+    }
     private void SetHealth(float value)
     {
         health = Mathf.Clamp(value, 0, MaxHealth);
@@ -48,6 +60,23 @@ public partial class OOTAPublicData : PublicData
         if (Multiplayer.GetUniqueId() == PeerID)
         {
             LocalLogic.ReadyChanged(isReady);
+        }
+    }
+    private void SetPlayerMode(PLAYERMODE newMode)
+    {
+        mode = newMode;
+        if (Multiplayer.GetUniqueId() == PeerID)
+        {
+            LocalLogic.PlayerModeChanged(mode);
+        }
+    }
+      private void SetPlayerState(PLAYERSTATE value)
+    {
+        state = value;
+        MLobbyPlayerEvents.RaiseOnPlayersChanged();
+        if (IsInsideTree() && Multiplayer.GetUniqueId() == PeerID)
+        {
+            LocalLogic.PlayerStateChanged(value);
         }
     }
 }// EOF CLASS

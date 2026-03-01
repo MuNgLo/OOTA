@@ -65,6 +65,7 @@
 [ext_resource type="Material" uid="uid://bsch310uncfdb" path="res://Materials/Ground.tres" id="44_m4llh"]
 [ext_resource type="Script" uid="uid://ckgv4qp8fmgcj" path="res://Scripts/GameLogic/Placer.cs" id="53_t3x2a"]
 [ext_resource type="Script" uid="uid://bwm6v2ycfwd0v" path="res://Scripts/Grid/GridNavigation.cs" id="55_yisvs"]
+[ext_resource type="PackedScene" uid="uid://bfc78fg22gbp0" path="res://Scenes/HUD/HUDPostGameReport.tscn" id="60_yic5e"]
 [ext_resource type="Script" uid="uid://coo10xkki8sph" path="res://Scripts/UnitDeathTrigger.cs" id="63_yn2g2"]
 [ext_resource type="Material" uid="uid://ch7ne8nwbxk4q" path="res://Materials/TowerGhost.tres" id="66_1bbis"]
 
@@ -922,6 +923,9 @@ properties/1/replication_mode = 2
 properties/2/path = NodePath("GameLogic/GameStats:BaseHealthRight")
 properties/2/spawn = true
 properties/2/replication_mode = 2
+properties/3/path = NodePath("GameLogic/GameStats:GameState")
+properties/3/spawn = true
+properties/3/replication_mode = 2
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_1bbis"]
 geometry_parsed_geometry_type = 1
@@ -1004,6 +1008,7 @@ playerPrefab = ExtResource("12_6ehlx")
 
 [node name="GameLogic" type="Node" parent="Core" unique_id=1852553460 node_paths=PackedStringArray("baseLocationLeft", "baseLocationRight", "gameStats", "towers", "arenaBuilder")]
 script = ExtResource("11_yisvs")
+startGold = 25000
 baseLocationLeft = NodePath("../../baseLeftLocation")
 baseLocationRight = NodePath("../../baseRightLocation")
 gameStats = NodePath("GameStats")
@@ -1021,10 +1026,10 @@ waves = Array[Resource]([SubResource("Resource_hwpts"), SubResource("Resource_c4
 
 [node name="GameTimer" type="Node" parent="Core/GameLogic" unique_id=1803392230]
 script = ExtResource("16_aht7i")
-ticksPerSecond = 0.5
 
 [node name="GameStats" type="Node" parent="Core/GameLogic" unique_id=976334290]
 script = ExtResource("13_0sclb")
+baseStartHealth = 5.0
 
 [node name="Towers" type="Node" parent="Core/GameLogic" unique_id=1889090329]
 script = ExtResource("23_f7hdo")
@@ -1118,6 +1123,8 @@ grow_vertical = 0
 
 [node name="TopElement" parent="CanvasHUD" unique_id=1227094197 instance=ExtResource("20_sxkr1")]
 
+[node name="PostGameReport" parent="CanvasHUD" unique_id=225309207 instance=ExtResource("60_yic5e")]
+
 [node name="CanvasMENUS" parent="." unique_id=1834781793 instance=ExtResource("32_qta6b")]
 layer = 2
 
@@ -1209,10 +1216,10 @@ mesh = SubResource("QuadMesh_j0p05")
 [node name="Buildings" type="Node3D" parent="NavigationRegion3D" unique_id=1446149746]
 
 [node name="SpawnLeft" type="Node3D" parent="." unique_id=482879428]
-transform = Transform3D(-2.9802322e-08, 0, -1, 0, 1, 0, 1, 0, -2.9802322e-08, -5, 0, 0)
+transform = Transform3D(-2.9802322e-08, 0, -1, 0, 1, 0, 1, 0, -2.9802322e-08, -18, 0, 9)
 
 [node name="SpawnRight" type="Node3D" parent="." unique_id=2101850589]
-transform = Transform3D(1.172251e-07, 0, 1, 0, 1, 0, -1, 0, 1.172251e-07, 5, 0, 0)
+transform = Transform3D(1.172251e-07, 0, 1, 0, 1, 0, -1, 0, 1.172251e-07, 18, 0, -9)
 
 [node name="baseLeftLocation" type="Node3D" parent="." unique_id=1794628689]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -14.049309, 0, -4.3280318e-07)
@@ -1223,6 +1230,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.239672, 0, 0)
 [node name="CameraTarget" parent="." unique_id=925498331 node_paths=PackedStringArray("avatarsContainer") instance=ExtResource("3_pbw6q")]
 physics_interpolation_mode = 2
 avatarsContainer = NodePath("../PlayerAvatars")
+baseSpeed = 12.0
+topMargin = 3.925
+bottomMargin = 5.33
 
 [node name="PlayerAvatars" type="Node3D" parent="." unique_id=628736147]
 

@@ -18,9 +18,14 @@ public partial class ArenaBuilder : Node
     [Export] StaticBody3D wallEast;
     [Export] StaticBody3D wallWest;
 
+    public float MaxLeft => wallWest.GlobalPosition.X;
+    public float MaxRight => wallEast.GlobalPosition.X;
+    public float MaxTop => wallNorth.GlobalPosition.Z;
+    public float MaxBottom => wallSouth.GlobalPosition.Z;
+
     public override void _Ready()
     {
-        GridNavigation.OnNavMeshRebuilt += WhenNavMeshRebuilt;
+        //GridNavigation.OnNavMeshRebuilt += WhenNavMeshRebuilt;
     }
 
     private void WhenNavMeshRebuilt(object sender, EventArgs e)
@@ -30,19 +35,24 @@ public partial class ArenaBuilder : Node
 
     public void BuildArena(int width, int depth)
     {
+        Rpc(nameof(RPCBuildArena), width, depth);
+    }
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void RPCBuildArena(int width, int depth)
+    {
         SetArenaSize(width, depth);
 
         PositionWalls(width, depth);
 
         GridManager.InitGrid(width, depth);
 
-        BuildFoundationsOnEnds();
-
-        AddGoals();
-
-        AddBases();
-
-        GridNavigation.Rebuild();
+        if (Multiplayer.IsServer())
+        {
+            BuildFoundationsOnEnds();
+            AddGoals();
+            AddBases();
+            GridNavigation.Rebuild();
+        }
     }
 
     private void AddBases()
@@ -91,6 +101,7 @@ public partial class ArenaBuilder : Node
         GridManager.PlaceStructure(rightGoal);
         GD.Print($"ArenaBuilder::AddGoals() coord[{leftGoalCoord}] world[{GridManager.CoordToWorld(leftGoalCoord)}]");
     }
+
 
     private void PositionWalls(int width, int depth)
     {

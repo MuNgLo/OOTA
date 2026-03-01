@@ -6,10 +6,24 @@ namespace OOTA.GameLogic;
 
 public partial class GameStats : Node
 {
+    [Export] public GAMESTATE GameState { get => gamestate; set => SetGameState(value); }
     [Export] public double baseStartHealth = 100.0;
 
+    GAMESTATE gamestate;
      public double bhl = 0;
      public double bhr = 0;
+
+
+    public event EventHandler<GAMESTATE> OnGameStateChanged;
+
+    private void SetGameState(GAMESTATE value)
+    {
+        if(gamestate != value)
+        {
+            gamestate = value;
+            OnGameStateChanged?.Invoke(null, gamestate);
+        }
+    }
 
     [Export] public double BaseHealthLeft { get => bhl; set { bhl = value; OnBaseDamage?.Invoke(null, [BaseNormalizedHealthLeft, BaseNormalizedHealthRight]); } }
     [Export] public double BaseHealthRight { get => bhr; set { bhr = value; OnBaseDamage?.Invoke(null, [BaseNormalizedHealthLeft, BaseNormalizedHealthRight]); } }

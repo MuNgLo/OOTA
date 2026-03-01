@@ -1,4 +1,5 @@
 using Godot;
+using OOTA.Enums;
 using System;
 
 namespace OOTA.GameLogic;
@@ -29,13 +30,9 @@ public partial class GameTimer : Node
     public override void _Ready()
     {
         Core.Rules.OnGameStart += WhenGameStart;
-    }
+        Core.Rules.gameStats.OnGameStateChanged += WhenGameStateChanged;
 
-    private void WhenGameStart(object sender, EventArgs e)
-    {
-        OnGameTimingDecided?.Invoke(this, [gameSpeed, ticksPerSecond]);
     }
-
     public override void _Process(double delta)
     {
         if (runningTimer)
@@ -43,12 +40,37 @@ public partial class GameTimer : Node
             RunTimer((float)delta);
         }
     }
-    public static void StartTimer()
+
+    private void WhenGameStateChanged(object sender, GAMESTATE e)
     {
-        ins.totalGameTime = 0.0f;
-        ins.totalGameTicks = 0;
-        ins.nextTickIn = 0.0f;
-        ins.runningTimer = true;
+        if (e == GAMESTATE.PLAYING)
+        {
+            StartTimer();
+        }
+        else
+        {
+            StopTimer();
+        }
+    }
+
+
+
+    private void WhenGameStart(object sender, EventArgs e)
+    {
+        OnGameTimingDecided?.Invoke(this, [gameSpeed, ticksPerSecond]);
+    }
+
+
+    private void StartTimer()
+    {
+        totalGameTime = 0.0f;
+        totalGameTicks = 0;
+        nextTickIn = 0.0f;
+        runningTimer = true;
+    }
+    private void StopTimer()
+    {
+        runningTimer = false;
     }
     private void RunTimer(float delta)
     {
@@ -59,7 +81,6 @@ public partial class GameTimer : Node
             RunTick(delta);
         }
     }
-
     private void RunTick(float delta)
     {
         nextTickIn = (1.0f / ticksPerSecond) + nextTickIn;

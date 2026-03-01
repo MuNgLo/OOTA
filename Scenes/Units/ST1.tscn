@@ -37,6 +37,7 @@ script = ExtResource("1_71np4")
 baseDamageBonus = 0.5
 baseScaleBonus = 0.05
 moveSpeed = 6.0
+acceleration = 50.0
 attackRange = 6.0
 targetMinDistance = 1.0
 
