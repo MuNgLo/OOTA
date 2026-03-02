@@ -45,13 +45,16 @@ public partial class OOTAPlayer : MLobbyPlayer
     }
 
     PlayerAvatar avatar;
+    //public PlayerAvatar Avatar { get => avatar; set => SetAvatar(value); }
     public PlayerAvatar Avatar { get => avatar; set => SetAvatar(value); }
 
     private void SetAvatar(PlayerAvatar value)
     {
-        Rpc(nameof(RPCSetAvatar), value is null ? null : value.GetPath());
+        avatar = value;
+        avatar.TreeExiting += ()=>{ avatar = null; };
+        //Rpc(nameof(RPCSetAvatar), value is null ? null : value.GetPath());
     }
-    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    /*[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void RPCSetAvatar(NodePath nodePath)
     {
         avatar = GetNodeOrNull<PlayerAvatar>(nodePath);
@@ -59,7 +62,7 @@ public partial class OOTAPlayer : MLobbyPlayer
         {
             LocalLogic.AvatarChanged(avatar);
         }
-    }
+    }*/
 
     public void AddHealth(int amount)
     {
@@ -80,7 +83,7 @@ public partial class OOTAPlayer : MLobbyPlayer
     }
     public virtual void Die()
     {
-        Core.Rules.PlayerDied(avatar);
+        Core.Rules.PlayerDied(PeerID);
     }
 
 
@@ -146,7 +149,7 @@ public partial class OOTAPlayer : MLobbyPlayer
         (publicData as OOTAPublicData).Health = health;
     }
 
-    internal void SetState(PLAYERSTATE newState)
+    private void SetState(PLAYERSTATE newState)
     {
         if (Multiplayer.IsServer())
         {

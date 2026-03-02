@@ -20,7 +20,6 @@ public partial class Waves : Node
 
     public override void _Ready()
     {
-        base._Ready();
         GameTimer.OnGameTick += WhenGameTick;
         Core.Rules.OnGameStart += WhenGameStart;
     }
@@ -28,6 +27,7 @@ public partial class Waves : Node
     private void WhenGameStart(object sender, EventArgs e)
     {
         OnWavesDecided?.Invoke(this, waves);
+        lastWaveIndexSpawned = -1;
     }
 
     private void WhenGameTick(object sender, int tick)

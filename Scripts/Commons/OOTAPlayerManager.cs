@@ -22,17 +22,20 @@ partial class OOTAPlayerManager : PlayerManager
         base.WhenChildEnterTree(node);
         if (node is OOTAPlayer ootaPlayer)
         {
-            if(Core.Rules.gameStats.GameState == GAMESTATE.PLAYING)
-            {
-                ootaPlayer.SetState(PLAYERSTATE.SPECTATING);
-            }
-            else
-            {
-                ootaPlayer.SetState(PLAYERSTATE.LOBBY);
-            }
             if (ootaPlayer.PeerID == Multiplayer.GetUniqueId())
             {
                 localPlayer = ootaPlayer;
+            }
+            if (Multiplayer.IsServer())
+            {
+                if (Core.Rules.gameStats.GameState == GAMESTATE.PLAYING)
+                {
+                    ootaPlayer.State = PLAYERSTATE.SPECTATING;
+                }
+                else
+                {
+                    ootaPlayer.State = PLAYERSTATE.LOBBY;
+                }
             }
         }
     }
@@ -93,14 +96,16 @@ partial class OOTAPlayerManager : PlayerManager
     }
     internal void SpawnPlayer(OOTAPlayer player)
     {
+        if(Core.Rules.gameStats.GameState != GAMESTATE.PLAYING){ return; }
         player.SetFullHealth();
         if (player.Avatar is not null)
         {
             MLog.LogError($"PlayerManager::SpawnPlayer({player.PeerID}) already has an avatar!", true);
             return;
         }
-        player.Avatar = AvatarSpawner.SpawnThisAvatar(new AvatarSpawner.SpawnAvatarArgument(player)); // WARNING MIGHT BE RACE CONDITION BETWEEN GAME INSTANCES
-        player.SetState(PLAYERSTATE.ALIVE);
+        //player.Avatar = AvatarSpawner.SpawnThisAvatar(new AvatarSpawner.SpawnAvatarArgument(player)); // WARNING MIGHT BE RACE CONDITION BETWEEN GAME INSTANCES
+        AvatarSpawner.SpawnThisAvatar(new AvatarSpawner.SpawnAvatarArgument(player));
+        player.State = PLAYERSTATE.ALIVE;
     }
     internal async void SpawnPlayerWithDelay(int delay, long peerID)
     {
@@ -128,6 +133,14 @@ partial class OOTAPlayerManager : PlayerManager
         foreach (MLobbyPlayer player in players)
         {
             (player as OOTAPlayer).SetToNotReady();
+        }
+    }
+
+    internal void KillEmAll()
+    {
+        foreach (MLobbyPlayer player in players)
+        {
+            (player as OOTAPlayer).State = PLAYERSTATE.DEAD;
         }
     }
     #endregion

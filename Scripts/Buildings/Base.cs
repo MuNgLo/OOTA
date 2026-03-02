@@ -16,6 +16,7 @@ public partial class Base : BuildingBaseClass
 
     public override void _Ready()
     {
+        if(!Multiplayer.IsServer()){return;}
         base._Ready();
         Waves.OnWaveSpawned += WhenWaveSpawned;
         TreeExiting += () => { Waves.OnWaveSpawned -= WhenWaveSpawned; };
@@ -23,6 +24,7 @@ public partial class Base : BuildingBaseClass
 
     private void WhenWaveSpawned(object sender, WaveDefinition e)
     {
+        GD.Print($"Base spawning for team[{Team}]");
         Spawn(e);
     }
 

@@ -59,13 +59,6 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
     public bool CanBeSupported => supporters.Count < maxNBofSupporters;
     public float CurrentSpeed => LinearVelocity.Length();
 
-
-    private void SetTeam(TEAM value)
-    {
-        GetNode<MeshInstance3D>("MeshInstance3D").SetSurfaceOverrideMaterial(0, Core.TeamMaterial(value));
-        CollisionLayer = value == TEAM.LEFT ? Core.Rules.leftTeamCollision : Core.Rules.rightTeamCollision;
-        team = value;
-    }
     public override void _EnterTree()
     {
         Core.Rules.OnGameStart += WhenGameStarts;
@@ -73,6 +66,21 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
         {
             LocalLogic.OnPlayerModeChanged += WhenPlayerModeChanged;
         }
+    }
+    public override void _ExitTree()
+    {
+        Core.Rules.OnGameStart -= WhenGameStarts;
+        if (player.PeerID == GetMultiplayerAuthority())
+        {
+            LocalLogic.OnPlayerModeChanged -= WhenPlayerModeChanged;
+        }
+    }
+
+    private void SetTeam(TEAM value)
+    {
+        GetNode<MeshInstance3D>("MeshInstance3D").SetSurfaceOverrideMaterial(0, Core.TeamMaterial(value));
+        CollisionLayer = value == TEAM.LEFT ? Core.Rules.leftTeamCollision : Core.Rules.rightTeamCollision;
+        team = value;
     }
 
     private void WhenPlayerModeChanged(object sender, PLAYERMODE mode)
@@ -101,9 +109,6 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
         inRightStick = Vector3.Zero;
         inRightStick += Vector3.Right * Input.GetAxis("RSLeft", "RSRight");
         inRightStick += Vector3.Back * Input.GetAxis("RSUp", "RSDown");
-
-
-
 
         // Mode dependent Controller
         if (inRightStick != Vector3.Zero)

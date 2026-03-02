@@ -24,8 +24,28 @@ public partial class LocalLogic : Node
     public override void _Ready()
     {
         lobbyManager.ChildEnteredTree += WhenLobbyMemberAdded;
+        avatarContainer.ChildEnteredTree += WhenAvatarAdded;
         Core.Rules.OnGameStart += WhenGameStarts;
         RegisterConsoleCommands();
+        OnPlayerStateChanged += WhenPlayerStateChanged;
+    }
+
+    private void WhenAvatarAdded(Node node)
+    {
+        if (Core.Players.GetPlayer(node.GetMultiplayerAuthority(), out OOTAPlayer player)) { player.Avatar = node as PlayerAvatar; }
+    }
+
+    private void WhenPlayerStateChanged(object sender, PLAYERSTATE e)
+    {
+        if (e == PLAYERSTATE.DEAD)
+        {
+            Node ava = Core.Players.LocalPlayer.Avatar;
+            MultiplayerSynchronizer synchronizer = ava.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
+            synchronizer.PublicVisibility = false;
+            synchronizer.UpdateVisibility();
+            ava.SetMultiplayerAuthority(1);
+            Core.Rules.PlayerRequestHandOverAvatar(ava.GetPath());
+        }
     }
 
     private void RegisterConsoleCommands()
@@ -89,12 +109,12 @@ public partial class LocalLogic : Node
 
     }
 
-    public static event EventHandler<PlayerAvatar> OnAvatarAssigned;
+    //public static event EventHandler<PlayerAvatar> OnAvatarAssigned;
 
-    internal static void AvatarChanged(PlayerAvatar avatar)
+    /*internal static void AvatarChanged(PlayerAvatar avatar)
     {
         OnAvatarAssigned?.Invoke(null, avatar);
-    }
+    }*/
 
     #region Local Events from PlayerData
 

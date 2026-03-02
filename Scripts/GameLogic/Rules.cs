@@ -75,7 +75,7 @@ public partial class Rules : Node
         ProjectileSpawner.CleanUp();
         BuildingSpawner.CleanUp();
         UnitSpawner.CleanUp();
-        AvatarSpawner.CleanUp();
+        //AvatarSpawner.CleanUp();
         PickupSpawner.CleanUp();
     }
 
@@ -114,9 +114,8 @@ public partial class Rules : Node
         AssignTeams();
         arenaBuilder.BuildArena(arenaWidth, arenaDepth);
         await Task.Delay(500);
-        Core.Players.SpawnPlayers();
-
         gameStats.GameState = GAMESTATE.PLAYING;
+        Core.Players.SpawnPlayers();
         Core.Players.SetStartResourcesOnAll(startGold, startHealth);
         Core.Players.SetAllAsNotReady();
         Rpc(nameof(RPCRaiseOnGameStart));
@@ -143,6 +142,7 @@ public partial class Rules : Node
     }
     public void TeamWin(TEAM team)
     {
+        Core.Players.KillEmAll();
         gameStats.GameState = GAMESTATE.POST;
         Cleanup(null, null);
         GD.Print($"Team WIN! [{team}]");
@@ -201,32 +201,34 @@ public partial class Rules : Node
         }
     }
 
-    public void PlayerDied(Node node)
+    public void PlayerDied(long peerID)
     {
         if (!Multiplayer.IsServer()) { return; }
-        RpcId(node.GetMultiplayerAuthority(), nameof(RPCHandOverAvatar), node.GetPath());
+        //RpcId(node.GetMultiplayerAuthority(), nameof(RPCHandOverAvatar), node.GetPath());
+        if(Core.Players.GetPlayer(peerID, out OOTAPlayer player)){ player.State = PLAYERSTATE.DEAD; }
     }
-    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void RPCHandOverAvatar(string nodePath)
+    //[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    public void PlayerRequestHandOverAvatar(string nodePath)
     {
-        Node ava = GetNode(nodePath);
-        MultiplayerSynchronizer synchronizer = ava.GetNode<MultiplayerSynchronizer>("MultiplayerSynchronizer");
-        synchronizer.PublicVisibility = false;
-        synchronizer.UpdateVisibility();
-        ava.SetMultiplayerAuthority(1);
         RpcId(1, nameof(RPCAvatarHandedOver), nodePath);
     }
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void RPCAvatarHandedOver(string nodePath)
     {
         long peerID = Multiplayer.GetRemoteSenderId() == 0 ? 1 : Multiplayer.GetRemoteSenderId();
+        /*
         if (Core.Players.GetPlayer(peerID, out OOTAPlayer player))
         {
             player.Avatar.QueueFree();
             player.Avatar = null;
-            player.SetState(PLAYERSTATE.DEAD);
+        }*/
+        PlayerAvatar ava = GetNode<PlayerAvatar>(nodePath);
+        ava.SetMultiplayerAuthority(1);
+        ava.QueueFree();
+        if(gameStats.GameState == GAMESTATE.PLAYING)
+        {
+            Core.Players.SpawnPlayerWithDelay(reSpawnTimerMS, peerID);
         }
-        Core.Players.SpawnPlayerWithDelay(reSpawnTimerMS, peerID);
     }
 
 

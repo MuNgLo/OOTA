@@ -13,7 +13,7 @@ public partial class Placer : Node
     [Export] Node3D worldRoot;
     [Export] Node3D placeBlocker;
 
-    PlayerAvatar avatar;
+    PlayerAvatar Avatar => Core.Players.LocalPlayer.Avatar;
     int towerIDX = 0;
     private Vector3 inRightStick;
     private Vector3 cursorWorldPosition;
@@ -30,7 +30,6 @@ public partial class Placer : Node
 
     public override void _Ready()
     {
-        LocalLogic.OnAvatarAssigned += WhenAvatarAssigned;
         placeGhost.Hide();
 
         // Create a new navigation map.
@@ -48,10 +47,10 @@ public partial class Placer : Node
         NavigationServer3D.MapChanged += WhenMapChanged;
     }
 
-
     public override void _PhysicsProcess(double delta)
     {
-        if (avatar is null) { return; }
+        if (Core.Players.LocalPlayer is null) { return; }
+        if (Core.Players.LocalPlayer.State != PLAYERSTATE.ALIVE) { return; }
 
         // Read toggle mode
         if (Input.IsActionJustPressed("TogglePlayerMode"))
@@ -72,7 +71,7 @@ public partial class Placer : Node
             GridLocation gridLocation = ProjectPlacerPosition();
 
             //GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::_PhysicsProcess() gridLocation[{gridLocation.Coord}].CanFit[{gridLocation.CanFit(tw)}] isBlocked[{isBlocked}]");
-            
+
             if (gridLocation is null || !gridLocation.CanFit(tw))
             {
                 HidePlacement();
@@ -141,11 +140,11 @@ public partial class Placer : Node
 
     private void WhenMapChanged(Rid mapThatChanged)
     {
-        if(!Multiplayer.HasMultiplayerPeer()) { return; }
+        if (!Multiplayer.HasMultiplayerPeer()) { return; }
         //GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::WhenMapChanged() GridManager.LeftTeamGoal is null[{GridManager.LeftTeamGoal is null}]");
 
-        if(GridManager.LeftTeamGoal is null) {return;}
-        if(map == mapThatChanged)
+        if (GridManager.LeftTeamGoal is null) { return; }
+        if (map == mapThatChanged)
         {
             CheckPath();
         }
@@ -163,13 +162,13 @@ public partial class Placer : Node
         await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
 
         Vector3[] arr = NavigationServer3D.MapGetPath(
-            map, 
-            GridManager.LeftTeamGoal.GlobalPosition, 
-            GridManager.RightTeamGoal.GlobalPosition, 
+            map,
+            GridManager.LeftTeamGoal.GlobalPosition,
+            GridManager.RightTeamGoal.GlobalPosition,
             true
             );
-        
-        
+
+
         if (arr.Length > 0)
         {
             isBlocked = arr[arr.Length - 1].DistanceTo(GridManager.RightTeamGoal.GlobalPosition) > 1.0f;
@@ -196,8 +195,8 @@ public partial class Placer : Node
         if (inRightStick == Vector3.Zero && Core.PlotMouseWorldPosition(out cursorWorldPosition))
         // Mode dependent Mouse
         {
-            cursorWorldPosition.Y = avatar.GlobalPosition.Y;
-            inRightStick = avatar.GlobalPosition.DirectionTo(cursorWorldPosition);
+            cursorWorldPosition.Y = Avatar.GlobalPosition.Y;
+            inRightStick = Avatar.GlobalPosition.DirectionTo(cursorWorldPosition);
         }
     }
 
@@ -227,7 +226,7 @@ public partial class Placer : Node
 
     private GridLocation ProjectPlacerPosition()
     {
-        Vector2I playerTileCoord = GridManager.WorldToCoord(avatar.GlobalPosition);
+        Vector2I playerTileCoord = GridManager.WorldToCoord(Avatar.GlobalPosition);
 
         //MGizmosCSharp.GizmoUtils.DrawShape(placer.GlobalPosition + Vector3.Up, MGizmosCSharp.GSHAPES.DIAMOND, 0.1f, 1.0f, Colors.Pink);
         //MGizmosCSharp.GizmoUtils.DrawShape(GridManager.CoordToWorld(playerTileCoord), MGizmosCSharp.GSHAPES.DIAMOND, 0.1f, 1.0f, Colors.BlueViolet);
@@ -255,19 +254,7 @@ public partial class Placer : Node
     #region pass 1
 
 
-    private void WhenAvatarAssigned(object sender, PlayerAvatar e)
-    {
-        avatar = e;
-        //ProcessMode = ProcessModeEnum.Inherit;
-        if (avatar is not null)
-        {
-            avatar.TreeExiting += () =>
-            {
-                //ProcessMode = ProcessModeEnum.Disabled;
-                avatar = null;
-            };
-        }
-    }
+
 
     #endregion
 }// EOF CLASS

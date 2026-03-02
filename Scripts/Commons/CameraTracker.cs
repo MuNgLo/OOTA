@@ -6,7 +6,6 @@ namespace OOTA;
 
 public partial class CameraTracker : Node3D
 {
-    [Export] Node3D target;
     [Export] Node3D avatarsContainer;
     [Export] bool freeLook = false;
 
@@ -33,12 +32,12 @@ public partial class CameraTracker : Node3D
         if (newState == PLAYERSTATE.ALIVE)
         {
             LocalLogic.ShowHUD();
-            target = Core.Players.LocalPlayer.Avatar;
+            
             freeLook = false;
         }
         else
         {
-            target = null;
+            
             freeLook = true;
         }
     }
@@ -47,18 +46,16 @@ public partial class CameraTracker : Node3D
     public override void _Process(double delta)
     {
         if (freeLook) { DoFreeLook((float)delta); }
-        if (target is null) { return; }
-        if (Core.Players.LocalPlayer.State == PLAYERSTATE.ALIVE)
+        if (Core.Players.LocalPlayer is not null && Core.Players.LocalPlayer.State == PLAYERSTATE.ALIVE)
         {
-            GlobalPosition = GlobalPosition.Lerp(target.GetGlobalTransformInterpolated().Origin, 0.5f);
+            if (Core.Players.LocalPlayer.Avatar is null) { return; }
+            GlobalPosition = GlobalPosition.Lerp(Core.Players.LocalPlayer.Avatar.GetGlobalTransformInterpolated().Origin, 0.5f);
             ClampCamera();
         }
     }
 
     private void DoFreeLook(float delta)
     {
-        GD.Print($"CameraTracker::DoFreeLook()");
-
         // Building input vector Left stick
         inVec = Vector3.Zero;
         inVec += Vector3.Right * Input.GetAxis("LSLeft", "LSRight");
