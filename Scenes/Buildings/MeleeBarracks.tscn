@@ -1,0 +1,100 @@
+[gd_scene format=3 uid="uid://b57sl3g4cf8w7"]
+
+[ext_resource type="Script" uid="uid://b2k6s27one3eg" path="res://Scripts/Buildings/Barracks.cs" id="1_igm1j"]
+[ext_resource type="PackedScene" uid="uid://p7gblyg4fk0h" path="res://Scenes/Units/MT1.tscn" id="2_m61dk"]
+[ext_resource type="ArrayMesh" uid="uid://c65d4s7lt4chu" path="res://Meshes/bWallFoundation.res" id="2_rnjew"]
+[ext_resource type="ArrayMesh" uid="uid://4u4ltfjew88x" path="res://Meshes/bWallConnector.res" id="3_m61dk"]
+[ext_resource type="Script" uid="uid://c3qkbidk7pl64" path="res://Scripts/HUD/HUDLabelMaker.cs" id="4_4y8uf"]
+[ext_resource type="Material" uid="uid://co3qh8agjudwr" path="res://Materials/TrampledGround.tres" id="6_4y8uf"]
+[ext_resource type="Material" uid="uid://bgbya1ktllsfd" path="res://Materials/Barrel.tres" id="7_2ha71"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_yxj02"]
+size = Vector3(0.8, 0.669, 0.8)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_bypgs"]
+properties/0/path = NodePath(".:health")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rfqov"]
+size = Vector3(1, 3, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4y8uf"]
+size = Vector3(0.35, 0.35, 0.5)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_h6grt"]
+size = Vector2(0.5, 0.625)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gvs3b"]
+size = Vector3(0.33, 0.44, 0.1)
+
+[node name="MeleeBarracks" type="StaticBody3D" unique_id=1281713625 node_paths=PackedStringArray("spawnPoint", "connSouth", "connWest", "connEast", "models")]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_igm1j")
+unitPrefab = ExtResource("2_m61dk")
+coolDownMS = 500
+spawnPoint = NodePath("SpawnPoint")
+connSouth = NodePath("ConnSouth")
+connWest = NodePath("ConnWest")
+connEast = NodePath("ConnEast")
+models = [NodePath("MeshInstance3D2"), NodePath("MeshInstance3D")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1818366435]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.07445872, 0)
+layers = 512
+mesh = ExtResource("2_rnjew")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1347173250]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33459473, 0)
+shape = SubResource("BoxShape3D_yxj02")
+
+[node name="ConnSouth" type="MeshInstance3D" parent="." unique_id=74436878]
+layers = 512
+mesh = ExtResource("3_m61dk")
+
+[node name="ConnWest" type="MeshInstance3D" parent="." unique_id=1609631111]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+layers = 512
+mesh = ExtResource("3_m61dk")
+
+[node name="ConnEast" type="MeshInstance3D" parent="." unique_id=808467006]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+layers = 512
+mesh = ExtResource("3_m61dk")
+
+[node name="LabelMaker" type="Node3D" parent="." unique_id=960099250 node_paths=PackedStringArray("building")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2396566, 0)
+script = ExtResource("4_4y8uf")
+building = NodePath("..")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=772288372]
+replication_config = SubResource("SceneReplicationConfig_bypgs")
+visibility_update_mode = 1
+
+[node name="NavBlock" type="StaticBody3D" parent="." unique_id=1256041457]
+visible = false
+collision_layer = 512
+collision_mask = 0
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="NavBlock" unique_id=1985620191]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_rfqov")
+debug_color = Color(0.63109064, 0.5288405, 0, 1)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="." unique_id=610950639]
+transform = Transform3D(0.70710677, 0.70710677, 0, -0.70710677, 0.70710677, 0, 0, 0, 1, 0, 0.6632583, 0)
+mesh = SubResource("BoxMesh_4y8uf")
+
+[node name="SpawnPoint" type="Node3D" parent="." unique_id=344226880]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.0282865)
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="." unique_id=495114610]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, -0.59066594)
+material_override = ExtResource("6_4y8uf")
+mesh = SubResource("PlaneMesh_h6grt")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="MeshInstance3D5" unique_id=1005062305]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17, 0.28966594)
+material_override = ExtResource("7_2ha71")
+mesh = SubResource("BoxMesh_gvs3b")

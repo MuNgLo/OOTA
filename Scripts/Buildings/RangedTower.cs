@@ -25,14 +25,14 @@ public partial class RangedTower : BuildingBaseClass, IMind
     public override void _PhysicsProcess(double delta)
     {
         if (!Multiplayer.IsServer()) { return; }
-        if (Time.GetTicksMsec() > tsLastAttackMS + attackCoolDownMS)
+        if (Time.GetTicksMsec() > tsSpawnMS + attackCoolDownMS)
         {
             PickTarget();
             if (target is not null)
             {
                 if (GlobalPosition.DistanceTo(target.GlobalPosition) <= attackRange)
                 {
-                    tsLastAttackMS = Time.GetTicksMsec();
+                    tsSpawnMS = Time.GetTicksMsec();
                     AttackTarget();
                 }
             }

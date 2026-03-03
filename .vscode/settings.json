@@ -25,6 +25,7 @@
         "MENUSTATE",
         "MINDSTATE",
         "NOTREADY",
+        "OBJECTIVESTATE",
         "ontop",
         "OOTA",
         "PATHSTATE",

@@ -1,4 +1,4 @@
-[gd_resource type="StandardMaterial3D" format=3 uid="uid://bsch310uncfdb"]
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://co3qh8agjudwr"]
 
 [sub_resource type="Gradient" id="Gradient_sk1ts"]
 offsets = PackedFloat32Array(0.17532468, 0.4935065)
@@ -10,10 +10,9 @@ frequency = 0.0149
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_v6oky"]
 noise = SubResource("FastNoiseLite_i3xm6")
 color_ramp = SubResource("Gradient_sk1ts")
-seamless = true
 
 [resource]
-albedo_color = Color(0.16585627, 0.29051536, 0.10412563, 1)
+albedo_color = Color(0.32839844, 0.3247353, 0.15581125, 1)
 albedo_texture = SubResource("NoiseTexture2D_v6oky")
 metallic_specular = 0.26
 uv1_scale = Vector3(0.035, 0.035, 0.035)

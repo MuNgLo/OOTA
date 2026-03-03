@@ -181,7 +181,7 @@ public partial class Rules : Node
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void RPCHandleReadyUp()
     {
-        GD.Print($"RPCHandleReadyUp");
+        //GD.Print($"RPCHandleReadyUp");
         long peerID = Multiplayer.GetRemoteSenderId() == 0 ? 1 : Multiplayer.GetRemoteSenderId();
         if (Core.Players.GetPlayer(peerID, out MLobbyPlayer player))
         {

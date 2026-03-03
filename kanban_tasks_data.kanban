@@ -15,55 +15,25 @@
 				"209b7577-0ea0-4cdc-b4b1-3dd2962399a8",
 				"aef5b1c8-45bf-472e-be33-9ced8458820c",
 				"e2b0a25a-20cf-48b5-83fa-4d35ad6a61ef",
-				"e6a5aac5-8fc9-4880-9513-4449a0675ed6"
+				"e6a5aac5-8fc9-4880-9513-4449a0675ed6",
+				"90fd554e-aa18-4dd6-a491-4998b1de9cb6"
 			]
 		},
 		{
 			"uuid": "2b9f4e05-1ce5-49f1-ac28-40d38b511a0e",
 			"title": "Doing",
-			"tasks": []
+			"tasks": [
+				"73734388-1d86-44f3-8217-f3028254ac55",
+				"21235c9d-783f-4321-b8c7-46651a1c48a8"
+			]
 		},
 		{
 			"uuid": "9e405e4f-f1b5-4694-b496-a478fdc96a82",
-			"title": "0.7",
-			"tasks": [
-				"fe74da01-554d-43a3-98ff-26d2f5931718",
-				"348d57a2-443e-4dab-b39e-2d0838834362",
-				"ae979152-b212-4767-ae13-e9269053f379",
-				"ecadf2ad-7815-499c-a666-45609ad404d8",
-				"caa16bda-5dbe-491a-8f4c-312bd81d6084"
-			]
+			"title": "0.8",
+			"tasks": []
 		}
 	],
 	"tasks": [
-		{
-			"uuid": "caa16bda-5dbe-491a-8f4c-312bd81d6084",
-			"title": "gamestate",
-			"description": "",
-			"category": "650d186a-7fd6-4501-8918-6071c592f186",
-			"steps": []
-		},
-		{
-			"uuid": "ecadf2ad-7815-499c-a666-45609ad404d8",
-			"title": "playerstate",
-			"description": "",
-			"category": "650d186a-7fd6-4501-8918-6071c592f186",
-			"steps": []
-		},
-		{
-			"uuid": "ae979152-b212-4767-ae13-e9269053f379",
-			"title": "spectatorcontrols",
-			"description": "",
-			"category": "650d186a-7fd6-4501-8918-6071c592f186",
-			"steps": []
-		},
-		{
-			"uuid": "348d57a2-443e-4dab-b39e-2d0838834362",
-			"title": "end game screen",
-			"description": "",
-			"category": "650d186a-7fd6-4501-8918-6071c592f186",
-			"steps": []
-		},
 		{
 			"uuid": "5b4ff7d2-f5d1-4ef8-9ee7-ea45fa327b08",
 			"title": "Feedback text on launch",
@@ -93,15 +63,29 @@
 			"steps": []
 		},
 		{
-			"uuid": "fe74da01-554d-43a3-98ff-26d2f5931718",
-			"title": "refactor avatar dumping on death",
+			"uuid": "e6a5aac5-8fc9-4880-9513-4449a0675ed6",
+			"title": "post screen text valid",
 			"description": "",
 			"category": "650d186a-7fd6-4501-8918-6071c592f186",
 			"steps": []
 		},
 		{
-			"uuid": "e6a5aac5-8fc9-4880-9513-4449a0675ed6",
-			"title": "post screen text valid",
+			"uuid": "90fd554e-aa18-4dd6-a491-4998b1de9cb6",
+			"title": "game version on connect verification",
+			"description": "",
+			"category": "650d186a-7fd6-4501-8918-6071c592f186",
+			"steps": []
+		},
+		{
+			"uuid": "73734388-1d86-44f3-8217-f3028254ac55",
+			"title": "staging ground",
+			"description": "",
+			"category": "650d186a-7fd6-4501-8918-6071c592f186",
+			"steps": []
+		},
+		{
+			"uuid": "21235c9d-783f-4321-b8c7-46651a1c48a8",
+			"title": "unit producing buildings",
 			"description": "",
 			"category": "650d186a-7fd6-4501-8918-6071c592f186",
 			"steps": []

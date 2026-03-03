@@ -19,6 +19,7 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
     [ExportGroup("States")]
     [Export] protected MINDSTATE mindState = MINDSTATE.NONE;
     [Export] protected PATHSTATE pathState = PATHSTATE.IDLE;
+    [Export] protected OBJECTIVESTATE objectiveState = OBJECTIVESTATE.STAGE;
 
     [ExportGroup("Movement")]
     [Export] float moveSpeed = 8.0f;
@@ -61,6 +62,7 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
     public List<ISupporter> Supporters => supporters;
     public bool CanBeSupported => supporters.Count < maxNBofSupporters;
     public float CurrentSpeed => LinearVelocity.Length();
+    public OBJECTIVESTATE ObjectiveState { get => objectiveState; set { objectiveState = value; ResetMind(); } }
 
 
 
@@ -93,6 +95,10 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
             default:
                 ProcessNone((float)delta);
                 break;
+        }
+        if(LinearVelocity.Length() > 0.05f && Math.Abs(Vector3.Up.Dot(LinearVelocity)) < 1.0f)
+        {
+            LookAt(GlobalPosition + LinearVelocity * 100.0f, Vector3.Up);
         }
     }
 
@@ -181,17 +187,11 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
     public virtual void ProcessNone(float delta)
     {
         PickTarget();
-        if (target is Goal)
-        {
-            mindState = MINDSTATE.TRAVELING;
-            return;
-        }
-        //mindState = MINDSTATE.HUNTING;
         mindState = MINDSTATE.TRAVELING;
     }
     public virtual void ProcessTraveling(float delta)
     {
-        if (target is not Goal)
+        if (target is not Goal && target is not StagingArea)
         {
             if (SightToTargetIsFree())
             {
@@ -293,6 +293,11 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
     {
         return GlobalPosition.DistanceTo(target.GlobalPosition) < targetMinDistance;
     }
+    private protected virtual bool TargetIsToFar()
+    {
+        return GlobalPosition.DistanceTo(target.GlobalPosition) > attackRange;
+    }
+
     /// <summary>
     /// Default behavior is to pick closest target. If that fails, target enemy base.
     /// </summary>
@@ -310,7 +315,14 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
                 return;
             }
         }
-        TargetEnemyBase();
+        if (objectiveState == OBJECTIVESTATE.ATTACK)
+        {
+            TargetEnemyBase();
+        }
+        else
+        {
+            TargetFriendlyStagingArea();
+        }
     }
     #endregion
 
@@ -380,9 +392,9 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
         target = team == TEAM.LEFT ? GridManager.RightTeamGoal : GridManager.LeftTeamGoal;
         pathState = PATHSTATE.IDLE;
     }
-    private protected void TargetFriendlyBase()
+    private protected void TargetFriendlyStagingArea()
     {
-        target = team == TEAM.LEFT ? GridManager.LeftTeamGoal : GridManager.RightTeamGoal;
+        target = team == TEAM.LEFT ? GridManager.LeftTeamStagingArea : GridManager.RightTeamStagingArea;
         pathState = PATHSTATE.IDLE;
     }
     private protected bool TargetInRange()

@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://cnurv87qeyqks"]
+
+[ext_resource type="Script" uid="uid://cuqyacg6tiekm" path="res://Scripts/Buildings/StagingArea.cs" id="1_vujw0"]
+[ext_resource type="Material" uid="uid://co3qh8agjudwr" path="res://Materials/TrampledGround.tres" id="2_bu25t"]
+[ext_resource type="Script" uid="uid://c3op6rxgnm80" path="res://Scripts/Components/AwarenessArea3D.cs" id="3_bxv8g"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_cu71p"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4tyk8"]
+size = Vector3(3, 1, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vujw0"]
+
+[node name="StagingArea" type="StaticBody3D" unique_id=1126224439 node_paths=PackedStringArray("models")]
+script = ExtResource("1_vujw0")
+canTakeDamage = false
+models = []
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=951489543]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+material_override = ExtResource("2_bu25t")
+mesh = SubResource("PlaneMesh_cu71p")
+
+[node name="AwarenessArea3D" type="Area3D" parent="." unique_id=1941854259 node_paths=PackedStringArray("collisionShape")]
+script = ExtResource("3_bxv8g")
+flipCollisionMask = true
+collisionShape = NodePath("CollisionShape3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AwarenessArea3D" unique_id=1848616372]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+shape = SubResource("BoxShape3D_4tyk8")
+debug_color = Color(0.95826524, 9.62615e-08, 0.53072435, 0.41960785)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1203193321]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.514435, 0)
+shape = SubResource("BoxShape3D_vujw0")

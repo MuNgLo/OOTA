@@ -12,7 +12,9 @@ public class GridLocation
     Vector2I coord;
     BuildingBaseClass foundation;
     BuildingBaseClass tower;
-    public bool IsFree => foundation is null && tower is null;
+
+    public bool canBuild = true;
+    public bool IsFree => canBuild && foundation is null && tower is null;
 
     public BuildingBaseClass Foundation { get => foundation; set { SetFoundation(value); } }
 
@@ -64,6 +66,7 @@ public class GridLocation
 
     internal bool CanFit(TowerResource tw)
     {
+        if(!canBuild){ return false; }
         if (foundation is not null)
         {
             if (tower is null && tw.towerType == TOWERTYPE.ATTACK)

@@ -19,15 +19,15 @@ public partial class UnitSpawner : MultiplayerSpawner
         if (debug) { Spawned += WhenNodeSpawned; }
     }
 
-    public static UnitBaseClass SpawnThisUnit(Godot.Collections.Dictionary<string, Variant> args)
+    public static UnitBaseClass SpawnThisUnit(SpawnUnitArguments args)
     {
-        return ins.Spawn(args) as UnitBaseClass;
+        return ins.Spawn(args.AsSpawnArgs) as UnitBaseClass;
     }
     private void WhenNodeSpawned(Node node)
     {
         if (debug) { MLog.LogInfo($"UnitSpawner::WhenNodeSpawned() node path is [{node.GetPath()}]"); }
     }
-   internal static void CleanUp()
+    internal static void CleanUp()
     {
         foreach (Node child in ins.GetNode(ins.SpawnPath).GetChildren())
         {
@@ -44,4 +44,29 @@ public partial class UnitSpawner : MultiplayerSpawner
         if (debug) { MLog.LogInfo($"UnitSpawner::SpawnUnit() Position[{args["pos"].AsVector3()}]"); }
         return unit;
     }
+
+
+    public struct SpawnUnitArguments
+    {
+        public TEAM team;
+        public Vector3 rotation;
+        public Vector3 position;
+        public string resourcePath;
+
+        public SpawnUnitArguments(TEAM team, Transform3D globalTransform, string resourcePath)
+        {
+            this.team = team;
+            this.rotation = globalTransform.Basis.GetEuler();
+            this.position = globalTransform.Origin;
+            this.resourcePath = resourcePath;
+        }
+
+        public Godot.Collections.Dictionary<string, Variant> AsSpawnArgs => new Godot.Collections.Dictionary<string, Variant>()
+        {
+            {"team", (int)team},
+            {"pos", position},
+            {"rot", rotation},
+            {"resourcePath", resourcePath}
+        };
+    }// EOF STRUCT
 }// EOF CLASS

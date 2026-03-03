@@ -132,7 +132,7 @@ public partial class Placer : Node
     }
     private void RebuildDone()
     {
-        GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::RebuildDone()");
+        //GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::RebuildDone()");
         NavigationServer3D.RegionSetNavigationMesh(region, navMesh);
         placeBlocker.Reparent(GetTree().Root, true);
         placeBlocker.GlobalPosition = Vector3.Down * 20.0f;

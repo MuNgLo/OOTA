@@ -28,7 +28,10 @@ public partial class AwarenessArea3D : Area3D
             }
             BodyEntered += mind.BodyEnteredAggroRange;
             BodyExited += mind.BodyExitedAggroRange;
-            Shape.Radius = radius;
+            if(collisionShape.Shape is CylinderShape3D)
+            {
+                Shape.Radius = radius;
+            }
             if(flipCollisionMask)
             {
                 CollisionMask = mind.Team == TEAM.RIGHT ? Core.Rules.rightTeamCollision : Core.Rules.leftTeamCollision;

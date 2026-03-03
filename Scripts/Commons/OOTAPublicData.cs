@@ -21,7 +21,7 @@ public partial class OOTAPublicData : PublicData
     [Export] public PLAYERMODE Mode { get => mode; set => SetPlayerMode(value); }
     [Export] public PLAYERSTATE State { get => state; set => SetPlayerState(value); }
 
-  
+
 
     PLAYERSTATE state = PLAYERSTATE.NONE;
     PLAYERMODE mode = PLAYERMODE.NONE;
@@ -70,7 +70,7 @@ public partial class OOTAPublicData : PublicData
             LocalLogic.PlayerModeChanged(mode);
         }
     }
-      private void SetPlayerState(PLAYERSTATE value)
+    private void SetPlayerState(PLAYERSTATE value)
     {
         state = value;
         MLobbyPlayerEvents.RaiseOnPlayersChanged();

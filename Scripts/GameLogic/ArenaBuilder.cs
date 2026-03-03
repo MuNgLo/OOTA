@@ -4,6 +4,7 @@ using OOTA.Enums;
 using OOTA.Grid;
 using OOTA.Spawners;
 using System;
+using System.Collections.Generic;
 
 namespace OOTA.GameLogic;
 
@@ -48,11 +49,44 @@ public partial class ArenaBuilder : Node
 
         if (Multiplayer.IsServer())
         {
+            BuildArenaMeleeBarracks();
+            BuildStagingAreas();
             BuildFoundationsOnEnds();
             AddGoals();
-            AddBases();
+            //AddBases();
             GridNavigation.Rebuild();
         }
+    }
+    private void BuildArenaMeleeBarracks()
+    {
+        List<GridLocation> locations = GridManager.GetFirstColumn();
+        int idx = locations.Count / 3;
+        BuildBarracksOnLocations(locations[idx].Coord, locations[idx].Coord + Vector2I.Down, locations[idx].Coord + Vector2I.Down * 2, TEAM.LEFT);
+        locations = GridManager.GetLastColumn();
+        idx = locations.Count / 3;
+        BuildBarracksOnLocations(locations[idx].Coord, locations[idx].Coord + Vector2I.Down, locations[idx].Coord + Vector2I.Down * 2, TEAM.RIGHT);
+    }
+
+    private void BuildStagingAreas()
+    {
+        List<GridLocation> locations = GridManager.GetColumn(5);
+        int idx = locations.Count / 2;
+        BuildStagingAreaOnLocation(locations[idx].Coord, TEAM.LEFT);
+
+        locations = GridManager.GetColumn(-7);
+        idx = locations.Count / 2;
+        BuildStagingAreaOnLocation(locations[idx].Coord, TEAM.RIGHT);
+    }
+
+    private void BuildStagingAreaOnLocation(Vector2I coordMelee, TEAM team)
+    {
+        BuildingBaseClass buildingMelee = BuildingSpawner.SpawnThisBuilding(
+            new BuildingSpawner.SpawnBuildingArgument(team, -1, GridManager.CoordToWorld(coordMelee))
+            { resourcePath = "res://Scenes/Buildings/StagingArea.tscn", rotation = Vector3.Zero });
+        GridManager.PlaceStructure(buildingMelee);
+        GridManager.GetGridLocation(coordMelee + Vector2I.Right).canBuild = false;
+        GridManager.GetGridLocation(coordMelee + Vector2I.Down).canBuild = false;
+        GridManager.GetGridLocation(coordMelee + Vector2I.Down + Vector2I.Right).canBuild = false;
     }
 
     private void AddBases()
@@ -99,7 +133,7 @@ public partial class ArenaBuilder : Node
 
         GridManager.PlaceStructure(leftGoal);
         GridManager.PlaceStructure(rightGoal);
-        GD.Print($"ArenaBuilder::AddGoals() coord[{leftGoalCoord}] world[{GridManager.CoordToWorld(leftGoalCoord)}]");
+        //GD.Print($"ArenaBuilder::AddGoals() coord[{leftGoalCoord}] world[{GridManager.CoordToWorld(leftGoalCoord)}]");
     }
 
 
@@ -115,11 +149,17 @@ public partial class ArenaBuilder : Node
     {
         foreach (GridLocation location in GridManager.GetFirstColumn())
         {
-            BuildFoundationOnLocation(location.Coord, TEAM.LEFT);
+            if (location.IsFree)
+            {
+                BuildFoundationOnLocation(location.Coord, TEAM.LEFT);
+            }
         }
         foreach (GridLocation location1 in GridManager.GetLastColumn())
         {
-            BuildFoundationOnLocation(location1.Coord, TEAM.RIGHT);
+            if (location1.IsFree)
+            {
+                BuildFoundationOnLocation(location1.Coord, TEAM.RIGHT);
+            }
         }
     }
 
@@ -133,6 +173,31 @@ public partial class ArenaBuilder : Node
         building.canTakeDamage = false;
         GridManager.PlaceStructure(building);
         //GD.Print($"ArenaBuilder::BuildFoundationOnLocation() coord[{coord}] world[{GridManager.CoordToWorld(coord)}]");
+    }
+
+    private void BuildBarracksOnLocations(Vector2I coordMelee, Vector2I coordSupport, Vector2I coordRanged, TEAM team)
+    {
+        Vector2I blockOffset = team == TEAM.LEFT ? Vector2I.Right : Vector2I.Left;
+        BuildingBaseClass buildingMelee = BuildingSpawner.SpawnThisBuilding(
+            new BuildingSpawner.SpawnBuildingArgument(team, -1, GridManager.CoordToWorld(coordMelee))
+            { resourcePath = "res://Scenes/Buildings/MeleeBarracks.tscn" });
+        GridManager.PlaceStructure(buildingMelee);
+        GridManager.GetGridLocation(coordMelee + blockOffset).canBuild = false;
+
+
+        BuildingBaseClass buildingSupport = BuildingSpawner.SpawnThisBuilding(
+          new BuildingSpawner.SpawnBuildingArgument(team, -1, GridManager.CoordToWorld(coordSupport))
+          { resourcePath = "res://Scenes/Buildings/SupportBarracks.tscn" });
+        GridManager.PlaceStructure(buildingSupport);
+        GridManager.GetGridLocation(coordSupport + blockOffset).canBuild = false;
+
+
+        BuildingBaseClass buildingRanged = BuildingSpawner.SpawnThisBuilding(
+          new BuildingSpawner.SpawnBuildingArgument(team, -1, GridManager.CoordToWorld(coordRanged))
+          { resourcePath = "res://Scenes/Buildings/RangedBarracks.tscn" });
+        GridManager.PlaceStructure(buildingRanged);
+        GridManager.GetGridLocation(coordRanged + blockOffset).canBuild = false;
+
     }
 
     private void SetArenaSize(int width, int depth)

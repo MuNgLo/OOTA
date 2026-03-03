@@ -101,9 +101,13 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
                     {
                         ApplyForce(-inVec * Mass * acceleration * SpeedModifier());
                     }
-                    else
+                    else if (TargetIsToFar())
                     {
                         ApplyForce(inVec * Mass * acceleration * SpeedModifier());
+                    }
+                    else
+                    {
+                        LinearVelocity *= 0.5f;
                     }
                 }
                 else
@@ -120,7 +124,7 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
         }
 
         // Clamp speed to be at max same as target current speed
-        if(target is not Goal)
+        if(target is UnitBaseClass)
         {
             LinearVelocity = LinearVelocity.Normalized() * Math.Min(LinearVelocity.Length(), target.CurrentSpeed);
         }
@@ -199,7 +203,7 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
                 return;
             }
         }
-        TargetFriendlyBase();
+        TargetFriendlyStagingArea();
     }
 
     public override void Die()

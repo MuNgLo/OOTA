@@ -23,7 +23,7 @@ public partial class BuildingBaseClass : StaticBody3D, ITargetable
     protected Node3D target;
     protected List<ITargetable> targets;
     protected List<ISupporter> supporters;
-    protected ulong tsLastAttackMS;
+    protected ulong tsSpawnMS;
 
     public TEAM Team { get => team; set => SetTeam(value); }
     public double NormalizedHealth => Math.Clamp(health / maxHealth, 0.0, 1.0);

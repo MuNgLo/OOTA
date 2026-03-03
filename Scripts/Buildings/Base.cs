@@ -24,7 +24,7 @@ public partial class Base : BuildingBaseClass
 
     private void WhenWaveSpawned(object sender, WaveDefinition e)
     {
-        GD.Print($"Base spawning for team[{Team}]");
+        //GD.Print($"Base spawning for team[{Team}]");
         Spawn(e);
     }
 
@@ -49,18 +49,11 @@ public partial class Base : BuildingBaseClass
 
     private void SpawnUnit(string resourcePath )
     {
-        Godot.Collections.Dictionary<string, Variant> args = new Godot.Collections.Dictionary<string, Variant>()
-            {
-                {"team", (int)team},
-                {"pos", RNGSpawn() + Vector3.Forward * (team == TEAM.LEFT ? 1.0f : -1.0f)},
-                {"rot", Vector3.Zero},
-                {"resourcePath", resourcePath}
-            };
-        UnitSpawner.SpawnThisUnit(args);
+        UnitSpawner.SpawnThisUnit(new UnitSpawner.SpawnUnitArguments(team, RNGSpawn().GlobalTransform, resourcePath));
     }
 
-    private Vector3 RNGSpawn()
+    private Node3D RNGSpawn()
     {
-        return spawnPoints[GD.RandRange(0, spawnPoints.Length - 1)].GlobalPosition;
+        return spawnPoints[GD.RandRange(0, spawnPoints.Length - 1)];
     }
 }// EOF CLASS

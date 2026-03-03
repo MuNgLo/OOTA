@@ -26,9 +26,14 @@ public partial class GridManager : Node
     private Goal rightTeamGoal;
     private Goal leftTeamGoal;
 
+    private StagingArea rightTeamStagingArea;
+    private StagingArea leftTTeamStagingArea;
+
     public static Goal RightTeamGoal => ins.rightTeamGoal;
     public static Goal LeftTeamGoal => ins.leftTeamGoal;
 
+    public static StagingArea RightTeamStagingArea => ins.rightTeamStagingArea;
+    public static StagingArea LeftTeamStagingArea => ins.leftTTeamStagingArea;
     public static event EventHandler<Vector2I> OnTileChanged;
 
     public override void _EnterTree()
@@ -151,16 +156,21 @@ public partial class GridManager : Node
         //GD.Print($"GridManager::TileIsFree({placerPoint}) coord[{coord}] tile is NULL[{tile is null}]");
         return tile.IsFree;
     }
-
+    /// <summary>
+    /// Ties the given building to the grid location instance<br/>
+    /// Causes event OnTileChanged to be raised
+    /// </summary>
+    /// <param name="building"></param>
+    /// <param name="rebuildNavMesh"></param>
     internal static void PlaceStructure(BuildingBaseClass building, bool rebuildNavMesh = true)
     {
         GridLocation tile = GetGridLocation(WorldToCoord(building.GlobalPosition));
         tile.SetBuilding(building);
         if (rebuildNavMesh) { GridNavigation.Rebuild(); }
 
-        if(building is Goal goal)
+        if (building is Goal goal)
         {
-            if(goal.Team == TEAM.RIGHT)
+            if (goal.Team == TEAM.RIGHT)
             {
                 ins.rightTeamGoal = goal;
             }
@@ -169,6 +179,19 @@ public partial class GridManager : Node
                 ins.leftTeamGoal = goal;
             }
         }
+
+        if (building is StagingArea stagingArea)
+        {
+            if (stagingArea.Team == TEAM.RIGHT)
+            {
+                ins.rightTeamStagingArea = stagingArea;
+            }
+            else
+            {
+                ins.leftTTeamStagingArea = stagingArea;
+            }
+        }
+
         OnTileChanged?.Invoke(null, tile.Coord);
         ins.Rpc(nameof(RPCPlaceStructure), (int)building.Team, building.GetPath());
     }
@@ -180,15 +203,26 @@ public partial class GridManager : Node
         GridLocation tile = GetGridLocation(WorldToCoord(building.GlobalPosition));
         tile.SetBuilding(building);
 
-        if(building is Goal goal)
+        if (building is Goal goal)
         {
-            if(goal.Team == TEAM.RIGHT)
+            if (goal.Team == TEAM.RIGHT)
             {
                 ins.rightTeamGoal = goal;
             }
             else
             {
                 ins.leftTeamGoal = goal;
+            }
+        }
+        if (building is StagingArea stagingArea)
+        {
+            if (stagingArea.Team == TEAM.RIGHT)
+            {
+                ins.rightTeamStagingArea = stagingArea;
+            }
+            else
+            {
+                ins.leftTTeamStagingArea = stagingArea;
             }
         }
         OnTileChanged?.Invoke(null, tile.Coord);
@@ -218,21 +252,29 @@ public partial class GridManager : Node
         return GetColumn(ins.gridWidth - 1);
     }
 
-
-    internal static List<GridLocation> GetColumn(int column)
+    /// <summary>
+    /// To get column from the end, use negative index<br/>
+    /// -1 is the last column
+    /// </summary>
+    /// <param name="columnIDX"></param>
+    /// <returns></returns>
+    internal static List<GridLocation> GetColumn(int columnIDX)
     {
         List<GridLocation> result = new List<GridLocation>();
-        if (ins.grid.ContainsKey(column))
+
+        if (columnIDX < 0) { columnIDX = ins.gridWidth + columnIDX; }
+
+        if (ins.grid.ContainsKey(columnIDX))
         {
             for (int y = 0; y < ins.gridHeight; y++)
             {
-                if(ins.grid[column].ContainsKey(y))
+                if (ins.grid[columnIDX].ContainsKey(y))
                 {
-                    result.Add(ins.grid[column][y]);
+                    result.Add(ins.grid[columnIDX][y]);
                 }
             }
         }
-        //GD.Print($"GridManager::GetColumn({column}) result count[{result.Count}] GridHeight[{ins.gridHeight}] gridWidth[{ins.gridWidth}]");
+        //GD.Print($"GridManager::GetColumn({columnIDX}) result count[{result.Count}] GridHeight[{ins.gridHeight}] gridWidth[{ins.gridWidth}]");
         return result;
     }
 
