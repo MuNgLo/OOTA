@@ -54,7 +54,7 @@ public partial class UIMainMenu : PanelContainer
         btnResume.ButtonDown += () => MMenuSystem.MenuSystem.HideMenu();
         btnExit.ButtonDown += () => UIAPICalls.CloseGame();
 
-        btnCloseMenu.ButtonDown += () => MMenuSystem.MenuSystem.HideMenu();
+        btnCloseMenu.ButtonUp += () => MMenuSystem.MenuSystem.HideMenu();
 
         btnReady.ButtonDown += () => Core.Rules.PlayerRequestReady();
     }

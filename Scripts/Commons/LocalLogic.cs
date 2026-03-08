@@ -5,6 +5,7 @@ using MMenuSystem;
 using OOTA.Enums;
 using OOTA.UI;
 using System;
+using System.Collections.Generic;
 
 namespace OOTA;
 
@@ -150,6 +151,19 @@ public partial class LocalLogic : Node
     internal static void HealthChanged(float[] values)
     {
         OnHealthChanged?.Invoke(null, values);
+    }
+
+
+    public static event EventHandler<List<PlayerActionStruct>> OnHudInteractMenu;
+
+    /// <summary>
+    /// If sender is Null the interact menu will hide.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="interactions"></param>
+    internal static void RaiseHudInteractMenu(Object sender, List<PlayerActionStruct> interactions)
+    {
+        OnHudInteractMenu?.Invoke(sender, interactions);
     }
 
 

@@ -3,6 +3,7 @@ using MLobby;
 using MLogging;
 using OOTA.Enums;
 using OOTA.GameLogic;
+using OOTA.Grid;
 using System;
 using System.Diagnostics;
 
@@ -12,12 +13,13 @@ public partial class Core : Node
 {
     private static Core ins;
 
-
     [Export] LobbyManager lobby;
     [Export] OOTAPlayerManager players;
     [Export] Rules rules;
+    [Export] GridManager grid;
     public static Rules Rules => ins.rules;
     public static LobbyManager Lobby => ins.lobby;
+    public static GridManager Grid => ins.grid;
 
     [ExportGroup("Team related")]
     [Export] Material teamLeft;
@@ -26,7 +28,7 @@ public partial class Core : Node
     [Export(PropertyHint.Layers3DPhysics)]
     public uint mouseCursorCollision;
 
-
+    public static Plane groundPlane;
 
     public static Material TeamLeft => ins.teamLeft;
     public static Material TeamRight => ins.teamRight;
@@ -38,7 +40,7 @@ public partial class Core : Node
     public override void _EnterTree()
     {
         ins = this;
-        
+        groundPlane = new Plane(Vector3.Up);
     }
 
     public static bool PlotMouseWorldPosition(out Vector3 worldPosition)

@@ -26,10 +26,6 @@ public partial class Rules : Node
     int arenaDepth = 20;
 
 
-    [ExportGroup("Player Spawns")]
-    [Export] Node3D baseLocationLeft;
-    [Export] Node3D baseLocationRight;
-
     [ExportGroup("References")]
     [Export] public GameStats gameStats;
     [Export] public Towers towers;
@@ -91,7 +87,7 @@ public partial class Rules : Node
     {
         GD.Print($"Core::BuildingDied() path[{building.GetPath()}]");
         RollForPickup(building.GlobalPosition);
-        GridManager.RemoveStructure(building);
+        Core.Grid.RemoveStructure(building);
         building.QueueFree();
     }
     private void RollForPickup(Vector3 worldPosition)
@@ -161,7 +157,7 @@ public partial class Rules : Node
         if (Core.Players.GetPlayer(peerID, out OOTAPlayer player))
         {
             TowerResource tw = Core.Rules.towers.GetTowerByIndex(towerIndex);
-            if (tw.towerType == TOWERTYPE.FOUNDATION && !GridManager.TileIsFree(placerPoint)) { return; }
+            if (tw.towerType == TOWERTYPE.FOUNDATION && !Core.Grid.TileIsFree(placerPoint)) { return; }
             if (player.Pay(tw.cost))
             {
                 BuildingBaseClass building = BuildingSpawner.SpawnThisBuilding(new BuildingSpawner.SpawnBuildingArgument(
@@ -169,7 +165,7 @@ public partial class Rules : Node
                     towerIndex,
                     placerPoint
                     ));
-                GridManager.PlaceStructure(building);
+                Core.Grid.PlaceStructure(building);
             }
         }
     }
@@ -189,7 +185,7 @@ public partial class Rules : Node
         }
         if (Core.Players.IsEveryoneReady())
         {
-            if(gameStats.GameState == GAMESTATE.SETUP)
+            if (gameStats.GameState == GAMESTATE.SETUP)
             {
                 StartGame();
             }
@@ -205,7 +201,7 @@ public partial class Rules : Node
     {
         if (!Multiplayer.IsServer()) { return; }
         //RpcId(node.GetMultiplayerAuthority(), nameof(RPCHandOverAvatar), node.GetPath());
-        if(Core.Players.GetPlayer(peerID, out OOTAPlayer player)){ player.State = PLAYERSTATE.DEAD; }
+        if (Core.Players.GetPlayer(peerID, out OOTAPlayer player)) { player.State = PLAYERSTATE.DEAD; }
     }
     //[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     public void PlayerRequestHandOverAvatar(string nodePath)
@@ -225,7 +221,7 @@ public partial class Rules : Node
         PlayerAvatar ava = GetNode<PlayerAvatar>(nodePath);
         ava.SetMultiplayerAuthority(1);
         ava.QueueFree();
-        if(gameStats.GameState == GAMESTATE.PLAYING)
+        if (gameStats.GameState == GAMESTATE.PLAYING)
         {
             Core.Players.SpawnPlayerWithDelay(reSpawnTimerMS, peerID);
         }
@@ -297,12 +293,74 @@ public partial class Rules : Node
         if (Core.Players.GetPlayer(peerID, out OOTAPlayer player))
         {
             TowerResource tw = Core.Rules.towers.GetTowerByIndex(towerIDX);
-            GridLocation gridLocation = GridManager.GetGridLocation(coord);
+            GridLocation gridLocation = Core.Grid.GetGridLocation(coord);
             if (gridLocation.CanFit(tw))
             {
                 if (player.CanPay(tw.cost))
                 {
-                    PlaceTower(peerID, player.Team, towerIDX, GridManager.CoordToWorld(coord));
+                    PlaceTower(peerID, player.Team, towerIDX, Core.Grid.CoordToWorld(coord));
+                }
+            }
+        }
+    }
+
+    internal void Sell(Vector2I coord, int cost)
+    {
+        RpcId(1, nameof(RPCSell), coord, cost);
+    }
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void RPCSell(Vector2I coord, int cost)
+    {
+        GridLocation location = Core.Grid.GetGridLocation(coord);
+        if (location is null) { return; }
+        long peerID = Multiplayer.GetRemoteSenderId() == 0 ? 1 : Multiplayer.GetRemoteSenderId();
+        if (Core.Players.GetPlayer(peerID, out OOTAPlayer player))
+        {
+            if (location.Building is not null)
+            {
+                GD.Print("Sell Tower");
+                player.AddGold(cost);
+                location.Building = null;
+                return;
+            }
+            if (location.Foundation is not null)
+            {
+                GD.Print("Sell Foundation");
+                player.AddGold(cost);
+                location.Foundation = null;
+                return;
+            }
+        }
+    }
+
+    internal void Repair(Vector2I coord, int cost)
+    {
+        RpcId(1, nameof(RPCRepair), coord, cost);
+    }
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    private void RPCRepair(Vector2I coord, int cost)
+    {
+        GridLocation location = Core.Grid.GetGridLocation(coord);
+        if (location is null) { return; }
+        long peerID = Multiplayer.GetRemoteSenderId() == 0 ? 1 : Multiplayer.GetRemoteSenderId();
+        if (Core.Players.GetPlayer(peerID, out OOTAPlayer player))
+        {
+            if (location.Building is not null && location.Building.Health < location.Building.MaxHealth)
+            {
+                if (player.Pay(cost))
+                {
+                    GD.Print("Repair Tower");
+                    location.Building.Health = location.Building.MaxHealth;
+                    return;
+                }
+            }
+            if (location.Foundation is not null)
+            {
+                if (player.Pay(cost))
+                {
+                    GD.Print("Repair Foundation");
+                    location.Foundation.Health = location.Foundation.MaxHealth;
+                    return;
                 }
             }
         }

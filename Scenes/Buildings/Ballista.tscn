@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://cht2xaa7miiq6" path="res://Scripts/Buildings/RangedTower.cs" id="2_33u83"]
 [ext_resource type="PackedScene" uid="uid://cknfroylc4m5u" path="res://Scenes/Projectiles/BallistaBolt.tscn" id="3_qdwwe"]
 [ext_resource type="PackedScene" uid="uid://bdd36kaa4ccrl" path="res://Scenes/AwarenessArea3d.tscn" id="4_3ago1"]
+[ext_resource type="Script" uid="uid://c3qkbidk7pl64" path="res://Scripts/HUD/HUDLabelMaker.cs" id="5_5e5jo"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_33u83"]
 size = Vector3(0.328, 0.5, 0.321)
@@ -21,7 +22,7 @@ weaponPivot = NodePath("BallistaStand/WeaponPivot")
 weaponMuzzle = NodePath("BallistaStand/WeaponPivot/BallistaMuzzle")
 towerType = 2
 aggroRange = 6.0
-health = 100.0
+health = 375.0
 models = [NodePath("BallistaStand")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=647524695]
@@ -29,3 +30,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
 shape = SubResource("BoxShape3D_33u83")
 
 [node name="AwarenessArea3D" parent="." index="2" unique_id=1941854259 instance=ExtResource("4_3ago1")]
+
+[node name="LabelMaker" type="Node3D" parent="." index="3" unique_id=1639072910 node_paths=PackedStringArray("building")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.41123956, 0)
+script = ExtResource("5_5e5jo")
+building = NodePath("..")

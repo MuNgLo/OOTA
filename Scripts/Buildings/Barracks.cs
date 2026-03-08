@@ -2,6 +2,7 @@ using Godot;
 using OOTA.Enums;
 using OOTA.Spawners;
 using System;
+using System.Collections.Generic;
 
 namespace OOTA.Buildings;
 
@@ -10,6 +11,11 @@ public partial class Barracks : Foundation
     [Export] PackedScene unitPrefab;
     [Export] ulong coolDownMS = 5000;
     [Export] Node3D spawnPoint;
+
+    [Export] int maxTier = 10;
+    [Export] int upgradeBaseCost = 10;
+
+    int tier = 1;
 
     ulong tsLastSpawn = 0;
 
@@ -24,7 +30,7 @@ public partial class Barracks : Foundation
     }
     public override void _Process(double delta)
     {
-        if (!Multiplayer.IsServer()){return;}
+        if (!Multiplayer.IsServer()) { return; }
         if (Core.Rules.gameStats.GameState == GAMESTATE.PLAYING && Time.GetTicksMsec() > tsSpawnMS + coolDownMS) { SpawnUnit(); }
     }
 
@@ -40,6 +46,35 @@ public partial class Barracks : Foundation
     }
 
 
+    #region Upgrade stuff
+    public override List<PlayerActionStruct> GetInteractions(Vector2I coord)
+    {
+        List<PlayerActionStruct> interActions = new List<PlayerActionStruct>();
+        if (tier < maxTier)
+        {
+            interActions.Add(UpgradeProductionAction(coord));
+        }
+        return interActions;
+    }
 
+    private PlayerActionStruct UpgradeProductionAction(Vector2I coord)
+    {
+        return new PlayerActionStruct()
+        {
+            Coord = coord,
+            ToolTip = "Production",
+            Cost = upgradeBaseCost * tier,
+            modulate = Colors.RoyalBlue,
+            texture = ResourceLoader.Load<Texture2D>("res://Images/Icons/BuildTime.png"),
+            action = () => { UpgradeProduction(); }
+        };
+    }
 
+    private void UpgradeProduction()
+    {
+        coolDownMS -= 200;
+        tier++;
+    }
+
+    #endregion
 }// EOF CLASS

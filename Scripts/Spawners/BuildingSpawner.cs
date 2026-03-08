@@ -11,10 +11,7 @@ namespace OOTA.Spawners;
 public partial class BuildingSpawner : MultiplayerSpawner
 {
     private static BuildingSpawner ins;
-    public enum BUILDINGTYPE { BASE, TOWER }
     [Export] bool debug = false;
-    [Export] PackedScene prefabBase;
-    [Export] PackedScene prefabTower;
 
     public override void _EnterTree()
     {

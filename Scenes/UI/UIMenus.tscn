@@ -430,6 +430,7 @@ offset_right = 220.0
 offset_bottom = 20.0
 size_flags_horizontal = 8
 size_flags_vertical = 0
+action_mode = 0
 text = "X"
 
 [node name="Label" type="Label" parent="Control" unique_id=313392084]

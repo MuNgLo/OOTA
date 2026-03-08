@@ -3,6 +3,7 @@ using OOTA.Buildings;
 using OOTA.Enums;
 using OOTA.Resources;
 using System;
+using System.Collections.Generic;
 
 namespace OOTA.Grid;
 
@@ -11,35 +12,48 @@ public class GridLocation
 {
     Vector2I coord;
     BuildingBaseClass foundation;
-    BuildingBaseClass tower;
+    BuildingBaseClass building;
 
     public bool canBuild = true;
-    public bool IsFree => canBuild && foundation is null && tower is null;
+    public bool IsFree => canBuild && foundation is null && building is null;
+    public TEAM Team => ResolveTeam();
+    public Vector2I Coord => coord;
 
     public BuildingBaseClass Foundation { get => foundation; set { SetFoundation(value); } }
 
     private void SetFoundation(BuildingBaseClass value)
     {
-        if (value is null && tower is not null)
+        if (value is null)
         {
-            Tower = null;
+            if (building is not null) { Building = null; }
         }
+        if (foundation is not null) { foundation.QueueFree(); }
         foundation = value;
     }
 
-    public BuildingBaseClass Tower { get => tower; set { SetTower(value); } }
+    /// <summary>
+    /// Setting Tower to Null will queueFree existing Tower
+    /// </summary>
+    public BuildingBaseClass Building { get => building; set { SetBuilding(value); } }
 
-    private void SetTower(BuildingBaseClass value)
+    private void SetBuilding(BuildingBaseClass newBuilding)
     {
-        if (value is null && tower is not null)
+        if (newBuilding is null)
         {
-            tower.QueueFree();
+            if (building is not null) { building.QueueFree(); building = null; return; }
+            if (foundation is not null) { Foundation = null; return; }
         }
-        tower = value;
-    }
 
-    public Vector2I Coord => coord;
-    public TEAM Team => ResolveTeam();
+        if (newBuilding.towerType == TOWERTYPE.FOUNDATION)
+        {
+            Foundation = newBuilding;
+        }
+        else
+        {
+            building = newBuilding;
+            if (foundation is not null) { building.GlobalPosition += Vector3.Up * 0.669f; }
+        }
+    }
 
     private TEAM ResolveTeam()
     {
@@ -47,39 +61,52 @@ public class GridLocation
         {
             return foundation.Team;
         }
-        if (tower is not null)
+        if (building is not null)
         {
-            return tower.Team;
+            return building.Team;
         }
         return TEAM.NONE;
     }
 
-    internal void SetBuilding(BuildingBaseClass building)
-    {
-        if (building.towerType == TOWERTYPE.FOUNDATION) { Foundation = building; }
-        else if (building.towerType == TOWERTYPE.ATTACK)
-        {
-            Tower = building;
-            if (foundation is not null) { Tower.GlobalPosition += Vector3.Up * 0.669f; }
-        }
-    }
+
 
     internal bool CanFit(TowerResource tw)
     {
-        if(!canBuild){ return false; }
+        if (!canBuild) { return false; }
         if (foundation is not null)
         {
-            if (tower is null && tw.towerType == TOWERTYPE.ATTACK)
+            if (building is null && tw.towerType == TOWERTYPE.ATTACK)
             {
                 return true;
             }
             return false;
         }
-        if (tower is not null)
+        if (building is not null)
         {
             return false;
         }
         return true;
+    }
+
+    internal List<PlayerActionStruct> GetInteractions()
+    {
+        List<PlayerActionStruct> interactions = new List<PlayerActionStruct>();
+
+        // Check repair option
+        if (foundation is not null && foundation.Health < foundation.MaxHealth) { interactions.Add(PlayerActionStruct.Repair(coord, 1)); }
+        else if (building is not null && building.Health < building.MaxHealth) { interactions.Add(PlayerActionStruct.Repair(coord, 10)); }
+
+        // Check Sell option
+        if (building is not null && building.canTakeDamage) { interactions.Add(PlayerActionStruct.Sell(coord, 10)); }
+        else if (foundation is not null && foundation.canTakeDamage) { interactions.Add(PlayerActionStruct.Sell(coord, 2)); }
+
+        // Add building's interactions
+        if(building is not null)
+        {
+            interactions.AddRange(building.GetInteractions(coord));
+        }
+        
+        return interactions;
     }
 
     public GridLocation(Vector2I coord)

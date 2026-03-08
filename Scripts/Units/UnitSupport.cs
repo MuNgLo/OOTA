@@ -11,61 +11,13 @@ namespace OOTA.Units;
 [GlobalClass]
 public partial class UnitSupport : UnitBaseClass, ISupporter
 {
-    //[Export] float targetMinDistance = 3.0f;
-    //[Export] float projectileSpeed = 6.0f;
-    //[Export] float projectileTTL = 1.5f;
-
     [Export] float baseDamageBonus = 0.25f;
     [Export] float baseScaleBonus = 0.15f;
 
-
-    /*public override void ProcessHunting(float delta)
-    {
-        GD.Print($"UnitSupport::ProcessHunting() UnitName[{Name}]");
-        inVec = Vector3.Zero;
-        inVec = GlobalPosition.DirectionTo(target.GlobalPosition);
-        // apply break if moving in wrong direction 
-        if (LinearVelocity.Dot(inVec) < 0.5f)
-        {
-            LinearVelocity *= 0.5f;
-        }
-        // tweak velocity to stick harder on track
-        float angle = LinearVelocity.SignedAngleTo(inVec, Vector3.Up);
-        LinearVelocity = LinearVelocity.Rotated(Vector3.Up, angle);
-
-        if (GlobalPosition.DistanceTo(target.GlobalPosition) > attackRange)
-        {
-            if (inVec != Vector3.Zero)
-            {
-                ApplyForce(inVec * Mass * acceleration * SpeedModifier());
-            }
-            else
-            {
-                LinearVelocity *= 0.85f;
-            }
-        }
-        else
-        {
-            // within range so slow down
-            LinearVelocity *= 0.5f;
-        }
-
-    }*/
-
     public override void ProcessTraveling(float delta)
     {
-        //if (target is not Goal)
-        //{
-        //    if (SightToTargetIsFree())
-        //    {
-        //        mindState = MINDSTATE.HUNTING;
-        //        return;
-        //    }
-        //}
-
-
         // if no path
-        if (pathState == PATHSTATE.IDLE || path.Last().DistanceTo(target.GlobalPosition) > 0.2f)
+        if (pathState == PATHSTATE.IDLE || path.Last().DistanceTo(projectedTargetPosition) > 0.2f)
         {
             GetPathToTarget();
         }
@@ -130,7 +82,7 @@ public partial class UnitSupport : UnitBaseClass, ISupporter
         }
 
         // Show current target gizmo
-        //MGizmosCSharp.GizmoUtils.DrawLine(GlobalPosition, target.GlobalPosition, 0.02f, Colors.Bisque);
+        //MGizmosCSharp.GizmoUtils.DrawLine(GlobalPosition, projectedTargetPosition, 0.02f, Colors.Bisque);
     }
 
     public override void SetTeam(TEAM value)

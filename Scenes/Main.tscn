@@ -16,7 +16,6 @@
 [ext_resource type="PackedScene" uid="uid://p7gblyg4fk0h" path="res://Scenes/Units/MT1.tscn" id="9_2w5on"]
 [ext_resource type="PackedScene" uid="uid://c8amfxmmxyj51" path="res://addons/MLobby/DropinScene/LobbyMember.tscn" id="10_6heos"]
 [ext_resource type="Script" uid="uid://c1efn3impdgid" path="res://Scripts/Resources/EnemySpawn.cs" id="10_346fj"]
-[ext_resource type="PackedScene" uid="uid://bgcalbv5r35bg" path="res://Scenes/Buildings/Base.tscn" id="10_bmxlf"]
 [ext_resource type="Script" uid="uid://de2j8pgfyip6y" path="res://Scripts/Commons/OOTAPlayerManager.cs" id="11_vs04g"]
 [ext_resource type="Script" uid="uid://epkvljjxe88u" path="res://Scripts/GameLogic/Rules.cs" id="11_yisvs"]
 [ext_resource type="PackedScene" uid="uid://2am2lupffi35" path="res://Scenes/HUD/HudWorldElements.tscn" id="12_0sclb"]
@@ -62,12 +61,15 @@
 [ext_resource type="Script" uid="uid://dn8byt8hoptha" path="res://Scripts/GameLogic/ArenaBuilder.cs" id="37_yisvs"]
 [ext_resource type="PackedScene" uid="uid://de1od7uc00qsf" path="res://addons/MConsole/DropinScene/GameConsole.tscn" id="38_utia5"]
 [ext_resource type="PackedScene" uid="uid://v4kptsufr618" path="res://addons/MConsole/DropinScene/FPSCounter.tscn" id="39_f7hdo"]
+[ext_resource type="Script" uid="uid://ccb6y6q6cop4w" path="res://Scripts/Difficulty.cs" id="43_4clwk"]
 [ext_resource type="Material" uid="uid://bsch310uncfdb" path="res://Materials/Ground.tres" id="44_m4llh"]
 [ext_resource type="Script" uid="uid://ckgv4qp8fmgcj" path="res://Scripts/GameLogic/Placer.cs" id="53_t3x2a"]
 [ext_resource type="Script" uid="uid://bwm6v2ycfwd0v" path="res://Scripts/Grid/GridNavigation.cs" id="55_yisvs"]
 [ext_resource type="PackedScene" uid="uid://bfc78fg22gbp0" path="res://Scenes/HUD/HUDPostGameReport.tscn" id="60_yic5e"]
+[ext_resource type="PackedScene" uid="uid://i31e3y00mv2j" path="res://Scenes/HUD/HUDInteractMenu.tscn" id="62_h2tpa"]
 [ext_resource type="Script" uid="uid://coo10xkki8sph" path="res://Scripts/UnitDeathTrigger.cs" id="63_yn2g2"]
 [ext_resource type="Material" uid="uid://ch7ne8nwbxk4q" path="res://Materials/TowerGhost.tres" id="66_1bbis"]
+[ext_resource type="Texture2D" uid="uid://dsxik2mw6xij3" path="res://Images/Icons/TileIndicator.png" id="70_h2tpa"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_gaesr"]
 top_radius = 0.2
@@ -951,6 +953,9 @@ agent_radius = 0.25
 agent_max_slope = 5.0
 vertices_per_polygon = 3.0
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_4clwk"]
+size = Vector3(200, 6, 200)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_5cjrv"]
 size = Vector3(40, 6, 20)
 
@@ -970,13 +975,24 @@ size = Vector3(1, 0.3, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yn2g2"]
 albedo_color = Color(1, 0, 0.654902, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nkjwg"]
+transparency = 1
+albedo_color = Color(1, 1, 0, 1)
+albedo_texture = ExtResource("70_h2tpa")
+emission_enabled = true
+emission = Color(1, 1, 0, 1)
+emission_energy_multiplier = 3.2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_8n4h5"]
+
 [node name="Main" type="Node3D" unique_id=1609698201]
 
-[node name="Core" type="Node" parent="." unique_id=1977013728 node_paths=PackedStringArray("lobby", "players", "rules")]
+[node name="Core" type="Node" parent="." unique_id=1977013728 node_paths=PackedStringArray("lobby", "players", "rules", "grid")]
 script = ExtResource("5_pbw6q")
 lobby = NodePath("LobbyManager")
 players = NodePath("PlayerManager")
 rules = NodePath("GameLogic")
+grid = NodePath("GridManager")
 teamLeft = ExtResource("5_frkhe")
 teamRight = ExtResource("6_1p5hy")
 mouseCursorCollision = 1
@@ -1006,11 +1022,13 @@ script = ExtResource("11_vs04g")
 lobby = NodePath("../LobbyManager")
 playerPrefab = ExtResource("12_6ehlx")
 
-[node name="GameLogic" type="Node" parent="Core" unique_id=1852553460 node_paths=PackedStringArray("baseLocationLeft", "baseLocationRight", "gameStats", "towers", "arenaBuilder")]
+[node name="BuildingSpawner" type="MultiplayerSpawner" parent="Core/PlayerManager" unique_id=157883056]
+spawn_path = NodePath("../../../NavigationRegion3D/Buildings")
+script = ExtResource("23_c5snn")
+metadata/_custom_type_script = "uid://bh6vusv8b7mi"
+
+[node name="GameLogic" type="Node" parent="Core" unique_id=1852553460 node_paths=PackedStringArray("gameStats", "towers", "arenaBuilder")]
 script = ExtResource("11_yisvs")
-startGold = 25000
-baseLocationLeft = NodePath("../../baseLeftLocation")
-baseLocationRight = NodePath("../../baseRightLocation")
 gameStats = NodePath("GameStats")
 towers = NodePath("Towers")
 towerPrefab = SubResource("PackedScene_5gwyn")
@@ -1029,7 +1047,6 @@ script = ExtResource("16_aht7i")
 
 [node name="GameStats" type="Node" parent="Core/GameLogic" unique_id=976334290]
 script = ExtResource("13_0sclb")
-baseStartHealth = 5.0
 
 [node name="Towers" type="Node" parent="Core/GameLogic" unique_id=1889090329]
 script = ExtResource("23_f7hdo")
@@ -1043,6 +1060,9 @@ wallNorth = NodePath("../../../WorldColliders/NorthWall")
 wallSouth = NodePath("../../../WorldColliders/SouthWall")
 wallEast = NodePath("../../../WorldColliders/EastWall")
 wallWest = NodePath("../../../WorldColliders/WestWall")
+
+[node name="Difficulty" type="Node" parent="Core/GameLogic" unique_id=1098241957]
+script = ExtResource("43_4clwk")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Core" unique_id=751636681]
 replication_config = SubResource("SceneReplicationConfig_kpo4j")
@@ -1074,23 +1094,17 @@ prefabGold = ExtResource("6_jw32o")
 prefabHealth = ExtResource("3_bmxlf")
 metadata/_custom_type_script = "uid://bqmsnui6f1p4t"
 
-[node name="BuildingSpawner" type="MultiplayerSpawner" parent="Core/Spawners" unique_id=157883056]
-spawn_path = NodePath("../../../NavigationRegion3D/Buildings")
-script = ExtResource("23_c5snn")
-prefabBase = ExtResource("10_bmxlf")
-prefabTower = SubResource("PackedScene_5gwyn")
-metadata/_custom_type_script = "uid://bh6vusv8b7mi"
-
 [node name="GridManager" type="Node" parent="Core" unique_id=1567185228]
 script = ExtResource("30_utia5")
 gridHeight = 20
 gridWidth = 40
 
-[node name="Placer" type="Node" parent="Core" unique_id=618206794 node_paths=PackedStringArray("placeGhost", "worldRoot", "placeBlocker")]
+[node name="Placer" type="Node" parent="Core" unique_id=618206794 node_paths=PackedStringArray("placeGhost", "worldRoot", "placeBlocker", "Indicator")]
 script = ExtResource("53_t3x2a")
 placeGhost = NodePath("../../PlaceGhost")
 worldRoot = NodePath("../../NavigationRegion3D")
 placeBlocker = NodePath("../../NavBlock")
+Indicator = NodePath("../../TileIndicator")
 navMesh = SubResource("NavigationMesh_1bbis")
 
 [node name="CanvasHUD" type="CanvasLayer" parent="." unique_id=1983381410 node_paths=PackedStringArray("persistent")]
@@ -1125,6 +1139,8 @@ grow_vertical = 0
 
 [node name="PostGameReport" parent="CanvasHUD" unique_id=225309207 instance=ExtResource("60_yic5e")]
 
+[node name="InteractMenu" parent="CanvasHUD" unique_id=526574941 instance=ExtResource("62_h2tpa")]
+
 [node name="CanvasMENUS" parent="." unique_id=1834781793 instance=ExtResource("32_qta6b")]
 layer = 2
 
@@ -1151,7 +1167,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
 physics_material_override = SubResource("PhysicsMaterial_5cjrv")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="WorldColliders/NorthWall" unique_id=1153549151]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.5, -3.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.5)
+shape = SubResource("BoxShape3D_j0p05")
+
+[node name="Area3D" type="Area3D" parent="WorldColliders/NorthWall" unique_id=1363369655]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldColliders/NorthWall/Area3D" unique_id=1354981196]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.6)
 shape = SubResource("BoxShape3D_j0p05")
 
 [node name="SouthWall" type="StaticBody3D" parent="WorldColliders" unique_id=44459634]
@@ -1159,7 +1181,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
 physics_material_override = SubResource("PhysicsMaterial_5cjrv")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="WorldColliders/SouthWall" unique_id=163705929]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.5, 3.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.5)
+shape = SubResource("BoxShape3D_j0p05")
+
+[node name="Area3D" type="Area3D" parent="WorldColliders/SouthWall" unique_id=704125840]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldColliders/SouthWall/Area3D" unique_id=983527503]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.6)
 shape = SubResource("BoxShape3D_j0p05")
 
 [node name="WestWall" type="StaticBody3D" parent="WorldColliders" unique_id=1827160435]
@@ -1201,6 +1229,13 @@ navigation_mesh = SubResource("NavigationMesh_5cjrv")
 navigation_layers = 513
 script = ExtResource("55_yisvs")
 
+[node name="Area3D" type="Area3D" parent="NavigationRegion3D" unique_id=1406239249]
+script = ExtResource("63_yn2g2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="NavigationRegion3D/Area3D" unique_id=1111334770]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.2, 0)
+shape = SubResource("BoxShape3D_4clwk")
+
 [node name="StaticBody3D" type="StaticBody3D" parent="NavigationRegion3D" unique_id=737780758]
 physics_material_override = SubResource("PhysicsMaterial_5cjrv")
 
@@ -1220,12 +1255,6 @@ transform = Transform3D(-2.9802322e-08, 0, -1, 0, 1, 0, 1, 0, -2.9802322e-08, -1
 
 [node name="SpawnRight" type="Node3D" parent="." unique_id=2101850589]
 transform = Transform3D(1.172251e-07, 0, 1, 0, 1, 0, -1, 0, 1.172251e-07, 18, 0, -9)
-
-[node name="baseLeftLocation" type="Node3D" parent="." unique_id=1794628689]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -14.049309, 0, -4.3280318e-07)
-
-[node name="baseRightLocation" type="Node3D" parent="." unique_id=2017474905]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.239672, 0, 0)
 
 [node name="CameraTarget" parent="." unique_id=925498331 node_paths=PackedStringArray("avatarsContainer") instance=ExtResource("3_pbw6q")]
 physics_interpolation_mode = 2
@@ -1260,3 +1289,10 @@ debug_color = Color(0.63109064, 0.5288405, 0, 1)
 visible = false
 mesh = SubResource("BoxMesh_1bbis")
 surface_material_override/0 = SubResource("StandardMaterial3D_yn2g2")
+
+[node name="TileIndicator" type="Node3D" parent="." unique_id=675565227]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TileIndicator" unique_id=1254458854]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.05, 0)
+material_override = SubResource("StandardMaterial3D_nkjwg")
+mesh = SubResource("PlaneMesh_8n4h5")

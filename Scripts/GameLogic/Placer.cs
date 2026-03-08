@@ -3,6 +3,7 @@ using OOTA.Enums;
 using OOTA.Grid;
 using OOTA.Resources;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OOTA.GameLogic;
@@ -12,6 +13,7 @@ public partial class Placer : Node
     [Export] MeshInstance3D placeGhost;
     [Export] Node3D worldRoot;
     [Export] Node3D placeBlocker;
+    [Export] Node3D Indicator;
 
     PlayerAvatar Avatar => Core.Players.LocalPlayer.Avatar;
     int towerIDX = 0;
@@ -30,7 +32,9 @@ public partial class Placer : Node
 
     public override void _Ready()
     {
-        placeGhost.Hide();
+        LocalLogic.OnPlayerStateChanged += WhenPlayerStateChanged;
+        HideGhost();
+        HideIndicator();
 
         // Create a new navigation map.
         map = NavigationServer3D.MapCreate();
@@ -47,6 +51,15 @@ public partial class Placer : Node
         NavigationServer3D.MapChanged += WhenMapChanged;
     }
 
+    private void WhenPlayerStateChanged(object sender, PLAYERSTATE e)
+    {
+        if (e == PLAYERSTATE.DEAD)
+        {
+            HideGhost();
+            HideIndicator();
+        }
+    }
+
     public override void _PhysicsProcess(double delta)
     {
         if (Core.Players.LocalPlayer is null) { return; }
@@ -58,23 +71,59 @@ public partial class Placer : Node
             Core.Players.LocalPlayer.Mode = Core.Players.LocalPlayer.Mode == PLAYERMODE.ATTACKING ? PLAYERMODE.BUILDING : PLAYERMODE.ATTACKING;
         }
 
-
         if (Core.Players.LocalPlayer.Mode == PLAYERMODE.BUILDING)
         {
-            TowerResource tw = Core.Rules.towers.GetTowerByIndex(towerIDX);
-            if (!Core.Players.LocalPlayer.CanPay(tw.cost))
+            RightStickInputVector();
+            GridLocation gridLocation = ProjectPlacerPosition();
+
+            // If it is other team we stop all
+            if (gridLocation.Team != TEAM.NONE && gridLocation.Team != Core.Players.LocalPlayer.Team)
             {
-                HidePlacement();
+                HideGhost();
+                HideIndicator();
                 return;
             }
-            ConstructInputVector();
-            GridLocation gridLocation = ProjectPlacerPosition();
+
+
+            if (gridLocation is null || gridLocation.Coord == Core.Grid.WorldToCoord(Avatar.GlobalPosition))
+            {
+                HideGhost();
+                HideIndicator();
+                return;
+            }
+
+            if (gridLocation is not null)
+            {
+                Indicator.GlobalPosition = Core.Grid.CoordToWorld(gridLocation.Coord);
+                if (!Indicator.Visible)
+                {
+                    ShowIndicator();
+                }
+            }
+
+            TowerResource tw = Core.Rules.towers.GetTowerByIndex(towerIDX);
+
+            if (Indicator.Visible && !gridLocation.CanFit(tw))
+            {
+                List<PlayerActionStruct> interactions = gridLocation.GetInteractions();
+                if (interactions.Count > 0 && Input.IsActionJustPressed("Place"))
+                {
+                    LocalLogic.RaiseHudInteractMenu(this, interactions);
+                    return;
+                }
+            }
+
+            if (!Core.Players.LocalPlayer.CanPay(tw.cost))
+            {
+                HideGhost();
+                return;
+            }
 
             //GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::_PhysicsProcess() gridLocation[{gridLocation.Coord}].CanFit[{gridLocation.CanFit(tw)}] isBlocked[{isBlocked}]");
 
             if (gridLocation is null || !gridLocation.CanFit(tw))
             {
-                HidePlacement();
+                HideGhost();
             }
             else
             {
@@ -82,7 +131,7 @@ public partial class Placer : Node
 
                 if (isBlocked)
                 {
-                    HidePlacement();
+                    HideGhost();
                 }
                 else
                 {
@@ -107,7 +156,11 @@ public partial class Placer : Node
         }
         else
         {
-            HidePlacement();
+            HideGhost();
+            if (Core.Players.LocalPlayer.Mode != PLAYERMODE.INTERACTING)
+            {
+                HideIndicator();
+            }
         }
     }
 
@@ -120,7 +173,7 @@ public partial class Placer : Node
         //GD.Print($"Placer::IsPathBlocked() Updating block check for coord[{coord}]");
         blockCheckLastCoord = coord;
         placeBlocker.Reparent(worldRoot);
-        placeBlocker.GlobalPosition = GridManager.CoordToWorld(coord);
+        placeBlocker.GlobalPosition = Core.Grid.CoordToWorld(coord);
         isBlocked = true;
         geoData.Clear();
         NavigationServer3D.ParseSourceGeometryData(navMesh, geoData, worldRoot, Callable.From(BuildPlacerMeshPart2));
@@ -141,9 +194,9 @@ public partial class Placer : Node
     private void WhenMapChanged(Rid mapThatChanged)
     {
         if (!Multiplayer.HasMultiplayerPeer()) { return; }
-        //GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::WhenMapChanged() GridManager.LeftTeamGoal is null[{GridManager.LeftTeamGoal is null}]");
+        //GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::WhenMapChanged() Core.Grid.LeftTeamGoal is null[{Core.Grid.LeftTeamGoal is null}]");
 
-        if (GridManager.LeftTeamGoal is null) { return; }
+        if (Core.Grid.LeftTeamGoal is null) { return; }
         if (map == mapThatChanged)
         {
             CheckPath();
@@ -163,17 +216,17 @@ public partial class Placer : Node
 
         Vector3[] arr = NavigationServer3D.MapGetPath(
             map,
-            GridManager.LeftTeamGoal.GlobalPosition,
-            GridManager.RightTeamGoal.GlobalPosition,
+            Core.Grid.LeftTeamGoal.GlobalPosition,
+            Core.Grid.RightTeamGoal.GlobalPosition,
             true
             );
 
 
         if (arr.Length > 0)
         {
-            isBlocked = arr[arr.Length - 1].DistanceTo(GridManager.RightTeamGoal.GlobalPosition) > 1.0f;
+            isBlocked = arr[arr.Length - 1].DistanceTo(Core.Grid.RightTeamGoal.GlobalPosition) > 1.0f;
             //MGizmosCSharp.GizmoUtils.DrawShape(arr[arr.Length - 1], MGizmosCSharp.GSHAPES.DIAMOND, 0.5f, 0.5f, Colors.Red);
-            //MGizmosCSharp.GizmoUtils.DrawShape(GridManager.RightTeamGoal.GlobalPosition + Vector3.Up, MGizmosCSharp.GSHAPES.DIAMOND, 0.5f, 0.5f, Colors.Blue);
+            //MGizmosCSharp.GizmoUtils.DrawShape(Core.Grid.RightTeamGoal.GlobalPosition + Vector3.Up, MGizmosCSharp.GSHAPES.DIAMOND, 0.5f, 0.5f, Colors.Blue);
             //MGizmosCSharp.GizmoUtils.DrawLine(arr, 0.5f, Colors.Red);
         }
         //GD.Print($"Placer::CheckPath() arr.Length[{arr.Length}] blocked[{isBlocked}]");
@@ -185,25 +238,33 @@ public partial class Placer : Node
 
 
 
-    private void ConstructInputVector()
+    private void RightStickInputVector()
     {
         // Building input vector Right stick
         inRightStick = Vector3.Zero;
         inRightStick += Vector3.Right * Input.GetAxis("RSLeft", "RSRight");
         inRightStick += Vector3.Back * Input.GetAxis("RSUp", "RSDown");
-
-        if (inRightStick == Vector3.Zero && Core.PlotMouseWorldPosition(out cursorWorldPosition))
-        // Mode dependent Mouse
-        {
-            cursorWorldPosition.Y = Avatar.GlobalPosition.Y;
-            inRightStick = Avatar.GlobalPosition.DirectionTo(cursorWorldPosition);
-        }
     }
 
-    private void HidePlacement()
+
+
+    private void HideGhost()
     {
         placeGhost.Hide();
         placeGhost.PhysicsInterpolationMode = MeshInstance3D.PhysicsInterpolationModeEnum.Off;
+    }
+
+    private void HideIndicator()
+    {
+        Indicator.Hide();
+        Indicator.PhysicsInterpolationMode = MeshInstance3D.PhysicsInterpolationModeEnum.Off;
+    }
+
+    private void ShowIndicator()
+    {
+        Indicator.PhysicsInterpolationMode = PhysicsInterpolationModeEnum.Inherit;
+        Indicator.ResetPhysicsInterpolation();
+        Indicator.Show();
     }
 
     private void ShowPlacement(TowerResource tw, GridLocation gridLocation)
@@ -215,7 +276,7 @@ public partial class Placer : Node
         }
         else
         {
-            placeGhost.GlobalPosition = GridManager.CoordToWorld(gridLocation.Coord);
+            placeGhost.GlobalPosition = Core.Grid.CoordToWorld(gridLocation.Coord);
         }
         placeGhost.Mesh = tw.mesh;
         placeGhost.Show();
@@ -226,30 +287,42 @@ public partial class Placer : Node
 
     private GridLocation ProjectPlacerPosition()
     {
-        Vector2I playerTileCoord = GridManager.WorldToCoord(Avatar.GlobalPosition);
+        Vector2I tileCoord = Core.Grid.WorldToCoord(Avatar.GlobalPosition);
+
+        // If inRightStick is 0 we lean on cursor pos
+        if (inRightStick == Vector3.Zero && Core.PlotMouseWorldPosition(out cursorWorldPosition))
+        {
+            Vector2I mouseTileCoord = Core.Grid.WorldToCoord(cursorWorldPosition);
+            if (Core.Grid.Distance(tileCoord, mouseTileCoord) < 2)
+            {
+                return Core.Grid.GetGridLocation(mouseTileCoord);
+            }
+            return Core.Grid.GetGridLocation(Avatar.GlobalPosition);
+        }
+
 
         //MGizmosCSharp.GizmoUtils.DrawShape(placer.GlobalPosition + Vector3.Up, MGizmosCSharp.GSHAPES.DIAMOND, 0.1f, 1.0f, Colors.Pink);
-        //MGizmosCSharp.GizmoUtils.DrawShape(GridManager.CoordToWorld(playerTileCoord), MGizmosCSharp.GSHAPES.DIAMOND, 0.1f, 1.0f, Colors.BlueViolet);
-
-
+        //MGizmosCSharp.GizmoUtils.DrawShape(Core.Grid.CoordToWorld(playerTileCoord), MGizmosCSharp.GSHAPES.DIAMOND, 0.1f, 1.0f, Colors.BlueViolet);
         float angle = Vector3.Back.SignedAngleTo(inRightStick, Vector3.Up) + Mathf.Pi;
         angle = Mathf.RadToDeg(angle);
         int step = Mathf.FloorToInt(angle / 45.0f);
-        //GD.Print($"Angle[{angle}] step[{step}] playerTileCoord[{playerTileCoord}] coord to world pos difference[{(GlobalPosition - GridManager.CoordToWorld(playerTileCoord)).Length()}]");
-        if (step < 1) { playerTileCoord += Vector2I.Up; }
-        else if (step < 2) { playerTileCoord += Vector2I.Up + Vector2I.Left; }
-        else if (step < 3) { playerTileCoord += Vector2I.Left; }
-        else if (step < 4) { playerTileCoord += Vector2I.Down + Vector2I.Left; }
-        else if (step < 5) { playerTileCoord += Vector2I.Down; }
-        else if (step < 6) { playerTileCoord += Vector2I.Down + Vector2I.Right; }
-        else if (step < 7) { playerTileCoord += Vector2I.Right; }
-        else if (step < 8) { playerTileCoord += Vector2I.Up + Vector2I.Right; }
-        else { playerTileCoord += Vector2I.Up; }
+        //GD.Print($"Angle[{angle}] step[{step}] playerTileCoord[{playerTileCoord}] coord to world pos difference[{(GlobalPosition - Core.Grid.CoordToWorld(playerTileCoord)).Length()}]");
+        if (step < 1) { tileCoord += Vector2I.Up; }
+        else if (step < 2) { tileCoord += Vector2I.Up + Vector2I.Left; }
+        else if (step < 3) { tileCoord += Vector2I.Left; }
+        else if (step < 4) { tileCoord += Vector2I.Down + Vector2I.Left; }
+        else if (step < 5) { tileCoord += Vector2I.Down; }
+        else if (step < 6) { tileCoord += Vector2I.Down + Vector2I.Right; }
+        else if (step < 7) { tileCoord += Vector2I.Right; }
+        else if (step < 8) { tileCoord += Vector2I.Up + Vector2I.Right; }
+        else { tileCoord += Vector2I.Up; }
 
-        return GridManager.GetGridLocation(playerTileCoord);
-
-
+        return Core.Grid.GetGridLocation(tileCoord);
     }
+
+
+
+
 
     #region pass 1
 

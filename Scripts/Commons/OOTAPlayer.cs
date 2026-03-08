@@ -20,6 +20,9 @@ public partial class OOTAPlayer : MLobbyPlayer
         get => (publicData as OOTAPublicData).CanTakeDamage;
         set => (publicData as OOTAPublicData).CanTakeDamage = value;
     }
+    /// <summary>
+    /// Mode is can be changed only by the player who's mode it is
+    /// </summary>
     public PLAYERMODE Mode
     {
         get => (publicData as OOTAPublicData).Mode;
@@ -38,6 +41,13 @@ public partial class OOTAPlayer : MLobbyPlayer
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void RPCHandleSetMode(int modeAsInt)
     {
+        long peer = Multiplayer.GetRemoteSenderId() == 0 ? 1 : Multiplayer.GetRemoteSenderId();
+        if(PeerID != peer)
+        {
+            // Mode change from wrong player so it is ignored
+            return;
+        }
+
         if (Multiplayer.IsServer())
         {
             (publicData as OOTAPublicData).Mode = (PLAYERMODE)modeAsInt;

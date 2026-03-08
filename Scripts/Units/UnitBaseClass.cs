@@ -49,6 +49,8 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
     protected List<ISupporter> supporters;
     protected List<Vector3> path;
     protected ulong lastAttack;
+    private protected Vector3 projectedTargetPosition;
+
 
     public double NormalizedHealth => Math.Clamp(health / maxHealth, 0.0, 1.0);
     public TEAM Team { get => team; set => SetTeam(value); }
@@ -83,6 +85,11 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
         if (!Multiplayer.IsServer()) { return; }
 
         if (target is null) { ResetMind(); }
+        else
+        {
+            projectedTargetPosition = Core.groundPlane.Project(target.GlobalPosition);
+        }
+
 
         switch (mindState)
         {
@@ -96,7 +103,7 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
                 ProcessNone((float)delta);
                 break;
         }
-        if(LinearVelocity.Length() > 0.05f && Math.Abs(Vector3.Up.Dot(LinearVelocity)) < 1.0f)
+        if (LinearVelocity.Length() > 0.05f && Math.Abs(Vector3.Up.Dot(LinearVelocity)) < 1.0f)
         {
             LookAt(GlobalPosition + LinearVelocity * 100.0f, Vector3.Up);
         }
@@ -146,7 +153,7 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
     public virtual void ProcessHunting(float delta)
     {
         inVec = Vector3.Zero;
-        inVec = GlobalPosition.DirectionTo(target.GlobalPosition);
+        inVec = GlobalPosition.DirectionTo(projectedTargetPosition);
         // apply break if moving in wrong direction 
         if (LinearVelocity.Dot(inVec) < 0.5f)
         {
@@ -156,7 +163,7 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
         float angle = LinearVelocity.SignedAngleTo(inVec, Vector3.Up);
         LinearVelocity = LinearVelocity.Rotated(Vector3.Up, angle);
 
-        if (GlobalPosition.DistanceTo(target.GlobalPosition) > attackRange)
+        if (GlobalPosition.DistanceTo(projectedTargetPosition) > attackRange)
         {
             if (inVec != Vector3.Zero)
             {
@@ -201,7 +208,7 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
         }
 
         // if no path
-        if (pathState == PATHSTATE.IDLE || path.Last().DistanceTo(target.GlobalPosition) > 0.2f)
+        if (pathState == PATHSTATE.IDLE || path.Last().DistanceTo(projectedTargetPosition) > 0.2f)
         {
             GetPathToTarget();
         }
@@ -291,11 +298,11 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
 
     private protected virtual bool TargetIsToClose()
     {
-        return GlobalPosition.DistanceTo(target.GlobalPosition) < targetMinDistance;
+        return GlobalPosition.DistanceTo(projectedTargetPosition) < targetMinDistance;
     }
     private protected virtual bool TargetIsToFar()
     {
-        return GlobalPosition.DistanceTo(target.GlobalPosition) > attackRange;
+        return GlobalPosition.DistanceTo(projectedTargetPosition) > attackRange;
     }
 
     /// <summary>
@@ -311,7 +318,9 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
                 if (target != candidates[0])
                 {
                     SetTarget(candidates[0]);
+
                 }
+                projectedTargetPosition = Core.groundPlane.Project(target.GlobalPosition);
                 return;
             }
         }
@@ -323,6 +332,7 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
         {
             TargetFriendlyStagingArea();
         }
+        projectedTargetPosition = Core.groundPlane.Project(target.GlobalPosition);
     }
     #endregion
 
@@ -351,7 +361,7 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
         if (pathState == PATHSTATE.PENDING) { return; }
         await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
         if (target is null) { ResetMind(); return; }
-        Vector3[] arr = NavigationServer3D.MapGetPath(GridNavigation.WorldNavMapRid, GlobalPosition, target.GlobalPosition, true);
+        Vector3[] arr = NavigationServer3D.MapGetPath(GridNavigation.WorldNavMapRid, GlobalPosition, projectedTargetPosition, true);
         path.Clear();
         path.AddRange(arr);
         pathIndex = 0;
@@ -389,25 +399,25 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
     }
     private protected void TargetEnemyBase()
     {
-        target = team == TEAM.LEFT ? GridManager.RightTeamGoal : GridManager.LeftTeamGoal;
+        target = team == TEAM.LEFT ? Core.Grid.RightTeamGoal : Core.Grid.LeftTeamGoal;
         pathState = PATHSTATE.IDLE;
     }
     private protected void TargetFriendlyStagingArea()
     {
-        target = team == TEAM.LEFT ? GridManager.LeftTeamStagingArea : GridManager.RightTeamStagingArea;
+        target = team == TEAM.LEFT ? Core.Grid.LeftTeamStagingArea : Core.Grid.RightTeamStagingArea;
         pathState = PATHSTATE.IDLE;
     }
     private protected bool TargetInRange()
     {
-        if (target is Base baseBuilding)
+        if (target is BuildingBaseClass baseBuilding)
         {
-            return GlobalPosition.DistanceTo(target.GlobalPosition) <= attackRange + 2.8f;
+            return GlobalPosition.DistanceTo(projectedTargetPosition) <= attackRange + 2.8f;
         }
-        if (target is Base unit)
+        if (target is UnitBaseClass unit)
         {
-            return GlobalPosition.DistanceTo(target.GlobalPosition) <= attackRange + 0.5f;
+            return GlobalPosition.DistanceTo(projectedTargetPosition) <= attackRange + 0.5f;
         }
-        return GlobalPosition.DistanceTo(target.GlobalPosition) <= attackRange;
+        return GlobalPosition.DistanceTo(projectedTargetPosition) <= attackRange;
     }
     private void UpdateUnitScale()
     {

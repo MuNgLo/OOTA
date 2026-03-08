@@ -37,6 +37,7 @@ collision_layer = 8
 collision_mask = 0
 script = ExtResource("1_b77br")
 unitPrefab = ExtResource("2_b77br")
+coolDownMS = 2500
 spawnPoint = NodePath("SpawnPoint")
 connSouth = NodePath("ConnSouth")
 connWest = NodePath("ConnWest")

@@ -126,12 +126,17 @@ public partial class BuildingBaseClass : StaticBody3D, ITargetable
     }
     private protected void UpdateUnitScale()
     {
-        float totalScale = 1.0f;
-        foreach (ISupporter supporter in supporters)
-        {
-            totalScale += supporter.BaseScaleBonus();
-        }
-        GetNode<MeshInstance3D>("MeshInstance3D").Scale = Vector3.One * totalScale;
+        //float totalScale = 1.0f;
+        //foreach (ISupporter supporter in supporters)
+        //{
+        //    totalScale += supporter.BaseScaleBonus();
+        //}
+        //GetNode<MeshInstance3D>("MeshInstance3D").Scale = Vector3.One * totalScale;
+    }
+
+    public virtual List<PlayerActionStruct> GetInteractions(Vector2I coord)
+    {
+        return new List<PlayerActionStruct>();
     }
     #endregion
 }// EOF CLASS

@@ -15,7 +15,7 @@ public partial class UnitRanged : UnitBaseClass
     public override void ProcessHunting(float delta)
     {
         inVec = Vector3.Zero;
-        inVec = GlobalPosition.DirectionTo(target.GlobalPosition);
+        inVec = GlobalPosition.DirectionTo(projectedTargetPosition);
         // apply break if moving in wrong direction 
         if (LinearVelocity.Dot(inVec) < 0.5f)
         {
@@ -25,7 +25,7 @@ public partial class UnitRanged : UnitBaseClass
         float angle = LinearVelocity.SignedAngleTo(inVec, Vector3.Up);
         LinearVelocity = LinearVelocity.Rotated(Vector3.Up, angle);
 
-        if (target is Goal || GlobalPosition.DistanceTo(target.GlobalPosition) > attackRange)
+        if (target is Goal || GlobalPosition.DistanceTo(projectedTargetPosition) > attackRange)
         {
             if (inVec != Vector3.Zero)
             {

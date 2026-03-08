@@ -99,6 +99,9 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
     public override void _PhysicsProcess(double delta)
     {
         if (!GetWindow().HasFocus() || !IsMultiplayerAuthority()) { return; }
+
+        if (player.Mode == PLAYERMODE.INTERACTING) { LinearVelocity *= 0.2f; return; }
+
         // Conserve fall speed
         float fallSpeed = LinearVelocity.Y;
         // Building input vector Left stick
@@ -115,7 +118,7 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
         {
             // Rotate player
             weaponPivot.LookAt(GlobalPosition + inRightStick.Normalized() * 10.0f, Vector3.Up);
-            if (player.Mode != PLAYERMODE.BUILDING)
+            if (player.Mode == PLAYERMODE.ATTACKING)
             {
                 if (!Multiplayer.IsServer()) { RpcId(1, nameof(RPCRunAttack)); } else { RPCRunAttack(); }
             }
@@ -126,7 +129,7 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
             // Rotate player
             cursorWorldPosition.Y = GlobalPosition.Y;
             weaponPivot.LookAt(cursorWorldPosition, Vector3.Up);
-            if (player.Mode != PLAYERMODE.BUILDING)
+            if (player.Mode == PLAYERMODE.ATTACKING)
             {
                 if (Input.IsActionPressed("Attack"))
                 {
@@ -138,7 +141,7 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
         {
             // Rotate player
             weaponPivot.LookAt(GlobalPosition + inRightStick.Normalized() * 10.0f, Vector3.Up);
-            if (player.Mode != PLAYERMODE.BUILDING)
+            if (player.Mode == PLAYERMODE.ATTACKING)
             {
                 if (!Multiplayer.IsServer()) { RpcId(1, nameof(RPCRunAttack)); } else { RPCRunAttack(); }
             }

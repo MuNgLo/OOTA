@@ -36,6 +36,14 @@ shadow_color = Color(0, 0, 1, 1)
 shadow_offset = Vector2(3.615, 1.095)
 
 [resource]
+ActionCost/base_type = &"RichTextLabel"
+ActionCost/colors/default_color = Color(0.8, 0.6627451, 0, 1)
+ActionCost/colors/font_outline_color = Color(0, 0, 0, 1)
+ActionCost/colors/font_shadow_color = Color(0, 0, 0, 1)
+ActionCost/constants/outline_size = 3
+ActionCost/constants/shadow_offset_x = 1
+ActionCost/constants/shadow_offset_y = 1
+ActionCost/font_sizes/normal_font_size = 26
 Button/colors/font_color = Color(0.8117647, 0.5372549, 0.18431373, 1)
 Button/colors/font_outline_color = Color(0.8117647, 0.33333334, 0.18431373, 1)
 Button/constants/outline_size = 2

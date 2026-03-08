@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://cht2xaa7miiq6" path="res://Scripts/Buildings/RangedTower.cs" id="2_q8556"]
 [ext_resource type="PackedScene" uid="uid://yoigwfaxc34a" path="res://Scenes/Projectiles/CannonBall.tscn" id="3_0hx4j"]
 [ext_resource type="PackedScene" uid="uid://bdd36kaa4ccrl" path="res://Scenes/AwarenessArea3d.tscn" id="4_yw1vg"]
+[ext_resource type="Script" uid="uid://c3qkbidk7pl64" path="res://Scripts/HUD/HUDLabelMaker.cs" id="5_84s25"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_jop0c"]
 size = Vector3(0.28735352, 0.5004883, 0.6123047)
@@ -19,7 +20,7 @@ weaponPivot = NodePath("Cannon")
 weaponMuzzle = NodePath("Cannon/Muzzle")
 towerType = 2
 aggroRange = 10.0
-health = 100.0
+health = 600.0
 models = [NodePath("Cannon")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=1879557597]
@@ -27,3 +28,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.24975586, 0)
 shape = SubResource("BoxShape3D_jop0c")
 
 [node name="AwarenessArea3D" parent="." index="2" unique_id=1941854259 instance=ExtResource("4_yw1vg")]
+
+[node name="LabelMaker" type="Node3D" parent="." index="3" unique_id=307385963 node_paths=PackedStringArray("building")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.41123956, 0)
+script = ExtResource("5_84s25")
+building = NodePath("..")

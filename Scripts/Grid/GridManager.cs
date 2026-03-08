@@ -9,8 +9,6 @@ namespace OOTA.Grid;
 [Tool]
 public partial class GridManager : Node
 {
-    static GridManager ins;
-
     [ExportToolButton("DrawDebug")]
     Callable DebugDraw => Callable.From(DebugGrid);
     [Export] float tileSize = 1.0f;
@@ -18,7 +16,7 @@ public partial class GridManager : Node
     [Export] int gridWidth = 8;
 
 
-    static Vector2I coordOffset = Vector2I.Zero;
+    Vector2I coordOffset = Vector2I.Zero;
     /// <summary>
     /// row/column
     /// </summary>
@@ -29,21 +27,15 @@ public partial class GridManager : Node
     private StagingArea rightTeamStagingArea;
     private StagingArea leftTTeamStagingArea;
 
-    public static Goal RightTeamGoal => ins.rightTeamGoal;
-    public static Goal LeftTeamGoal => ins.leftTeamGoal;
+    public Goal RightTeamGoal => rightTeamGoal;
+    public Goal LeftTeamGoal => leftTeamGoal;
 
-    public static StagingArea RightTeamStagingArea => ins.rightTeamStagingArea;
-    public static StagingArea LeftTeamStagingArea => ins.leftTTeamStagingArea;
-    public static event EventHandler<Vector2I> OnTileChanged;
-
-    public override void _EnterTree()
-    {
-        ins = this;
-    }
+    public StagingArea RightTeamStagingArea => rightTeamStagingArea;
+    public StagingArea LeftTeamStagingArea => leftTTeamStagingArea;
+    public event EventHandler<Vector2I> OnTileChanged;
 
     private void DebugGrid()
     {
-        if (ins is null) { ins = this; }
         InitGrid();
         foreach (KeyValuePair<int, Dictionary<int, GridLocation>> item in grid)
         {
@@ -52,26 +44,25 @@ public partial class GridManager : Node
                 MGizmosCSharp.GizmoUtils.DrawShape(CoordToWorld(tile.Value.Coord), MGizmosCSharp.GSHAPES.STOP, 10.0f, tileSize, Colors.Yellow);
             }
         }
-        ins = null;
     }
 
-    public static Vector3 CoordToWorld(Vector2I coord)
+    public Vector3 CoordToWorld(Vector2I coord)
     {
         coord += coordOffset;
-        return new Vector3(coord.X, 0.0f, coord.Y) * ins.tileSize + new Vector3(1, 0, 1) * ins.tileSize * 0.5f;
+        return new Vector3(coord.X, 0.0f, coord.Y) * tileSize + new Vector3(1, 0, 1) * tileSize * 0.5f;
     }
 
 
-    public static Vector2I WorldToCoord(Vector3 worldPoint)
+    public Vector2I WorldToCoord(Vector3 worldPoint)
     {
-        Vector3 adjustedWorldPoint = worldPoint * 1 / ins.tileSize - Vector3.One * ins.tileSize * 0.5f;
+        Vector3 adjustedWorldPoint = worldPoint * 1 / tileSize - Vector3.One * tileSize * 0.5f;
         Vector2I coord = new Vector2I(Mathf.RoundToInt(adjustedWorldPoint.X), Mathf.RoundToInt(adjustedWorldPoint.Z));
         return coord - coordOffset;
     }
 
-    public static Vector3 SnapWorldToTileCenter(Vector3 worldPoint)
+    public Vector3 SnapWorldToTileCenter(Vector3 worldPoint)
     {
-        Vector3I clamped = (Vector3I)(worldPoint * 1 / ins.tileSize);
+        Vector3I clamped = (Vector3I)(worldPoint * 1 / tileSize);
         Vector2I worldPos = new Vector2I(Mathf.RoundToInt(clamped.X), Mathf.RoundToInt(clamped.Z));
         if (clamped.X < 0) { worldPos.X -= 1; }
         if (clamped.Y < 0) { worldPos.Y -= 1; }
@@ -79,11 +70,11 @@ public partial class GridManager : Node
         return CoordToWorld(coord);
     }
 
-    internal static void InitGrid(int width, int depth)
+    internal void InitGrid(int width, int depth)
     {
-        ins.gridWidth = width;
-        ins.gridHeight = depth;
-        ins.InitGrid();
+        gridWidth = width;
+        gridHeight = depth;
+        InitGrid();
     }
     private void InitGrid()
     {
@@ -100,13 +91,13 @@ public partial class GridManager : Node
         }
     }
 
-    internal static int Distance(Vector2I coord, Vector2I otherTileCoord)
+    internal int Distance(Vector2I coord, Vector2I otherTileCoord)
     {
         Vector2I distance = coord - otherTileCoord;
-        return Math.Min(Math.Abs(distance.X), Math.Abs(distance.Y));
+        return Math.Max(Math.Abs(distance.X), Math.Abs(distance.Y));
     }
 
-    internal static bool[] GetFriendlyFoundationFlag(TEAM team, Vector2I coord)
+    internal bool[] GetFriendlyFoundationFlag(TEAM team, Vector2I coord)
     {
         bool[] result = new bool[4];
         List<GridLocation> neighbors = GetNeighbors(coord);
@@ -120,7 +111,7 @@ public partial class GridManager : Node
         return result;
     }
 
-    private static List<GridLocation> GetNeighbors(Vector2I coord)
+    private List<GridLocation> GetNeighbors(Vector2I coord)
     {
         List<GridLocation> result =
         [
@@ -132,24 +123,24 @@ public partial class GridManager : Node
         return result;
     }
 
-    public static GridLocation GetGridLocation(Vector3 worldPoint)
+    public GridLocation GetGridLocation(Vector3 worldPoint)
     {
         return GetGridLocation(WorldToCoord(worldPoint));
     }
 
-    public static GridLocation GetGridLocation(Vector2I coord)
+    public GridLocation GetGridLocation(Vector2I coord)
     {
-        if (ins.grid.ContainsKey(coord.X))
+        if (grid.ContainsKey(coord.X))
         {
-            if (ins.grid[coord.X].ContainsKey(coord.Y))
+            if (grid[coord.X].ContainsKey(coord.Y))
             {
-                return ins.grid[coord.X][coord.Y];
+                return grid[coord.X][coord.Y];
             }
         }
         return null;
     }
 
-    internal static bool TileIsFree(Vector3 placerPoint)
+    internal bool TileIsFree(Vector3 placerPoint)
     {
         Vector2I coord = WorldToCoord(placerPoint);
         GridLocation tile = GetGridLocation(coord);
@@ -162,21 +153,21 @@ public partial class GridManager : Node
     /// </summary>
     /// <param name="building"></param>
     /// <param name="rebuildNavMesh"></param>
-    internal static void PlaceStructure(BuildingBaseClass building, bool rebuildNavMesh = true)
+    internal void PlaceStructure(BuildingBaseClass building, bool rebuildNavMesh = true)
     {
         GridLocation tile = GetGridLocation(WorldToCoord(building.GlobalPosition));
-        tile.SetBuilding(building);
+        tile.Building = building;
         if (rebuildNavMesh) { GridNavigation.Rebuild(); }
 
         if (building is Goal goal)
         {
             if (goal.Team == TEAM.RIGHT)
             {
-                ins.rightTeamGoal = goal;
+                rightTeamGoal = goal;
             }
             else
             {
-                ins.leftTeamGoal = goal;
+                leftTeamGoal = goal;
             }
         }
 
@@ -184,16 +175,16 @@ public partial class GridManager : Node
         {
             if (stagingArea.Team == TEAM.RIGHT)
             {
-                ins.rightTeamStagingArea = stagingArea;
+                rightTeamStagingArea = stagingArea;
             }
             else
             {
-                ins.leftTTeamStagingArea = stagingArea;
+                leftTTeamStagingArea = stagingArea;
             }
         }
 
         OnTileChanged?.Invoke(null, tile.Coord);
-        ins.Rpc(nameof(RPCPlaceStructure), (int)building.Team, building.GetPath());
+        Rpc(nameof(RPCPlaceStructure), (int)building.Team, building.GetPath());
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
     private void RPCPlaceStructure(int teamAsInt, string nodePath)
@@ -201,34 +192,34 @@ public partial class GridManager : Node
         BuildingBaseClass building = GetNode<BuildingBaseClass>(nodePath);
 
         GridLocation tile = GetGridLocation(WorldToCoord(building.GlobalPosition));
-        tile.SetBuilding(building);
+        tile.Building = building;
 
         if (building is Goal goal)
         {
             if (goal.Team == TEAM.RIGHT)
             {
-                ins.rightTeamGoal = goal;
+                rightTeamGoal = goal;
             }
             else
             {
-                ins.leftTeamGoal = goal;
+                leftTeamGoal = goal;
             }
         }
         if (building is StagingArea stagingArea)
         {
             if (stagingArea.Team == TEAM.RIGHT)
             {
-                ins.rightTeamStagingArea = stagingArea;
+                rightTeamStagingArea = stagingArea;
             }
             else
             {
-                ins.leftTTeamStagingArea = stagingArea;
+                leftTTeamStagingArea = stagingArea;
             }
         }
         OnTileChanged?.Invoke(null, tile.Coord);
     }
 
-    internal static void RemoveStructure(BuildingBaseClass building)
+    internal void RemoveStructure(BuildingBaseClass building)
     {
         GridLocation tile = GetGridLocation(WorldToCoord(building.GlobalPosition));
         if (building.towerType == TOWERTYPE.FOUNDATION)
@@ -237,19 +228,19 @@ public partial class GridManager : Node
         }
         else
         {
-            tile.Tower = null;
+            tile.Building = null;
         }
         GridNavigation.Rebuild();
         OnTileChanged?.Invoke(null, tile.Coord);
     }
 
-    internal static List<GridLocation> GetFirstColumn()
+    internal List<GridLocation> GetFirstColumn()
     {
         return GetColumn(0);
     }
-    internal static List<GridLocation> GetLastColumn()
+    internal List<GridLocation> GetLastColumn()
     {
-        return GetColumn(ins.gridWidth - 1);
+        return GetColumn(gridWidth - 1);
     }
 
     /// <summary>
@@ -258,19 +249,19 @@ public partial class GridManager : Node
     /// </summary>
     /// <param name="columnIDX"></param>
     /// <returns></returns>
-    internal static List<GridLocation> GetColumn(int columnIDX)
+    internal List<GridLocation> GetColumn(int columnIDX)
     {
         List<GridLocation> result = new List<GridLocation>();
 
-        if (columnIDX < 0) { columnIDX = ins.gridWidth + columnIDX; }
+        if (columnIDX < 0) { columnIDX = gridWidth + columnIDX; }
 
-        if (ins.grid.ContainsKey(columnIDX))
+        if (grid.ContainsKey(columnIDX))
         {
-            for (int y = 0; y < ins.gridHeight; y++)
+            for (int y = 0; y < gridHeight; y++)
             {
-                if (ins.grid[columnIDX].ContainsKey(y))
+                if (grid[columnIDX].ContainsKey(y))
                 {
-                    result.Add(ins.grid[columnIDX][y]);
+                    result.Add(grid[columnIDX][y]);
                 }
             }
         }
@@ -278,12 +269,12 @@ public partial class GridManager : Node
         return result;
     }
 
-    internal static Vector2I LeftGoalCoord()
+    internal Vector2I LeftGoalCoord()
     {
-        return (ins.grid[1][ins.gridHeight / 2] as GridLocation).Coord;
+        return (grid[1][(int)(gridHeight * 0.8f)] as GridLocation).Coord;
     }
-    internal static Vector2I RightGoalCoord()
+    internal Vector2I RightGoalCoord()
     {
-        return (ins.grid[ins.gridWidth - 2][ins.gridHeight / 2] as GridLocation).Coord;
+        return (grid[gridWidth - 2][(int)(gridHeight * 0.8f)] as GridLocation).Coord;
     }
 }// EOF CLASS
