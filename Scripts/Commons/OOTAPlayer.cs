@@ -15,6 +15,12 @@ public partial class OOTAPlayer : MLobbyPlayer
     public bool IsReady => (publicData as OOTAPublicData).IsReady;
     public double NormalizedHealth => Math.Clamp(Health / MaxHealth, 0.0, 1.0);
 
+
+    #region Unsynced
+    public int TowerIDX { get => (publicData as OOTAPublicData).towerIDX; set => (publicData as OOTAPublicData).towerIDX = value; }
+    #endregion 
+
+
     public bool CanTakeDamage
     {
         get => (publicData as OOTAPublicData).CanTakeDamage;

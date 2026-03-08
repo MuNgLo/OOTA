@@ -10,21 +10,20 @@ namespace OOTA.GameLogic;
 
 public partial class Placer : Node
 {
-    [Export] MeshInstance3D placeGhost;
     [Export] Node3D worldRoot;
     [Export] Node3D placeBlocker;
-    [Export] Node3D Indicator;
 
-    PlayerAvatar Avatar => Core.Players.LocalPlayer.Avatar;
-    int towerIDX = 0;
     private Vector3 inRightStick;
     private Vector3 cursorWorldPosition;
 
-
-
+    PlayerAvatar Avatar => Core.Players.LocalPlayer.Avatar;
     Vector2I blockCheckLastCoord = new Vector2I(int.MinValue, int.MinValue);
     bool isBlocked = true;
+    public bool IsBlocked => isBlocked;
 
+
+
+    [ExportGroup("BlockCheck NavMesh")]
     [Export] NavigationMesh navMesh;
     NavigationMeshSourceGeometryData3D geoData;
     Rid map;
@@ -32,275 +31,38 @@ public partial class Placer : Node
 
     public override void _Ready()
     {
-        LocalLogic.OnPlayerStateChanged += WhenPlayerStateChanged;
-        HideGhost();
-        HideIndicator();
-
-        // Create a new navigation map.
-        map = NavigationServer3D.MapCreate();
-        NavigationServer3D.MapSetUp(map, Vector3.Up);
-        NavigationServer3D.MapSetActive(map, true);
-
-        // Create a navigation region and assign it to the map.
-        region = NavigationServer3D.RegionCreate();
-        NavigationServer3D.RegionSetEnabled(region, true);
-        NavigationServer3D.RegionSetMap(region, map);
-
-        geoData = new NavigationMeshSourceGeometryData3D();
-
-        NavigationServer3D.MapChanged += WhenMapChanged;
+        InitNavMesh();
     }
 
-    private void WhenPlayerStateChanged(object sender, PLAYERSTATE e)
-    {
-        if (e == PLAYERSTATE.DEAD)
-        {
-            HideGhost();
-            HideIndicator();
-        }
-    }
-
+    public GridLocation gridLocation;
     public override void _PhysicsProcess(double delta)
     {
         if (Core.Players.LocalPlayer is null) { return; }
-        if (Core.Players.LocalPlayer.State != PLAYERSTATE.ALIVE) { return; }
-
-        // Read toggle mode
-        if (Input.IsActionJustPressed("TogglePlayerMode"))
-        {
-            Core.Players.LocalPlayer.Mode = Core.Players.LocalPlayer.Mode == PLAYERMODE.ATTACKING ? PLAYERMODE.BUILDING : PLAYERMODE.ATTACKING;
-        }
-
         if (Core.Players.LocalPlayer.Mode == PLAYERMODE.BUILDING)
         {
-            RightStickInputVector();
-            GridLocation gridLocation = ProjectPlacerPosition();
-
-            // If it is other team we stop all
-            if (gridLocation.Team != TEAM.NONE && gridLocation.Team != Core.Players.LocalPlayer.Team)
-            {
-                HideGhost();
-                HideIndicator();
-                return;
-            }
-
-
-            if (gridLocation is null || gridLocation.Coord == Core.Grid.WorldToCoord(Avatar.GlobalPosition))
-            {
-                HideGhost();
-                HideIndicator();
-                return;
-            }
-
-            if (gridLocation is not null)
-            {
-                Indicator.GlobalPosition = Core.Grid.CoordToWorld(gridLocation.Coord);
-                if (!Indicator.Visible)
-                {
-                    ShowIndicator();
-                }
-            }
-
-            TowerResource tw = Core.Rules.towers.GetTowerByIndex(towerIDX);
-
-            if (Indicator.Visible && !gridLocation.CanFit(tw))
-            {
-                List<PlayerActionStruct> interactions = gridLocation.GetInteractions();
-                if (interactions.Count > 0 && Input.IsActionJustPressed("Place"))
-                {
-                    LocalLogic.RaiseHudInteractMenu(this, interactions);
-                    return;
-                }
-            }
-
-            if (!Core.Players.LocalPlayer.CanPay(tw.cost))
-            {
-                HideGhost();
-                return;
-            }
-
-            //GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::_PhysicsProcess() gridLocation[{gridLocation.Coord}].CanFit[{gridLocation.CanFit(tw)}] isBlocked[{isBlocked}]");
-
-            if (gridLocation is null || !gridLocation.CanFit(tw))
-            {
-                HideGhost();
-            }
-            else
+            if (ProjectPlacerPosition() && gridLocation is not null)
             {
                 IsPathBlocked(gridLocation.Coord);
-
-                if (isBlocked)
-                {
-                    HideGhost();
-                }
-                else
-                {
-                    ShowPlacement(tw, gridLocation);
-                    if (Input.IsActionPressed("Place"))
-                    {
-                        Core.Rules.RequestPlaceTower(towerIDX, gridLocation.Coord);
-                    }
-                }
-            }
-            // If in build mode accept tower index shift
-            if (Input.IsActionJustPressed("BuildSelectLeft"))
-            {
-                towerIDX--;
-                if (towerIDX < 0) { towerIDX = Core.Rules.towers.MaxIndex; }
-            }
-            if (Input.IsActionJustPressed("BuildSelectRight"))
-            {
-                towerIDX++;
-                if (towerIDX > Core.Rules.towers.MaxIndex) { towerIDX = 0; }
-            }
-        }
-        else
-        {
-            HideGhost();
-            if (Core.Players.LocalPlayer.Mode != PLAYERMODE.INTERACTING)
-            {
-                HideIndicator();
             }
         }
     }
 
-
-
-
-    private void IsPathBlocked(Vector2I coord)
-    {
-        if (blockCheckLastCoord == coord) { return; }
-        //GD.Print($"Placer::IsPathBlocked() Updating block check for coord[{coord}]");
-        blockCheckLastCoord = coord;
-        placeBlocker.Reparent(worldRoot);
-        placeBlocker.GlobalPosition = Core.Grid.CoordToWorld(coord);
-        isBlocked = true;
-        geoData.Clear();
-        NavigationServer3D.ParseSourceGeometryData(navMesh, geoData, worldRoot, Callable.From(BuildPlacerMeshPart2));
-    }
-
-    private void BuildPlacerMeshPart2()
-    {
-        NavigationServer3D.BakeFromSourceGeometryDataAsync(navMesh, geoData, Callable.From(RebuildDone));
-    }
-    private void RebuildDone()
-    {
-        //GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::RebuildDone()");
-        NavigationServer3D.RegionSetNavigationMesh(region, navMesh);
-        placeBlocker.Reparent(GetTree().Root, true);
-        placeBlocker.GlobalPosition = Vector3.Down * 20.0f;
-    }
-
-    private void WhenMapChanged(Rid mapThatChanged)
-    {
-        if (!Multiplayer.HasMultiplayerPeer()) { return; }
-        //GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::WhenMapChanged() Core.Grid.LeftTeamGoal is null[{Core.Grid.LeftTeamGoal is null}]");
-
-        if (Core.Grid.LeftTeamGoal is null) { return; }
-        if (map == mapThatChanged)
-        {
-            CheckPath();
-        }
-    }
-
-    //bool isCheckingPath = false;
-    private async void CheckPath()
-    {
-        //if (isCheckingPath) { return; }
-        //isCheckingPath = true;
-        //GD.Print($"CheckPath");
-        // This one probably is the ticket for a calm mind
-        //GD.Print($"NavigationServer3D region iteration ID?[{NavigationServer3D.RegionGetIterationId(region)}]");
-
-        await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
-
-        Vector3[] arr = NavigationServer3D.MapGetPath(
-            map,
-            Core.Grid.LeftTeamGoal.GlobalPosition,
-            Core.Grid.RightTeamGoal.GlobalPosition,
-            true
-            );
-
-
-        if (arr.Length > 0)
-        {
-            isBlocked = arr[arr.Length - 1].DistanceTo(Core.Grid.RightTeamGoal.GlobalPosition) > 1.0f;
-            //MGizmosCSharp.GizmoUtils.DrawShape(arr[arr.Length - 1], MGizmosCSharp.GSHAPES.DIAMOND, 0.5f, 0.5f, Colors.Red);
-            //MGizmosCSharp.GizmoUtils.DrawShape(Core.Grid.RightTeamGoal.GlobalPosition + Vector3.Up, MGizmosCSharp.GSHAPES.DIAMOND, 0.5f, 0.5f, Colors.Blue);
-            //MGizmosCSharp.GizmoUtils.DrawLine(arr, 0.5f, Colors.Red);
-        }
-        //GD.Print($"Placer::CheckPath() arr.Length[{arr.Length}] blocked[{isBlocked}]");
-        //isCheckingPath = false;
-
-        //GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::CheckPath() arr.Length[{arr.Length}] blocked[{isBlocked}]");
-
-    }
-
-
-
-    private void RightStickInputVector()
-    {
-        // Building input vector Right stick
-        inRightStick = Vector3.Zero;
-        inRightStick += Vector3.Right * Input.GetAxis("RSLeft", "RSRight");
-        inRightStick += Vector3.Back * Input.GetAxis("RSUp", "RSDown");
-    }
-
-
-
-    private void HideGhost()
-    {
-        placeGhost.Hide();
-        placeGhost.PhysicsInterpolationMode = MeshInstance3D.PhysicsInterpolationModeEnum.Off;
-    }
-
-    private void HideIndicator()
-    {
-        Indicator.Hide();
-        Indicator.PhysicsInterpolationMode = MeshInstance3D.PhysicsInterpolationModeEnum.Off;
-    }
-
-    private void ShowIndicator()
-    {
-        Indicator.PhysicsInterpolationMode = PhysicsInterpolationModeEnum.Inherit;
-        Indicator.ResetPhysicsInterpolation();
-        Indicator.Show();
-    }
-
-    private void ShowPlacement(TowerResource tw, GridLocation gridLocation)
-    {
-        if (gridLocation is null) { return; }
-        if (gridLocation.Foundation is not null)
-        {
-            placeGhost.GlobalPosition = gridLocation.Foundation.GlobalPosition + Vector3.Up * 0.669f;
-        }
-        else
-        {
-            placeGhost.GlobalPosition = Core.Grid.CoordToWorld(gridLocation.Coord);
-        }
-        placeGhost.Mesh = tw.mesh;
-        placeGhost.Show();
-        placeGhost.PhysicsInterpolationMode = MeshInstance3D.PhysicsInterpolationModeEnum.On;
-        placeGhost.ResetPhysicsInterpolation();
-    }
-
-
-    private GridLocation ProjectPlacerPosition()
+    private bool ProjectPlacerPosition()
     {
         Vector2I tileCoord = Core.Grid.WorldToCoord(Avatar.GlobalPosition);
-
+        RightStickInputVector();
         // If inRightStick is 0 we lean on cursor pos
         if (inRightStick == Vector3.Zero && Core.PlotMouseWorldPosition(out cursorWorldPosition))
         {
             Vector2I mouseTileCoord = Core.Grid.WorldToCoord(cursorWorldPosition);
             if (Core.Grid.Distance(tileCoord, mouseTileCoord) < 2)
             {
-                return Core.Grid.GetGridLocation(mouseTileCoord);
+                gridLocation = Core.Grid.GetGridLocation(mouseTileCoord);
+                return true;
             }
-            return Core.Grid.GetGridLocation(Avatar.GlobalPosition);
+            gridLocation = Core.Grid.GetGridLocation(Avatar.GlobalPosition);
+            return false;
         }
-
-
         //MGizmosCSharp.GizmoUtils.DrawShape(placer.GlobalPosition + Vector3.Up, MGizmosCSharp.GSHAPES.DIAMOND, 0.1f, 1.0f, Colors.Pink);
         //MGizmosCSharp.GizmoUtils.DrawShape(Core.Grid.CoordToWorld(playerTileCoord), MGizmosCSharp.GSHAPES.DIAMOND, 0.1f, 1.0f, Colors.BlueViolet);
         float angle = Vector3.Back.SignedAngleTo(inRightStick, Vector3.Up) + Mathf.Pi;
@@ -316,18 +78,112 @@ public partial class Placer : Node
         else if (step < 7) { tileCoord += Vector2I.Right; }
         else if (step < 8) { tileCoord += Vector2I.Up + Vector2I.Right; }
         else { tileCoord += Vector2I.Up; }
+        gridLocation = Core.Grid.GetGridLocation(tileCoord);
+        return true;
+    }
 
-        return Core.Grid.GetGridLocation(tileCoord);
+   private void RightStickInputVector()
+    {
+        // Building input vector Right stick
+        inRightStick = Vector3.Zero;
+        inRightStick += Vector3.Right * Input.GetAxis("RSLeft", "RSRight");
+        inRightStick += Vector3.Back * Input.GetAxis("RSUp", "RSDown");
     }
 
 
 
+    #region Nav Mesh related
+    /// <summary>
+    /// Initialize the navMesh
+    /// </summary>
+    private void InitNavMesh()
+    {
+        // Create a new navigation map.
+        map = NavigationServer3D.MapCreate();
+        NavigationServer3D.MapSetUp(map, Vector3.Up);
+        NavigationServer3D.MapSetActive(map, true);
 
+        // Create a navigation region and assign it to the map.
+        region = NavigationServer3D.RegionCreate();
+        NavigationServer3D.RegionSetEnabled(region, true);
+        NavigationServer3D.RegionSetMap(region, map);
+        geoData = new NavigationMeshSourceGeometryData3D();
+        NavigationServer3D.MapChanged += WhenMapChanged;
+    }
+    /// <summary>
+    /// When the navMesh is done rebuilding, Start checking the path
+    /// </summary>
+    /// <param name="mapThatChanged"></param>
+    private void WhenMapChanged(Rid mapThatChanged)
+    {
+        if (!Multiplayer.HasMultiplayerPeer()) { return; }
+        if (Core.Grid.LeftTeamGoal is null) { return; }
+        if (map == mapThatChanged)
+        {
+            CheckPath();
+        }
+    }
+    /// <summary>
+    /// Wait to physics tick. Then check path between goals and<br/>
+    /// update the isBlocked bool
+    /// </summary>
+    private async void CheckPath()
+    {
+        await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
+        Vector3[] arr = NavigationServer3D.MapGetPath(
+            map,
+            Core.Grid.LeftTeamGoal.GlobalPosition,
+            Core.Grid.RightTeamGoal.GlobalPosition,
+            true
+            );
+        if (arr.Length > 0)
+        {
+            isBlocked = arr[arr.Length - 1].DistanceTo(Core.Grid.RightTeamGoal.GlobalPosition) > 1.0f;
+        }
+    }
+    /// <summary>
+    /// Moves the block collider in position<br/>
+    /// Clears the geo data and rebuilds it<br/>
+    /// Will call IsPathBlocked2 when build is done
+    /// </summary>
+    /// <param name="coord"></param>
+    public void IsPathBlocked(Vector2I coord)
+    {
+        if (blockCheckLastCoord == coord) { return; }
+        blockCheckLastCoord = coord;
 
-    #region pass 1
+        if (Core.Grid.GetFreeNeighbors(coord).Count >= 7)
+        {
+            GD.Print($"Cant be blocked!! neighborCount[{Core.Grid.GetFreeNeighbors(coord).Count}]");
+            isBlocked = false;
+            return;
+        }
 
-
-
-
+        //GD.Print($"Placer::IsPathBlocked() Updating block check for coord[{coord}]");
+        placeBlocker.Reparent(worldRoot);
+        placeBlocker.GlobalPosition = Core.Grid.CoordToWorld(coord);
+        isBlocked = true;
+        geoData.Clear();
+        NavigationServer3D.ParseSourceGeometryData(navMesh, geoData, worldRoot, Callable.From(IsPathBlocked2));
+    }
+    /// <summary>
+    /// When geometry has been processed, start baking a new navMesh<br/>
+    /// Will call IsPathBlocked3 when bake is done
+    /// </summary>
+    private void IsPathBlocked2()
+    {
+        NavigationServer3D.BakeFromSourceGeometryDataAsync(navMesh, geoData, Callable.From(IsPathBlocked3));
+    }
+    /// <summary>
+    /// Update the navMesh for the region<br/>
+    /// reset the blocker collider (maybe do that after geo bake if it starts causing issues)
+    /// </summary>
+    private void IsPathBlocked3()
+    {
+        //GD.Print($"[{Multiplayer.GetUniqueId()}]Placer::RebuildDone()");
+        NavigationServer3D.RegionSetNavigationMesh(region, navMesh);
+        placeBlocker.Reparent(GetTree().Root, true);
+        placeBlocker.GlobalPosition = Vector3.Down * 20.0f;
+    }
     #endregion
 }// EOF CLASS

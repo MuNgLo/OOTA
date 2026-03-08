@@ -50,8 +50,8 @@ jumpForce = 5.0
 jumpCoolDownMS = 860.0
 weaponPivot = NodePath(".")
 weaponMuzzle = NodePath("WeaponPivot/MeshInstance3D/Muzzle")
-damage = 12
-attackCoolDownMS = 125
+damage = 24
+attackCoolDownMS = 150
 projectilePrefab = ExtResource("2_52ee3")
 projectileDuration = 0.325
 

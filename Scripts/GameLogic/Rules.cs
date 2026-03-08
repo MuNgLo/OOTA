@@ -163,6 +163,7 @@ public partial class Rules : Node
                 BuildingBaseClass building = BuildingSpawner.SpawnThisBuilding(new BuildingSpawner.SpawnBuildingArgument(
                     (TEAM)team,
                     towerIndex,
+                    tw.cost,
                     placerPoint
                     ));
                 Core.Grid.PlaceStructure(building);
@@ -320,14 +321,14 @@ public partial class Rules : Node
             {
                 GD.Print("Sell Tower");
                 player.AddGold(cost);
-                location.Building = null;
+                Core.Grid.RemoveStructure(location.Building);
                 return;
             }
             if (location.Foundation is not null)
             {
                 GD.Print("Sell Foundation");
                 player.AddGold(cost);
-                location.Foundation = null;
+                Core.Grid.RemoveStructure(location.Foundation);
                 return;
             }
         }
@@ -361,6 +362,28 @@ public partial class Rules : Node
                     GD.Print("Repair Foundation");
                     location.Foundation.Health = location.Foundation.MaxHealth;
                     return;
+                }
+            }
+        }
+    }
+
+    internal void PlayerRequestUpgradeProduction(Vector2I coord)
+    {
+        RpcId(1, nameof(RPCHandleRequestUpgradeProduction), coord);
+    }
+    [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    internal void RPCHandleRequestUpgradeProduction(Vector2I coord)
+    {
+        GridLocation location = Core.Grid.GetGridLocation(coord);
+        if (location is null) { return; }
+        if (location.Building is Barracks barrack)
+        {
+            long peerID = Multiplayer.GetRemoteSenderId() == 0 ? 1 : Multiplayer.GetRemoteSenderId();
+            if (Core.Players.GetPlayer(peerID, out OOTAPlayer player))
+            {
+                if (player.Pay(barrack.ProductionUpgradeCost))
+                {
+                    barrack.UpgradeProduction();
                 }
             }
         }

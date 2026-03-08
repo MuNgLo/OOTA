@@ -111,7 +111,7 @@ public partial class GridManager : Node
         return result;
     }
 
-    private List<GridLocation> GetNeighbors(Vector2I coord)
+    public List<GridLocation> GetNeighbors(Vector2I coord)
     {
         List<GridLocation> result =
         [
@@ -122,6 +122,22 @@ public partial class GridManager : Node
         ];
         return result;
     }
+    public List<GridLocation> GetFreeNeighbors(Vector2I coord)
+    {
+        List<GridLocation> result =
+        [
+            GetGridLocation(coord + Vector2I.Up),
+            GetGridLocation(coord + Vector2I.Up + Vector2I.Right),
+            GetGridLocation(coord + Vector2I.Right),
+            GetGridLocation(coord + Vector2I.Right + Vector2I.Down),
+            GetGridLocation(coord + Vector2I.Down),
+            GetGridLocation(coord + Vector2I.Down + Vector2I.Left),
+            GetGridLocation(coord + Vector2I.Left),
+            GetGridLocation(coord + Vector2I.Left + Vector2I.Up),
+        ];
+        return result.FindAll(p => p.IsFree);
+    }
+
 
     public GridLocation GetGridLocation(Vector3 worldPoint)
     {
@@ -184,10 +200,10 @@ public partial class GridManager : Node
         }
 
         OnTileChanged?.Invoke(null, tile.Coord);
-        Rpc(nameof(RPCPlaceStructure), (int)building.Team, building.GetPath());
+        Rpc(nameof(RPCPlaceStructure), building.GetPath());
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void RPCPlaceStructure(int teamAsInt, string nodePath)
+    private void RPCPlaceStructure(string nodePath)
     {
         BuildingBaseClass building = GetNode<BuildingBaseClass>(nodePath);
 
@@ -232,7 +248,27 @@ public partial class GridManager : Node
         }
         GridNavigation.Rebuild();
         OnTileChanged?.Invoke(null, tile.Coord);
+        Rpc(nameof(RPCRemoveStructure), building.GetPath());
     }
+
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = false, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
+    internal void RPCRemoveStructure(string nodePath)
+    {
+        BuildingBaseClass building = GetNode<BuildingBaseClass>(nodePath);
+        GridLocation tile = GetGridLocation(WorldToCoord(building.GlobalPosition));
+
+        if (building.towerType == TOWERTYPE.FOUNDATION)
+        {
+            tile.Foundation = null;
+        }
+        else
+        {
+            tile.Building = null;
+        }
+        OnTileChanged?.Invoke(null, tile.Coord);
+    }
+
+
 
     internal List<GridLocation> GetFirstColumn()
     {
@@ -277,4 +313,5 @@ public partial class GridManager : Node
     {
         return (grid[gridWidth - 2][(int)(gridHeight * 0.8f)] as GridLocation).Coord;
     }
+
 }// EOF CLASS

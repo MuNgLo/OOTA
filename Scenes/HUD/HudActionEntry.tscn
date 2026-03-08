@@ -4,7 +4,16 @@
 [ext_resource type="Texture2D" uid="uid://h1vsip1tomg7" path="res://Images/Icons/ActionFrame.png" id="1_u2gv1"]
 [ext_resource type="Texture2D" uid="uid://dsd70c4htfbn7" path="res://Images/Icons/Repair.png" id="2_b1uuk"]
 
-[node name="HUDActionEntry" type="Control" unique_id=1714396819 node_paths=PackedStringArray("icon", "cost")]
+[sub_resource type="Gradient" id="Gradient_b1uuk"]
+offsets = PackedFloat32Array(0, 0.36477986, 0.4371069)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_irhpl"]
+gradient = SubResource("Gradient_b1uuk")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[node name="HUDActionEntry" type="Control" unique_id=1714396819 node_paths=PackedStringArray("icon", "frame", "cost", "affordable")]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -17,13 +26,16 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_b1uuk")
 icon = NodePath("ActionIcon")
+frame = NodePath("Frame")
 cost = NodePath("Cost")
+affordable = NodePath("Affordable")
 
 [node name="Frame" type="TextureRect" parent="." unique_id=1813197432]
 modulate = Color(0.9577009, 0.6945558, 0.39292136, 1)
 layout_mode = 0
 offset_right = 100.0
 offset_bottom = 100.0
+mouse_filter = 2
 texture = ExtResource("1_u2gv1")
 expand_mode = 1
 
@@ -33,19 +45,30 @@ offset_left = 11.0
 offset_top = 8.0
 offset_right = 69.0
 offset_bottom = 66.0
+mouse_filter = 2
 texture = ExtResource("2_b1uuk")
 expand_mode = 1
 flip_h = true
 
+[node name="Affordable" type="TextureRect" parent="." unique_id=269993094]
+layout_mode = 0
+offset_left = 41.0
+offset_top = 40.0
+offset_right = 105.0
+offset_bottom = 104.0
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_irhpl")
+
 [node name="Cost" type="RichTextLabel" parent="." unique_id=173181262]
 layout_mode = 0
-offset_left = 51.0
+offset_left = 31.0
 offset_top = 53.0
-offset_right = 93.0
+offset_right = 113.0
 offset_bottom = 89.0
+mouse_filter = 2
 theme_type_variation = &"ActionCost"
 bbcode_enabled = true
-text = "13"
+text = "+999"
 fit_content = true
 horizontal_alignment = 1
 vertical_alignment = 1

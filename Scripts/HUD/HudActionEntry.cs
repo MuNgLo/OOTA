@@ -6,7 +6,9 @@ namespace OOTA.HUD;
 public partial class HudActionEntry : Control
 {
     [Export] TextureRect icon;
+    [Export] TextureRect frame;
     [Export] RichTextLabel cost;
+    [Export] TextureRect affordable;
 
     HUDInteractMenu interactMenu;
     PlayerActionStruct playerAction;
@@ -22,19 +24,26 @@ public partial class HudActionEntry : Control
         icon.Modulate = playerAction.modulate;
         icon.TooltipText = playerAction.ToolTip;
 
-        if(playerAction.ToolTip == "Sell")
+        UpdateCost(null, Core.Players.LocalPlayer.Gold);
+
+        MLobby.MLobbyPlayerEvents.OnGoldAmountChanged += UpdateCost;
+        TreeExiting += () => { MLobby.MLobbyPlayerEvents.OnGoldAmountChanged -= UpdateCost; };
+        MouseEntered += () => { iMenu.selectedButton = actionIndex; frame.SelfModulate = Color.FromHtml("00ffff"); };
+        MouseExited += () => { iMenu.selectedButton = -1; frame.SelfModulate = Colors.White; };
+    }
+
+    private void UpdateCost(object sender, int playerGold)
+    {
+        if (playerAction.ToolTip == "Sell")
         {
-            cost.Text = "+" + pAction.Cost.ToString();
+            cost.Text = "+" + playerAction.Cost.ToString();
+            affordable.Hide();
         }
         else
         {
-            cost.Text = pAction.Cost.ToString();
+            cost.Text = playerAction.Cost.ToString();
+            affordable.Modulate = playerGold >= playerAction.Cost ? Colors.Green : Colors.Red;
+            affordable.Show();
         }
-
-
-        icon.MouseEntered += ()=>{ iMenu.selectedButton = actionIndex; };
-        icon.MouseExited +=  ()=>{ iMenu.selectedButton = -1; };
     }
-
-
 }// EOF CLASS

@@ -9,6 +9,23 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_jop0c"]
 size = Vector3(0.28735352, 0.5004883, 0.6123047)
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_84s25"]
+properties/0/path = NodePath(".:health")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:maxHealth")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:currentTier")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:cost")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath(".:team")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+
 [node name="Cannon2" unique_id=71578167 node_paths=PackedStringArray("weaponPivot", "weaponMuzzle", "models") instance=ExtResource("1_jop0c")]
 script = ExtResource("2_q8556")
 attackRange = 8.0
@@ -33,3 +50,7 @@ shape = SubResource("BoxShape3D_jop0c")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.41123956, 0)
 script = ExtResource("5_84s25")
 building = NodePath("..")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="4" unique_id=852787667]
+replication_config = SubResource("SceneReplicationConfig_84s25")
+visibility_update_mode = 1

@@ -40,6 +40,7 @@ public partial class BuildingSpawner : MultiplayerSpawner
 
         building.Team = (TEAM)args["team"].AsInt32();
         building.Position = args["pos"].AsVector3();
+        building.cost =  args["cost"].AsUInt16();
         building.Rotation = building.towerType == TOWERTYPE.FOUNDATION ? Vector3.Zero : args["rot"].AsVector3();
         if (debug) { MLog.LogInfo($"BuildingSpawner::SpawnBuilding() Position[{args["pos"].AsVector3()}]"); }
         return building;
@@ -55,15 +56,17 @@ public partial class BuildingSpawner : MultiplayerSpawner
     {
         public TEAM team;
         public int towerIndex;
+        public int cost;
         public Vector3 rotation;
         public Vector3 position;
 
         public string resourcePath;
 
-        public SpawnBuildingArgument(TEAM team, int towerIndex, Vector3 position)
+        public SpawnBuildingArgument(TEAM team, int towerIndex, int cost, Vector3 position)
         {
             this.team = team;
             this.towerIndex = towerIndex;
+            this.cost = cost;
             this.rotation = team == TEAM.LEFT ? new Vector3(0, Mathf.Pi * -0.5f, 0) : new Vector3(0, Mathf.Pi * 0.5f, 0);
             this.position = position;
         }
@@ -72,6 +75,7 @@ public partial class BuildingSpawner : MultiplayerSpawner
         {
             {"team", (int)team },
             {"towerIndex", towerIndex},
+            {"cost", cost},
             {"rot", rotation},
             {"pos", position},
             {"resourcePath", resourcePath}

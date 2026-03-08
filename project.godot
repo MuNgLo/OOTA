@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="O.O.T.A."
-config/version="0.8"
+config/version="0.8.1"
 run/main_scene="uid://do6g4exfmgrb4"
 config/features=PackedStringArray("4.6", "C#", "Forward Plus")
 config/icon="uid://dsd70c4htfbn7"

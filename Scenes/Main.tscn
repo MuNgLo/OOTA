@@ -70,6 +70,8 @@
 [ext_resource type="Script" uid="uid://coo10xkki8sph" path="res://Scripts/UnitDeathTrigger.cs" id="63_yn2g2"]
 [ext_resource type="Material" uid="uid://ch7ne8nwbxk4q" path="res://Materials/TowerGhost.tres" id="66_1bbis"]
 [ext_resource type="Texture2D" uid="uid://dsxik2mw6xij3" path="res://Images/Icons/TileIndicator.png" id="70_h2tpa"]
+[ext_resource type="Script" uid="uid://dhw33ym2csxon" path="res://Scripts/GameLogic/GhostBuilding.cs" id="70_nkjwg"]
+[ext_resource type="Script" uid="uid://bdgc6ju3lpse8" path="res://Scripts/GameLogic/TileIndicator.cs" id="71_nkjwg"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_gaesr"]
 top_radius = 0.2
@@ -962,10 +964,6 @@ size = Vector3(40, 6, 20)
 [sub_resource type="QuadMesh" id="QuadMesh_j0p05"]
 size = Vector2(40, 20)
 
-[sub_resource type="SphereMesh" id="SphereMesh_yn2g2"]
-radius = 0.2
-height = 0.4
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_rfqov"]
 size = Vector3(1, 3, 1)
 
@@ -974,6 +972,10 @@ size = Vector3(1, 0.3, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yn2g2"]
 albedo_color = Color(1, 0, 0.654902, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_yn2g2"]
+radius = 0.2
+height = 0.4
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nkjwg"]
 transparency = 1
@@ -1022,13 +1024,9 @@ script = ExtResource("11_vs04g")
 lobby = NodePath("../LobbyManager")
 playerPrefab = ExtResource("12_6ehlx")
 
-[node name="BuildingSpawner" type="MultiplayerSpawner" parent="Core/PlayerManager" unique_id=157883056]
-spawn_path = NodePath("../../../NavigationRegion3D/Buildings")
-script = ExtResource("23_c5snn")
-metadata/_custom_type_script = "uid://bh6vusv8b7mi"
-
 [node name="GameLogic" type="Node" parent="Core" unique_id=1852553460 node_paths=PackedStringArray("gameStats", "towers", "arenaBuilder")]
 script = ExtResource("11_yisvs")
+startGold = 1000
 gameStats = NodePath("GameStats")
 towers = NodePath("Towers")
 towerPrefab = SubResource("PackedScene_5gwyn")
@@ -1076,16 +1074,10 @@ packedLevel = ExtResource("17_3tgeq")
 spawnLeft = NodePath("../../../SpawnLeft")
 spawnRight = NodePath("../../../SpawnRight")
 
-[node name="UnitSpawner" type="MultiplayerSpawner" parent="Core/Spawners" unique_id=1513468807]
-spawn_path = NodePath("../../../Units")
-script = ExtResource("18_c4ay3")
-metadata/_custom_type_script = "uid://b0ciamxuywagm"
-
-[node name="ProjectileSpawner" type="MultiplayerSpawner" parent="Core/Spawners" unique_id=669255474]
-spawn_path = NodePath("../../../Projectiles")
-script = ExtResource("20_kpo4j")
-debug = true
-metadata/_custom_type_script = "uid://c08wprspm4bf"
+[node name="BuildingSpawner" type="MultiplayerSpawner" parent="Core/Spawners" unique_id=157883056]
+spawn_path = NodePath("../../../NavigationRegion3D/Buildings")
+script = ExtResource("23_c5snn")
+metadata/_custom_type_script = "uid://bh6vusv8b7mi"
 
 [node name="PickupSpawner" type="MultiplayerSpawner" parent="Core/Spawners" unique_id=58980480]
 spawn_path = NodePath("../../../Pickups")
@@ -1094,17 +1086,26 @@ prefabGold = ExtResource("6_jw32o")
 prefabHealth = ExtResource("3_bmxlf")
 metadata/_custom_type_script = "uid://bqmsnui6f1p4t"
 
+[node name="ProjectileSpawner" type="MultiplayerSpawner" parent="Core/Spawners" unique_id=669255474]
+spawn_path = NodePath("../../../Projectiles")
+script = ExtResource("20_kpo4j")
+debug = true
+metadata/_custom_type_script = "uid://c08wprspm4bf"
+
+[node name="UnitSpawner" type="MultiplayerSpawner" parent="Core/Spawners" unique_id=1513468807]
+spawn_path = NodePath("../../../Units")
+script = ExtResource("18_c4ay3")
+metadata/_custom_type_script = "uid://b0ciamxuywagm"
+
 [node name="GridManager" type="Node" parent="Core" unique_id=1567185228]
 script = ExtResource("30_utia5")
 gridHeight = 20
 gridWidth = 40
 
-[node name="Placer" type="Node" parent="Core" unique_id=618206794 node_paths=PackedStringArray("placeGhost", "worldRoot", "placeBlocker", "Indicator")]
+[node name="Placer" type="Node" parent="Core" unique_id=618206794 node_paths=PackedStringArray("worldRoot", "placeBlocker")]
 script = ExtResource("53_t3x2a")
-placeGhost = NodePath("../../PlaceGhost")
 worldRoot = NodePath("../../NavigationRegion3D")
 placeBlocker = NodePath("../../NavBlock")
-Indicator = NodePath("../../TileIndicator")
 navMesh = SubResource("NavigationMesh_1bbis")
 
 [node name="CanvasHUD" type="CanvasLayer" parent="." unique_id=1983381410 node_paths=PackedStringArray("persistent")]
@@ -1271,10 +1272,6 @@ bottomMargin = 5.33
 
 [node name="Pickups" type="Node3D" parent="." unique_id=170036029]
 
-[node name="PlaceGhost" type="MeshInstance3D" parent="." unique_id=1706616224]
-material_override = ExtResource("66_1bbis")
-mesh = SubResource("SphereMesh_yn2g2")
-
 [node name="NavBlock" type="StaticBody3D" parent="." unique_id=1256041457]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -20, 0)
 collision_layer = 512
@@ -1290,7 +1287,16 @@ visible = false
 mesh = SubResource("BoxMesh_1bbis")
 surface_material_override/0 = SubResource("StandardMaterial3D_yn2g2")
 
-[node name="TileIndicator" type="Node3D" parent="." unique_id=675565227]
+[node name="GhostBuilding" type="MeshInstance3D" parent="." unique_id=1706616224 node_paths=PackedStringArray("placer")]
+process_physics_priority = 1
+material_override = ExtResource("66_1bbis")
+mesh = SubResource("SphereMesh_yn2g2")
+script = ExtResource("70_nkjwg")
+placer = NodePath("../Core/Placer")
+
+[node name="TileIndicator" type="Node3D" parent="." unique_id=675565227 node_paths=PackedStringArray("placer")]
+script = ExtResource("71_nkjwg")
+placer = NodePath("../Core/Placer")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="TileIndicator" unique_id=1254458854]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.05, 0)

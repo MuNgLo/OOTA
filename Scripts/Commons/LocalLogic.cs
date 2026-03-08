@@ -108,6 +108,28 @@ public partial class LocalLogic : Node
             MConsole.GameConsole.Toggle();
         }
 
+        if (Core.Players.LocalPlayer is null) { return; }
+        if (Core.Players.LocalPlayer.State != PLAYERSTATE.ALIVE) { return; }
+
+        if (Input.IsActionJustPressed("TogglePlayerMode"))
+        {
+            Core.Players.LocalPlayer.Mode = Core.Players.LocalPlayer.Mode == PLAYERMODE.ATTACKING ? PLAYERMODE.BUILDING : PLAYERMODE.ATTACKING;
+        }
+
+        if (Core.Players.LocalPlayer.Mode == PLAYERMODE.BUILDING)
+        {
+            // If in build mode accept tower index shift
+            if (Input.IsActionJustPressed("BuildSelectLeft"))
+            {
+                Core.Players.LocalPlayer.TowerIDX--;
+                if (Core.Players.LocalPlayer.TowerIDX < 0) { Core.Players.LocalPlayer.TowerIDX = Core.Rules.towers.MaxIndex; }
+            }
+            if (Input.IsActionJustPressed("BuildSelectRight"))
+            {
+                Core.Players.LocalPlayer.TowerIDX++;
+                if (Core.Players.LocalPlayer.TowerIDX > Core.Rules.towers.MaxIndex) { Core.Players.LocalPlayer.TowerIDX = 0; }
+            }
+        }
     }
 
     //public static event EventHandler<PlayerAvatar> OnAvatarAssigned;

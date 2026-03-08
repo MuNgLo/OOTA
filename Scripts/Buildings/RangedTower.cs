@@ -2,6 +2,7 @@ using Godot;
 using System;
 using OOTA.Interfaces;
 using OOTA.Spawners;
+using System.Threading.Tasks;
 namespace OOTA.Buildings;
 
 public partial class RangedTower : BuildingBaseClass, IMind
@@ -22,6 +23,10 @@ public partial class RangedTower : BuildingBaseClass, IMind
     [Export] protected Node3D weaponPivot;
     [Export] protected Node3D weaponMuzzle;
 
+
+    public event EventHandler<float> OnAttack;
+    public event EventHandler<float> OnReload;
+
     public override void _PhysicsProcess(double delta)
     {
         if (!Multiplayer.IsServer()) { return; }
@@ -39,12 +44,18 @@ public partial class RangedTower : BuildingBaseClass, IMind
         }
     }
 
-    public virtual void AttackTarget()
+    public virtual async void AttackTarget()
     {
         weaponPivot.LookAt(target.GlobalPosition + Vector3.Up * 0.25f, Vector3.Up);
+
+
+        OnAttack?.Invoke(this, 1000.0f / attackCoolDownMS * 5.0f);
         Projectile proj = ProjectileSpawner.SpawnThisProjectile(new ProjectileSpawner.SpawnProjectileArgument(prefabProjectile.ResourcePath,
             Team, BuildDamage(baseDamage), projectileSpeed, projectileTTL, GetPath(), weaponMuzzle.GlobalRotation, weaponMuzzle.GlobalPosition
         ));
+
+        await Task.Delay(Mathf.FloorToInt(1000.0f / attackCoolDownMS * 5.0f));
+        OnReload?.Invoke(this, 1000.0f / attackCoolDownMS);
     }
 
     public void BodyEnteredAggroRange(Node3D body)

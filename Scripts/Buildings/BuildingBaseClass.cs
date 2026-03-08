@@ -7,12 +7,15 @@ using OOTA.Units;
 using OOTA.Enums;
 
 namespace OOTA.Buildings;
+
 public partial class BuildingBaseClass : StaticBody3D, ITargetable
 {
     [Export] protected TEAM team = TEAM.NONE;
     [Export] public TOWERTYPE towerType = TOWERTYPE.NONE;
 
     [ExportGroup("Stats")]
+    [Export] public int cost = 10000;
+
     [Export] public bool canTakeDamage = true;
     [Export] protected int maxNBofSupporters = 4;
     [Export] protected float aggroRange = 5.0f;
@@ -20,6 +23,13 @@ public partial class BuildingBaseClass : StaticBody3D, ITargetable
     [Export] protected float maxHealth = 100;
 
 
+    [ExportGroup("Upgrade")]
+    [Export] protected int maxTier = 10;
+    [Export] protected int upgradeBaseCost = 10;
+    [Export] protected int currentTier = 1;
+
+    public int CurrentRepairCost => Mathf.FloorToInt(((maxHealth - health) / maxHealth * cost) * 0.75f);
+    public int CurrentSellValue => Mathf.FloorToInt((cost - (maxHealth - health) / maxHealth * cost) * 0.5f);
     protected Node3D target;
     protected List<ITargetable> targets;
     protected List<ISupporter> supporters;
@@ -37,6 +47,8 @@ public partial class BuildingBaseClass : StaticBody3D, ITargetable
     public float CurrentSpeed => 0.0f;
 
 
+
+
     [ExportGroup("Team Meshes")]
     [Export] protected MeshInstance3D[] models;
 
@@ -51,7 +63,7 @@ public partial class BuildingBaseClass : StaticBody3D, ITargetable
         }
     }
     #region BaseClass Public Virtual
-       public virtual void Die()
+    public virtual void Die()
     {
         Core.Rules.BuildingDied(this);
     }
@@ -78,7 +90,7 @@ public partial class BuildingBaseClass : StaticBody3D, ITargetable
     #endregion
 
     #region BaseClass Private Virtual
- 
+
     private protected virtual void PickTarget()
     {
         if (targets.Count > 0)

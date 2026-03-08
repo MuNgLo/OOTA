@@ -5,12 +5,30 @@
 [ext_resource type="PackedScene" uid="uid://yoigwfaxc34a" path="res://Scenes/Projectiles/CannonBall.tscn" id="3_i6pne"]
 [ext_resource type="PackedScene" uid="uid://bdd36kaa4ccrl" path="res://Scenes/AwarenessArea3d.tscn" id="4_0fnpj"]
 [ext_resource type="Script" uid="uid://c3qkbidk7pl64" path="res://Scripts/HUD/HUDLabelMaker.cs" id="5_i6pne"]
+[ext_resource type="Script" uid="uid://cbp7lpxnkc8ec" path="res://Scripts/Buildings/RangedTowerAnimations.cs" id="6_0fnpj"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_4h01i"]
 height = 0.78759766
 radius = 0.395
 
-[node name="Trebuchet" unique_id=148523869 node_paths=PackedStringArray("weaponPivot", "weaponMuzzle", "models") instance=ExtResource("1_hdl73")]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_i6pne"]
+properties/0/path = NodePath(".:health")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:maxHealth")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:team")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:cost")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath(".:currentTier")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+
+[node name="Trebuchet" unique_id=2081756969 node_paths=PackedStringArray("weaponPivot", "weaponMuzzle", "models") instance=ExtResource("1_hdl73")]
 script = ExtResource("2_8igxr")
 attackRange = 14.0
 baseDamage = 250
@@ -18,13 +36,19 @@ attackCoolDownMS = 500
 prefabProjectile = ExtResource("3_i6pne")
 projectileSpeed = 16.0
 projectileTTL = 0.5
-weaponPivot = NodePath("Trebuchet/Pivot")
-weaponMuzzle = NodePath("Trebuchet/Pivot/Muzzle")
+weaponPivot = NodePath("Armature/Trebuchet/Pivot")
+weaponMuzzle = NodePath("Armature/Trebuchet/Pivot/Muzzle")
 towerType = 2
 aggroRange = 15.0
 health = 500.0
 maxHealth = 250.0
-models = [NodePath("Trebuchet")]
+models = [NodePath("Armature/Skeleton3D/Trebuchet")]
+
+[node name="Skeleton3D" parent="Armature" parent_id_path=PackedInt32Array(1913451290) index="1" unique_id=964435476]
+bones/2/rotation = Quaternion(0.6875429, 0.6875429, 0.1651811, 0.1651811)
+bones/3/rotation = Quaternion(-1.7763568e-15, -9.403954e-38, 1, 5.293956e-23)
+bones/4/rotation = Quaternion(0.55277735, 1.04941636e-22, -1.3252654e-22, 0.8333291)
+bones/5/rotation = Quaternion(0.18345028, 2.0195073e-23, -1.1485946e-22, 0.983029)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." index="1" unique_id=639538522]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.39379883, 0)
@@ -36,3 +60,10 @@ shape = SubResource("CylinderShape3D_4h01i")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8659342, 0)
 script = ExtResource("5_i6pne")
 building = NodePath("..")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="4" unique_id=1681725767]
+replication_config = SubResource("SceneReplicationConfig_i6pne")
+
+[node name="AnimationPlayer" parent="." index="5" unique_id=609930915 node_paths=PackedStringArray("tower")]
+script = ExtResource("6_0fnpj")
+tower = NodePath("..")

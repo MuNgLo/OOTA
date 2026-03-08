@@ -47,12 +47,22 @@ public partial class HUDInteractMenu : Control
 
     public override void _Process(double delta)
     {
-        if (Visible && selectedButton != -1 && Input.IsActionJustReleased("Place"))
+        if (Visible)
         {
-            interactions[selectedButton].action.Invoke();
-            Hide();
-            ProcessMode = ProcessModeEnum.Disabled;
-            Core.Players.LocalPlayer.Mode = PLAYERMODE.BUILDING;
+            if (selectedButton != -1 && Input.IsActionJustReleased("Place"))
+            {
+                interactions[selectedButton].action.Invoke();
+                Hide();
+                ProcessMode = ProcessModeEnum.Disabled;
+                Core.Players.LocalPlayer.Mode = PLAYERMODE.BUILDING;
+                return;
+            }
+            if (!Input.IsActionPressed("Place"))
+            {
+                Hide();
+                ProcessMode = ProcessModeEnum.Disabled;
+                Core.Players.LocalPlayer.Mode = PLAYERMODE.BUILDING;
+            }
         }
     }
 

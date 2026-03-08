@@ -12,12 +12,11 @@ public partial class Barracks : Foundation
     [Export] ulong coolDownMS = 5000;
     [Export] Node3D spawnPoint;
 
-    [Export] int maxTier = 10;
-    [Export] int upgradeBaseCost = 10;
 
-    int tier = 1;
 
     ulong tsLastSpawn = 0;
+
+    public int ProductionUpgradeCost => upgradeBaseCost * currentTier;
 
     public override void _Ready()
     {
@@ -50,7 +49,7 @@ public partial class Barracks : Foundation
     public override List<PlayerActionStruct> GetInteractions(Vector2I coord)
     {
         List<PlayerActionStruct> interActions = new List<PlayerActionStruct>();
-        if (tier < maxTier)
+        if (currentTier < maxTier)
         {
             interActions.Add(UpgradeProductionAction(coord));
         }
@@ -63,17 +62,20 @@ public partial class Barracks : Foundation
         {
             Coord = coord,
             ToolTip = "Production",
-            Cost = upgradeBaseCost * tier,
+            Cost = ProductionUpgradeCost,
             modulate = Colors.RoyalBlue,
             texture = ResourceLoader.Load<Texture2D>("res://Images/Icons/BuildTime.png"),
-            action = () => { UpgradeProduction(); }
+            action = () => { Core.Rules.PlayerRequestUpgradeProduction(coord); }
         };
     }
 
-    private void UpgradeProduction()
+    public void UpgradeProduction()
     {
-        coolDownMS -= 200;
-        tier++;
+        if (Multiplayer.IsServer())
+        {
+            coolDownMS -= 200;
+            currentTier++;
+        }
     }
 
     #endregion

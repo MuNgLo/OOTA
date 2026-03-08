@@ -9,6 +9,23 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_33u83"]
 size = Vector3(0.328, 0.5, 0.321)
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_5e5jo"]
+properties/0/path = NodePath(".:health")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:maxHealth")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:cost")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:currentTier")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+properties/4/path = NodePath(".:team")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+
 [node name="Ballista2" unique_id=1187934347 node_paths=PackedStringArray("weaponPivot", "weaponMuzzle", "models") instance=ExtResource("1_vyvu3")]
 collision_layer = 8
 collision_mask = 0
@@ -35,3 +52,7 @@ shape = SubResource("BoxShape3D_33u83")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.41123956, 0)
 script = ExtResource("5_5e5jo")
 building = NodePath("..")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." index="4" unique_id=1512962179]
+replication_config = SubResource("SceneReplicationConfig_5e5jo")
+visibility_update_mode = 1

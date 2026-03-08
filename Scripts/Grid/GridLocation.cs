@@ -93,12 +93,12 @@ public class GridLocation
         List<PlayerActionStruct> interactions = new List<PlayerActionStruct>();
 
         // Check repair option
-        if (foundation is not null && foundation.Health < foundation.MaxHealth) { interactions.Add(PlayerActionStruct.Repair(coord, 1)); }
-        else if (building is not null && building.Health < building.MaxHealth) { interactions.Add(PlayerActionStruct.Repair(coord, 10)); }
+        if (foundation is not null && foundation.Health < foundation.MaxHealth) { interactions.Add(PlayerActionStruct.Repair(coord, foundation.CurrentRepairCost)); }
+        else if (building is not null && building.Health < building.MaxHealth) { interactions.Add(PlayerActionStruct.Repair(coord, building.CurrentRepairCost)); }
 
         // Check Sell option
-        if (building is not null && building.canTakeDamage) { interactions.Add(PlayerActionStruct.Sell(coord, 10)); }
-        else if (foundation is not null && foundation.canTakeDamage) { interactions.Add(PlayerActionStruct.Sell(coord, 2)); }
+        if (building is not null && building.canTakeDamage) { interactions.Add(PlayerActionStruct.Sell(coord, building.CurrentSellValue)); }
+        else if (foundation is not null && foundation.canTakeDamage) { interactions.Add(PlayerActionStruct.Sell(coord, foundation.CurrentSellValue)); }
 
         // Add building's interactions
         if(building is not null)

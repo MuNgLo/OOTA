@@ -31,6 +31,9 @@ public partial class OOTAPublicData : PublicData
     [Export] public TEAM Team { get => team; set => SetTeam(value); }
     TEAM team = TEAM.NONE;
 
+    #region Unsynced
+    public int towerIDX = 0;
+    #endregion 
 
     private void SetTeam(TEAM value)
     {
