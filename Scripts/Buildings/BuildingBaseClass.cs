@@ -28,8 +28,8 @@ public partial class BuildingBaseClass : StaticBody3D, ITargetable
     [Export] protected int upgradeBaseCost = 10;
     [Export] protected int currentTier = 1;
 
-    public int CurrentRepairCost => Mathf.FloorToInt(((maxHealth - health) / maxHealth * cost) * 0.75f);
-    public int CurrentSellValue => Mathf.FloorToInt((cost - (maxHealth - health) / maxHealth * cost) * 0.5f);
+    public int CurrentRepairCost => Mathf.CeilToInt(((maxHealth - health) / maxHealth * cost) * 0.75f);
+    public int CurrentSellValue => Mathf.CeilToInt((cost - (maxHealth - health) / maxHealth * cost) * 0.5f);
     protected Node3D target;
     protected List<ITargetable> targets;
     protected List<ISupporter> supporters;

@@ -109,6 +109,10 @@ public partial class LocalLogic : Node
         }
 
         if (Core.Players.LocalPlayer is null) { return; }
+
+		// Voip as soon as we have a player object representing us on the network
+		GetTree().Root.GetNode("Main/MicIn").Set("talking", Input.IsActionPressed("PTT"));
+
         if (Core.Players.LocalPlayer.State != PLAYERSTATE.ALIVE) { return; }
 
         if (Input.IsActionJustPressed("TogglePlayerMode"))

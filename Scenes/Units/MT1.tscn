@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://btxk033l7oxdm" path="res://Scripts/Units/UnitMelee.cs" id="1_33ws7"]
 [ext_resource type="PhysicsMaterial" uid="uid://dr8slojgt6lyu" path="res://Materials/Physics/UnitsDefault.tres" id="1_bhn57"]
 [ext_resource type="Script" uid="uid://c3qkbidk7pl64" path="res://Scripts/HUD/HUDLabelMaker.cs" id="2_en7ll"]
-[ext_resource type="ArrayMesh" uid="uid://ou8eropuulea" path="res://Meshes/Warrior.res" id="3_44h1n"]
+[ext_resource type="ArrayMesh" uid="uid://c0ykmob0wayv1" path="res://Meshes/Warrior.res" id="3_44h1n"]
 [ext_resource type="Script" uid="uid://c3op6rxgnm80" path="res://Scripts/Components/AwarenessArea3D.cs" id="4_lk8eg"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_33ws7"]
@@ -34,7 +34,7 @@ axis_lock_angular_y = true
 axis_lock_angular_z = true
 physics_material_override = ExtResource("1_bhn57")
 script = ExtResource("1_33ws7")
-moveSpeed = 4.0
+moveSpeed = 3.0
 damage = 20
 attackRange = 0.5
 

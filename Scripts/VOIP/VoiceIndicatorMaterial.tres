@@ -1,0 +1,16 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://diq5l02env4yy"]
+
+[ext_resource type="Shader" uid="uid://dfvbi0dqypsjy" path="res://Scripts/VOIP/VOIPLevelShader.gdshader" id="1_pmw7a"]
+
+[resource]
+resource_local_to_scene = true
+shader = ExtResource("1_pmw7a")
+shader_parameter/backgroundcolor = Color(0.1, 0.2, 0.8, 1)
+shader_parameter/voxThresholdColor = Color(0.68235296, 0.57254905, 0, 1)
+shader_parameter/voxchunkmaxcolor = Color(0.73333335, 0, 0.47058824, 0.6509804)
+shader_parameter/voxwavecolor = Color(0.12909243, 0.47097027, 0.4041798, 1)
+shader_parameter/voxThresHold = 0.2
+shader_parameter/chunkmax = 0.0
+shader_parameter/chunkMaxPersist = 0.0
+shader_parameter/speechNoiseProbability = 0.0
+shader_parameter/chunkTextEnabled = false

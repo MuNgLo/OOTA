@@ -1,8 +1,12 @@
 [gd_scene format=3 uid="uid://do6g4exfmgrb4"]
 
+[ext_resource type="Script" uid="uid://cteeid4k5v6ym" path="res://Scripts/VOIP/VOIPInput.gd" id="1_tt1x2"]
+[ext_resource type="Script" uid="uid://cnejboegjbss1" path="res://Scripts/VOIP/VOIPInputDevice.gd" id="2_2wrh7"]
+[ext_resource type="Material" uid="uid://diq5l02env4yy" path="res://Scripts/VOIP/VoiceIndicatorMaterial.tres" id="3_atu2d"]
 [ext_resource type="PackedScene" uid="uid://bj484sau2we4n" path="res://Scenes/Pickups/Health.tscn" id="3_bmxlf"]
 [ext_resource type="PackedScene" uid="uid://evcej7t3o6vg" path="res://Scenes/CameraTracker.tscn" id="3_pbw6q"]
 [ext_resource type="PackedScene" uid="uid://cab4ia5tx3mr0" path="res://Scenes/HUD/GoldCounter.tscn" id="4_rgh2o"]
+[ext_resource type="Script" uid="uid://dfwu10s2jbst5" path="res://Scripts/VOIP/VOIPMicLevel.gd" id="4_x5wht"]
 [ext_resource type="Script" uid="uid://du4kk6xseht4l" path="res://Scripts/GameLogic/Waves.cs" id="5_4kpch"]
 [ext_resource type="Material" uid="uid://bdpvphxt80dv3" path="res://Materials/TeamLeft.tres" id="5_frkhe"]
 [ext_resource type="Script" uid="uid://ewx8khoihbgr" path="res://Scripts/Core.cs" id="5_pbw6q"]
@@ -988,6 +992,42 @@ emission_energy_multiplier = 3.2
 [sub_resource type="PlaneMesh" id="PlaneMesh_8n4h5"]
 
 [node name="Main" type="Node3D" unique_id=1609698201]
+
+[node name="MicIn" type="Node" parent="." unique_id=93052111 node_paths=PackedStringArray("micLevel")]
+script = ExtResource("1_tt1x2")
+deNoise = true
+micLevel = NodePath("OptionButton/ColorRect")
+
+[node name="OptionButton" type="OptionButton" parent="MicIn" unique_id=855867007 node_paths=PackedStringArray("btnMicEnabled")]
+offset_left = 28.0
+offset_top = 373.0
+offset_right = 300.0
+offset_bottom = 404.0
+fit_to_longest_item = false
+script = ExtResource("2_2wrh7")
+btnMicEnabled = NodePath("CheckButton")
+
+[node name="CheckButton" type="CheckButton" parent="MicIn/OptionButton" unique_id=1929079780]
+layout_mode = 0
+offset_left = 278.0
+offset_right = 326.0
+offset_bottom = 31.0
+
+[node name="ColorRect" type="ColorRect" parent="MicIn/OptionButton" unique_id=512504054]
+material = ExtResource("3_atu2d")
+layout_mode = 0
+offset_top = 34.0
+offset_right = 326.0
+offset_bottom = 56.0
+script = ExtResource("4_x5wht")
+
+[node name="Label" type="Label" parent="MicIn/OptionButton" unique_id=860850006]
+layout_mode = 0
+offset_top = -60.0
+offset_right = 340.0
+offset_bottom = -11.0
+text = "Mic related stuff. Temporary UI. F8 to toggle
+Use Mouse 4 or V for voice communication"
 
 [node name="Core" type="Node" parent="." unique_id=1977013728 node_paths=PackedStringArray("lobby", "players", "rules", "grid")]
 script = ExtResource("5_pbw6q")

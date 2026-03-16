@@ -10,6 +10,10 @@
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_kyqiw"]
 friction = 0.0
 
+[sub_resource type="Curve" id="Curve_fente"]
+_data = [Vector2(0, 1), 0.0, -1.0, 0, 1, Vector2(1, 0), -1.0, 0.0, 1, 0]
+point_count = 2
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_cvnsp"]
 radius = 0.2
 height = 0.6
@@ -45,7 +49,8 @@ mass = 10.0
 physics_material_override = SubResource("PhysicsMaterial_kyqiw")
 script = ExtResource("1_cvnsp")
 team = 1
-moveSpeed = 10.0
+moveSpeed = 8.0
+accelerationCurve = SubResource("Curve_fente")
 jumpForce = 5.0
 jumpCoolDownMS = 860.0
 weaponPivot = NodePath(".")
