@@ -45,7 +45,7 @@ public partial class UISettingsEntry : Control
     {
         // Listen for config changes
         Settings.OnSettingsChange += WhenSettingsChange;
-        // Listen for keybinds
+        // Listen for keyBinds
         UIKeybindPopup.OnKeyBindUpdated += WhenNewKeyBindIsMade;
         // GrabChildren
         foreach (Control child in elementParent.GetChildren())
@@ -73,7 +73,7 @@ public partial class UISettingsEntry : Control
         if (toggleButton is not null) { toggleButton.Toggled += WhenToggleToggled; }
         if (toggleBox is not null) { toggleBox.Toggled += WhenToggleToggled; }
         if (btnColourPicker is not null) { btnColourPicker.PopupClosed += WhenBtnColPickPopUpClosed; }
-        if (btnReset is not null) { btnReset.Pressed += WhenbtnResetPressed; }
+        if (btnReset is not null) { btnReset.Pressed += WhenBtnResetPressed; }
         dropdown.ItemSelected += WhenItemSelected;
 
         VisibilityChanged += WhenVisibilityChanged;
@@ -677,7 +677,7 @@ public partial class UISettingsEntry : Control
 
 
     #region Listeners
-    private void WhenbtnResetPressed()
+    private void WhenBtnResetPressed()
     {
         Settings.ResetField(settingsName, fieldTarget, "");
         FieldInfo fieldInfo = Config.GetType().GetField(fieldTarget);
@@ -686,7 +686,7 @@ public partial class UISettingsEntry : Control
             PropertyInfo pInfo = Config.GetType().GetProperty(fieldTarget);
             if (pInfo is null)
             {
-                GD.PushError($"UISettingsEntry::WhenbtnResetPressed() fieldInfo[{fieldTarget}] returned as NULL! Neither Field or Property found");
+                GD.PushError($"UISettingsEntry::WhenBtnResetPressed() fieldInfo[{fieldTarget}] returned as NULL! Neither Field or Property found");
                 return;
             }
             SetupProperty(settingsName, pInfo);
