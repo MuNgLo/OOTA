@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bj484sau2we4n"]
 
 [ext_resource type="Script" uid="uid://ps8tc1kxgp34" path="res://Scripts/Commons/Pickup.cs" id="1_2docl"]
-[ext_resource type="ArrayMesh" uid="uid://48o2epurkxpr" path="res://Meshes/Heart.res" id="2_c2c7p"]
+[ext_resource type="ArrayMesh" uid="uid://cbymumsknkg8n" path="res://Meshes/Heart.res" id="2_c2c7p"]
 [ext_resource type="Script" uid="uid://ceshj47msk6h6" path="res://Scripts/Components/TimeToLive.cs" id="3_c2c7p"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_inam1"]

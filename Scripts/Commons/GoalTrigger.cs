@@ -27,7 +27,6 @@ public partial class GoalTrigger : Area3D
 
     private void WhenBodyEntered(Node3D body)
     {
-        //GD.Print($"GoalTrigger: Body entered {body.Name} Trigger Team: {team}   Body Team: {(body is UnitBaseClass unit2 ? unit2.Team.ToString() : "N/A")}");
         if (body is UnitBaseClass unit && unit.Team != team)
         {
             Core.Rules.UnitReachedGoal(unit);

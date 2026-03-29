@@ -105,7 +105,7 @@ func addAudioPacket(packet):
 				for i in range(Noutoforderqueue):
 					outoforderchunkqueue.push_back(null)
 				opusframequeuecount = 0
-				assert (Npacketinitialbatching < Noutoforderqueue)
+				#assert (Npacketinitialbatching < Noutoforderqueue)
 				runningLagTimeMinimum = -1.0
 
 			elif h.has("talkingtimeend"):
@@ -139,7 +139,7 @@ func addAudioPacket(packet):
 			
 		if opusframecountR >= 0:
 			while opusframecountR >= Noutoforderqueue:
-				print("shifting outoforderqueue ", opusframecountI, " ", ("null" if outoforderchunkqueue[0] == null else len(outoforderchunkqueue[0])))
+				#print("shifting outoforderqueue ", opusframecountI, " ", ("null" if outoforderchunkqueue[0] == null else len(outoforderchunkqueue[0])))
 				if outoforderchunkqueue[0] != null:
 					audioStreamPlaybackOpus.push_opus_packet(outoforderchunkqueue[0], lenchunkprefix, 0)
 					opusframequeuecount -= 1
@@ -197,4 +197,4 @@ var sinewaveoutmode = false
 func set_sinewave_out(toggled_on):
 	sinewaveoutmode = toggled_on
 	if audioStreamPlaybackOpus:
-		audioStreamPlaybackOpus.set_sinewave_frames(audioStreamOpus.opus_sample_rate/440 if toggled_on else 0, 0.05)
+		audioStreamPlaybackOpus.set_sinewave_frames(int(audioStreamOpus.opus_sample_rate/440) if toggled_on else 0, 0.05)

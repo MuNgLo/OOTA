@@ -18,12 +18,12 @@ public partial class PublicData : MLobbyBaseNode
         if (playerName == value) { return; }
         playerName = value;
         if(!IsInsideTree()){ return;}
-        //GD.Print("PlayerName set GOAL!");
         MLobbyPlayerEvents.RaiseOnPlayersChanged();
         if ( Multiplayer.GetUniqueId() == PeerID)
         {
-            GD.Print("TODO add player name change event");
-            //LocalLogic.HealthChanged([Health, MaxHealth]);
+            GameConfigSettings config = MSettings.Settings.GetCachedSettings("GameConfigSettings") as GameConfigSettings;
+			config.playerName = playerName;
+			MSettings.Settings.SaveSettings(config, "Configs");
         }
     }
 }// EOF CLASS

@@ -4,11 +4,13 @@
 [ext_resource type="Theme" uid="uid://37lnj814yiul" path="res://Theme/Theme.tres" id="2_mlnba"]
 [ext_resource type="Script" uid="uid://bg4y50ylwoi4o" path="res://Scripts/UI/UIMainMenu.cs" id="2_sbixj"]
 [ext_resource type="Script" uid="uid://cv7k0r0fory6d" path="res://Scripts/UI/UIMainMenuFlipper.cs" id="3_5rw6b"]
+[ext_resource type="PackedScene" uid="uid://ccka1uc6yid6x" path="res://Scenes/UI/UISettingsMenu.tscn" id="4_px0f3"]
 [ext_resource type="Script" uid="uid://dweiqpt2q5hm7" path="res://Scripts/UI/UILobbyKey.cs" id="5_lm4vy"]
 [ext_resource type="Texture2D" uid="uid://bjn7065aapivj" path="res://Images/Icons/PWEye.png" id="6_4umi5"]
 [ext_resource type="Script" uid="uid://cp5o0ayt806am" path="res://Scripts/UI/UIGameVersion.cs" id="7_4umi5"]
 [ext_resource type="Script" uid="uid://cxfv0eolh1b80" path="res://Scripts/UI/UIPlayerList.cs" id="8_aai8q"]
 [ext_resource type="PackedScene" uid="uid://cu1yynbdjctcx" path="res://Scenes/UI/UIPlayerListEntry.tscn" id="9_yipmn"]
+[ext_resource type="Texture2D" uid="uid://v6ej08nhwykc" path="res://Images/Icons/SettingsCog.png" id="11_tba07"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5rw6b"]
 content_margin_left = 0.0
@@ -27,8 +29,6 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 corner_detail = 1
 
-[sub_resource type="Theme" id="Theme_cdwq0"]
-
 [node name="CanvasMENUS" type="CanvasLayer" unique_id=1834781793]
 script = ExtResource("1_q3xfn")
 
@@ -45,6 +45,42 @@ offset_right = 100.0
 offset_bottom = 150.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Control3" type="Control" parent="Control" unique_id=1987597075]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -507.0
+offset_top = -150.0
+offset_right = 73.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control2" type="Control" parent="Control/Control3" unique_id=111170291]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_bottom = 150.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="SettingsMenu" parent="Control/Control3/Control2" unique_id=917039662 node_paths=PackedStringArray("btnCog") instance=ExtResource("4_px0f3")]
+layout_mode = 1
+offset_left = 27.0
+offset_right = 127.0
+offset_bottom = 0.0
+transitionDuration = 0.25
+btnCog = NodePath("../../../btnSettingsMenu")
 
 [node name="PlayerList" type="Control" parent="Control" unique_id=237764510]
 layout_mode = 1
@@ -81,29 +117,6 @@ theme_override_constants/margin_bottom = 10
 [node name="GridContainer" type="GridContainer" parent="Control/PlayerList/GridContainer/PanelContainer/MarginContainer" unique_id=1751545414]
 layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="Control/PlayerList/GridContainer/PanelContainer/MarginContainer/GridContainer" unique_id=1332955188]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="RichTextLabel" type="RichTextLabel" parent="Control/PlayerList/GridContainer/PanelContainer/MarginContainer/GridContainer/GridContainer" unique_id=237817629]
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"feedbackText"
-text = "Your Player Name"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="CenterContainer" type="CenterContainer" parent="Control/PlayerList/GridContainer/PanelContainer/MarginContainer/GridContainer/GridContainer" unique_id=768358871]
-layout_mode = 2
-
-[node name="PlayerNameEdit" type="LineEdit" parent="Control/PlayerList/GridContainer/PanelContainer/MarginContainer/GridContainer/GridContainer/CenterContainer" unique_id=605673064]
-custom_minimum_size = Vector2(120, 0)
-layout_mode = 2
-placeholder_text = "duuhh"
-alignment = 1
-select_all_on_focus = true
-
 [node name="RichTextLabel2" type="RichTextLabel" parent="Control/PlayerList/GridContainer/PanelContainer/MarginContainer/GridContainer" unique_id=1959965798]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
@@ -113,19 +126,17 @@ text = "Players"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="GridContainer2" type="GridContainer" parent="Control/PlayerList/GridContainer/PanelContainer/MarginContainer/GridContainer" unique_id=7225547 node_paths=PackedStringArray("playerList", "playerNameEdit")]
+[node name="GridContainer2" type="GridContainer" parent="Control/PlayerList/GridContainer/PanelContainer/MarginContainer/GridContainer" unique_id=7225547 node_paths=PackedStringArray("playerList")]
 layout_mode = 2
 script = ExtResource("8_aai8q")
 playerList = NodePath("../../../../..")
-playerNameEdit = NodePath("../GridContainer/CenterContainer/PlayerNameEdit")
-playerListDuration = 0.5
 prefabPlayerEntry = ExtResource("9_yipmn")
 
 [node name="Control2" type="Control" parent="Control/PlayerList/GridContainer" unique_id=735978306]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 
-[node name="MainMenu" type="PanelContainer" parent="Control" unique_id=375434091 node_paths=PackedStringArray("feedBackText", "btnHost", "btnStartHost", "btnStopHost", "btnJoin", "btnConnect", "btnDisConnect", "btnExit", "btnResume", "btnCloseMenu", "btnReady", "hostMaxPlayers", "hostPort", "lobbyKey")]
+[node name="MainMenu" type="PanelContainer" parent="Control" unique_id=375434091 node_paths=PackedStringArray("feedBackText", "btnHost", "btnStartHost", "btnStopHost", "btnJoin", "btnConnect", "btnDisConnect", "btnExit", "btnResume", "btnCloseMenu", "btnReady", "lobbyKey")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -144,8 +155,6 @@ btnExit = NodePath("MarginContainer/GridContainer/MarginContainer4/btnExit")
 btnResume = NodePath("MarginContainer/GridContainer/MarginContainer4/btnResume")
 btnCloseMenu = NodePath("../btnCloseMenu")
 btnReady = NodePath("MarginContainer/GridContainer/MarginContainer5/GridContainer/btnReady")
-hostMaxPlayers = NodePath("MarginContainer/GridContainer/MarginContainer2/GridContainer/HBoxContainer/maxPlayers")
-hostPort = NodePath("MarginContainer/GridContainer/MarginContainer2/GridContainer/HBoxContainer/port")
 lobbyKey = NodePath("MarginContainer/GridContainer/MarginContainer3/GridContainer/HBoxContainer/lobbyKey")
 
 [node name="MarginContainer" type="MarginContainer" parent="Control/MainMenu" unique_id=839824102]
@@ -199,50 +208,15 @@ menu = NodePath("../../../..")
 groupOneState = 1
 groupOneElements = [NodePath("btnHost")]
 groupTwoState = 2
-groupTwoElements = [NodePath("HBoxContainer"), NodePath("btnStartHost")]
+groupTwoElements = [NodePath("btnStartHost")]
 groupThreeState = 6
 groupThreeElements = [NodePath("btnStopHost")]
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Control/MainMenu/MarginContainer/GridContainer/MarginContainer2/GridContainer" unique_id=654964909]
-visible = false
-layout_mode = 2
-
-[node name="Label" type="RichTextLabel" parent="Control/MainMenu/MarginContainer/GridContainer/MarginContainer2/GridContainer/HBoxContainer" unique_id=556600409]
-custom_minimum_size = Vector2(16, 0)
-layout_mode = 2
-theme_type_variation = &"FooterText"
-text = "P:"
-vertical_alignment = 1
-
-[node name="maxPlayers" type="SpinBox" parent="Control/MainMenu/MarginContainer/GridContainer/MarginContainer2/GridContainer/HBoxContainer" unique_id=518729529]
-layout_mode = 2
-theme = SubResource("Theme_cdwq0")
-min_value = 2.0
-max_value = 10.0
-step = 2.0
-value = 2.0
-alignment = 1
-
-[node name="Label2" type="RichTextLabel" parent="Control/MainMenu/MarginContainer/GridContainer/MarginContainer2/GridContainer/HBoxContainer" unique_id=1934893292]
-custom_minimum_size = Vector2(39.685, 0)
-layout_mode = 2
-theme_type_variation = &"FooterText"
-text = "Port:"
-autowrap_mode = 0
-vertical_alignment = 1
-
-[node name="port" type="LineEdit" parent="Control/MainMenu/MarginContainer/GridContainer/MarginContainer2/GridContainer/HBoxContainer" unique_id=1525482679]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_type_variation = &"SpinBoxInnerLineEdit"
-text = "27015"
-alignment = 1
-select_all_on_focus = true
-virtual_keyboard_type = 2
 
 [node name="btnHost" type="Button" parent="Control/MainMenu/MarginContainer/GridContainer/MarginContainer2/GridContainer" unique_id=926529676]
 layout_mode = 2
 size_flags_horizontal = 3
+focus_neighbor_top = NodePath("../../../MarginContainer4/btnExit")
+focus_neighbor_bottom = NodePath("../../../MarginContainer3/GridContainer/btnJoin")
 text = "HOST"
 
 [node name="btnStartHost" type="Button" parent="Control/MainMenu/MarginContainer/GridContainer/MarginContainer2/GridContainer" unique_id=1282274153]
@@ -380,6 +354,8 @@ grow_horizontal = 2
 theme_type_variation = &"SpinBoxInnerLineEdit"
 text = "h2kFlulM"
 alignment = 1
+editable = false
+select_all_on_focus = true
 
 [node name="Button" type="Button" parent="Control/MainMenu/MarginContainer/GridContainer/LobbyKey" unique_id=900854611]
 layout_mode = 1
@@ -397,6 +373,7 @@ size_flags_horizontal = 8
 text = "COPY   "
 
 [node name="TextureButton" type="TextureButton" parent="Control/MainMenu/MarginContainer/GridContainer/LobbyKey" unique_id=638390119]
+modulate = Color(0.8117647, 0.33333334, 0.18431373, 1)
 clip_contents = true
 layout_mode = 0
 offset_right = 20.0
@@ -449,3 +426,14 @@ grow_vertical = 0
 text = "9999"
 horizontal_alignment = 2
 script = ExtResource("7_4umi5")
+
+[node name="btnSettingsMenu" type="Button" parent="Control" unique_id=1168057647]
+layout_mode = 0
+offset_left = -11.0
+offset_top = 294.0
+offset_right = 19.0
+offset_bottom = 314.0
+tooltip_text = "Settings"
+theme_type_variation = &"IconColor"
+icon = ExtResource("11_tba07")
+expand_icon = true

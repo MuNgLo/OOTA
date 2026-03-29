@@ -1,12 +1,9 @@
 [gd_scene format=3 uid="uid://do6g4exfmgrb4"]
 
 [ext_resource type="Script" uid="uid://cteeid4k5v6ym" path="res://Scripts/VOIP/VOIPInput.gd" id="1_tt1x2"]
-[ext_resource type="Script" uid="uid://cnejboegjbss1" path="res://Scripts/VOIP/VOIPInputDevice.gd" id="2_2wrh7"]
-[ext_resource type="Material" uid="uid://diq5l02env4yy" path="res://Scripts/VOIP/VoiceIndicatorMaterial.tres" id="3_atu2d"]
 [ext_resource type="PackedScene" uid="uid://bj484sau2we4n" path="res://Scenes/Pickups/Health.tscn" id="3_bmxlf"]
 [ext_resource type="PackedScene" uid="uid://evcej7t3o6vg" path="res://Scenes/CameraTracker.tscn" id="3_pbw6q"]
 [ext_resource type="PackedScene" uid="uid://cab4ia5tx3mr0" path="res://Scenes/HUD/GoldCounter.tscn" id="4_rgh2o"]
-[ext_resource type="Script" uid="uid://dfwu10s2jbst5" path="res://Scripts/VOIP/VOIPMicLevel.gd" id="4_x5wht"]
 [ext_resource type="Script" uid="uid://du4kk6xseht4l" path="res://Scripts/GameLogic/Waves.cs" id="5_4kpch"]
 [ext_resource type="Material" uid="uid://bdpvphxt80dv3" path="res://Materials/TeamLeft.tres" id="5_frkhe"]
 [ext_resource type="Script" uid="uid://ewx8khoihbgr" path="res://Scripts/Core.cs" id="5_pbw6q"]
@@ -68,6 +65,7 @@
 [ext_resource type="Script" uid="uid://ccb6y6q6cop4w" path="res://Scripts/Difficulty.cs" id="43_4clwk"]
 [ext_resource type="Material" uid="uid://bsch310uncfdb" path="res://Materials/Ground.tres" id="44_m4llh"]
 [ext_resource type="Script" uid="uid://ckgv4qp8fmgcj" path="res://Scripts/GameLogic/Placer.cs" id="53_t3x2a"]
+[ext_resource type="Script" uid="uid://c7snqx85lqnaf" path="res://Scripts/SettingsEnforcer.cs" id="55_as1io"]
 [ext_resource type="Script" uid="uid://bwm6v2ycfwd0v" path="res://Scripts/Grid/GridNavigation.cs" id="55_yisvs"]
 [ext_resource type="PackedScene" uid="uid://bfc78fg22gbp0" path="res://Scenes/HUD/HUDPostGameReport.tscn" id="60_yic5e"]
 [ext_resource type="PackedScene" uid="uid://i31e3y00mv2j" path="res://Scenes/HUD/HUDInteractMenu.tscn" id="62_h2tpa"]
@@ -993,42 +991,6 @@ emission_energy_multiplier = 3.2
 
 [node name="Main" type="Node3D" unique_id=1609698201]
 
-[node name="MicIn" type="Node" parent="." unique_id=93052111 node_paths=PackedStringArray("micLevel")]
-script = ExtResource("1_tt1x2")
-deNoise = true
-micLevel = NodePath("OptionButton/ColorRect")
-
-[node name="OptionButton" type="OptionButton" parent="MicIn" unique_id=855867007 node_paths=PackedStringArray("btnMicEnabled")]
-offset_left = 28.0
-offset_top = 373.0
-offset_right = 300.0
-offset_bottom = 404.0
-fit_to_longest_item = false
-script = ExtResource("2_2wrh7")
-btnMicEnabled = NodePath("CheckButton")
-
-[node name="CheckButton" type="CheckButton" parent="MicIn/OptionButton" unique_id=1929079780]
-layout_mode = 0
-offset_left = 278.0
-offset_right = 326.0
-offset_bottom = 31.0
-
-[node name="ColorRect" type="ColorRect" parent="MicIn/OptionButton" unique_id=512504054]
-material = ExtResource("3_atu2d")
-layout_mode = 0
-offset_top = 34.0
-offset_right = 326.0
-offset_bottom = 56.0
-script = ExtResource("4_x5wht")
-
-[node name="Label" type="Label" parent="MicIn/OptionButton" unique_id=860850006]
-layout_mode = 0
-offset_top = -60.0
-offset_right = 340.0
-offset_bottom = -11.0
-text = "Mic related stuff. Temporary UI. F8 to toggle
-Use Mouse 4 or V for voice communication"
-
 [node name="Core" type="Node" parent="." unique_id=1977013728 node_paths=PackedStringArray("lobby", "players", "rules", "grid")]
 script = ExtResource("5_pbw6q")
 lobby = NodePath("LobbyManager")
@@ -1066,7 +1028,6 @@ playerPrefab = ExtResource("12_6ehlx")
 
 [node name="GameLogic" type="Node" parent="Core" unique_id=1852553460 node_paths=PackedStringArray("gameStats", "towers", "arenaBuilder")]
 script = ExtResource("11_yisvs")
-startGold = 1000
 gameStats = NodePath("GameStats")
 towers = NodePath("Towers")
 towerPrefab = SubResource("PackedScene_5gwyn")
@@ -1147,6 +1108,13 @@ script = ExtResource("53_t3x2a")
 worldRoot = NodePath("../../NavigationRegion3D")
 placeBlocker = NodePath("../../NavBlock")
 navMesh = SubResource("NavigationMesh_1bbis")
+
+[node name="MicIn" type="Node" parent="Core" unique_id=894098729]
+script = ExtResource("1_tt1x2")
+deNoise = true
+
+[node name="SettingsEnforcer" type="Node" parent="Core" unique_id=862615752]
+script = ExtResource("55_as1io")
 
 [node name="CanvasHUD" type="CanvasLayer" parent="." unique_id=1983381410 node_paths=PackedStringArray("persistent")]
 script = ExtResource("30_vvnwx")

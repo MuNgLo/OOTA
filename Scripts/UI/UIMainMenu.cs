@@ -8,70 +8,77 @@ public enum MENUSTATE { NONE, START, HOST, JOIN, HOSTING, CONNECTED, PLAYING }
 [GlobalClass]
 public partial class UIMainMenu : PanelContainer
 {
-    [Export] RichTextLabel feedBackText;
+	[Export] RichTextLabel feedBackText;
 
-    [ExportGroup("Navigation Btns")]
-    [Export] Button btnHost;
-    [Export] Button btnStartHost;
-    [Export] Button btnStopHost;
-    [Export] Button btnJoin;
-    [Export] Button btnConnect;
-    [Export] Button btnDisConnect;
-    [Export] Button btnExit;
-    [Export] Button btnResume;
-    [Export] Button btnCloseMenu;
-    [Export] Button btnReady;
+	[ExportGroup("Navigation Btns")]
+	[Export] Button btnHost;
+	[Export] Button btnStartHost;
+	[Export] Button btnStopHost;
+	[Export] Button btnJoin;
+	[Export] Button btnConnect;
+	[Export] Button btnDisConnect;
+	[Export] Button btnExit;
+	[Export] Button btnResume;
+	[Export] Button btnCloseMenu;
+	[Export] Button btnReady;
 
-    [ExportGroup("Host settings")]
-    [Export] SpinBox hostMaxPlayers;
-    [Export] LineEdit hostPort;
-    [Export] LineEdit lobbyKey;
+	[ExportGroup("Host settings")]
+	[Export] SpinBox hostMaxPlayers;
+	[Export] LineEdit hostPort;
+	[Export] LineEdit lobbyKey;
 
-    MENUSTATE state = MENUSTATE.START;
-    public MENUSTATE State { get => state; set => ChangeState(value); }
+	MENUSTATE state = MENUSTATE.START;
+	public MENUSTATE State { get => state; set => ChangeState(value); }
 
-    public event EventHandler<MENUSTATE> OnMenuStateChanged;
+	public event EventHandler<MENUSTATE> OnMenuStateChanged;
 
 
-    public override void _EnterTree()
-    {
-        LocalLogic.mainMenu = this;
-    }
+	public override void _EnterTree()
+	{
+		LocalLogic.mainMenu = this;
+	}
 
-    public override void _Ready()
-    {
-        state = MENUSTATE.START;
-        OnMenuStateChanged?.Invoke(null, MENUSTATE.START);
-        // Hook up buttons
-        btnHost.ButtonDown += () => State = MENUSTATE.HOST;
-        btnStartHost.ButtonDown += () => { State = MENUSTATE.HOSTING; UIAPICalls.HostStart(); };
-        btnStopHost.ButtonDown += () => { State = MENUSTATE.HOST; UIAPICalls.DisconnectFromGame(); };
+	public override void _Ready()
+	{
+		state = MENUSTATE.START;
+		OnMenuStateChanged?.Invoke(null, MENUSTATE.START);
+		// Hook up buttons
+		btnHost.ButtonDown += () => State = MENUSTATE.HOST;
+		btnStartHost.ButtonDown += () => { State = MENUSTATE.HOSTING; UIAPICalls.HostStart(); };
+		btnStopHost.ButtonDown += () => { State = MENUSTATE.HOST; UIAPICalls.DisconnectFromGame(); };
 
-        btnJoin.ButtonDown += () => State = MENUSTATE.JOIN;
-        btnConnect.ButtonDown += () => { State = MENUSTATE.CONNECTED; UIAPICalls.JoinHost(lobbyKey.Text); };
-        btnDisConnect.ButtonDown += () => { State = MENUSTATE.START; UIAPICalls.DisconnectFromGame(); };
+		btnJoin.ButtonDown += () => State = MENUSTATE.JOIN;
+		btnConnect.ButtonDown += () => { State = MENUSTATE.CONNECTED; UIAPICalls.JoinHost(lobbyKey.Text); };
+		btnDisConnect.ButtonDown += () => { State = MENUSTATE.START; UIAPICalls.DisconnectFromGame(); };
 
-        btnResume.ButtonDown += () => MMenuSystem.MenuSystem.HideMenu();
-        btnExit.ButtonDown += () => UIAPICalls.CloseGame();
+		btnResume.ButtonDown += () => MMenuSystem.MenuSystem.HideMenu();
+		btnExit.ButtonDown += () => UIAPICalls.CloseGame();
 
-        btnCloseMenu.ButtonUp += () => MMenuSystem.MenuSystem.HideMenu();
+		btnCloseMenu.ButtonUp += () => MMenuSystem.MenuSystem.HideMenu();
 
-        btnReady.ButtonDown += () => Core.Rules.PlayerRequestReady();
-    }
+		btnReady.ButtonDown += () => Core.Rules.PlayerRequestReady();
 
-    internal void ConnectedToGame()
-    {
+		CallDeferred("FocusOnReady");
+	}
 
-        State = MENUSTATE.PLAYING;
-    }
+	void FocusOnReady()
+	{
+		btnHost.GrabFocus();
+	}
 
-    private void ChangeState(MENUSTATE value)
-    {
-        if (state != value)
-        {
-            state = value;
-            OnMenuStateChanged?.Invoke(null, state);
-            feedBackText.Text = state.ToString();
-        }
-    }
+	internal void ConnectedToGame()
+	{
+
+		State = MENUSTATE.PLAYING;
+	}
+
+	private void ChangeState(MENUSTATE value)
+	{
+		if (state != value)
+		{
+			state = value;
+			OnMenuStateChanged?.Invoke(null, state);
+			feedBackText.Text = state.ToString();
+		}
+	}
 }// EOF CLASS

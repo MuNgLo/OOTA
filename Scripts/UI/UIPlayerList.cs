@@ -7,8 +7,7 @@ namespace OOTA.UI;
 public partial class UIPlayerList : GridContainer
 {
     [Export] Control playerList;
-    [Export] LineEdit playerNameEdit;
-    [Export] float playerListDuration = 1.0f;
+    [Export] float playerListDuration = 0.5f;
     [Export] PackedScene prefabPlayerEntry;
 
     bool isShowing = false;
@@ -18,12 +17,6 @@ public partial class UIPlayerList : GridContainer
     {
         ogPos = playerList.Position;
         MLobbyPlayerEvents.OnPlayersChanged += UpdatePlayerList;
-        playerNameEdit.TextSubmitted += WhenPlayerNameSubmitted;
-    }
-
-    private void WhenPlayerNameSubmitted(string newName)
-    {
-        Core.Rules.PlayerRequestNameChange(newName);
     }
 
     private void UpdatePlayerList(object sender, EventArgs args)
@@ -70,11 +63,6 @@ public partial class UIPlayerList : GridContainer
         entry.GetNode<RichTextLabel>("Name").Text = player.PlayerName;
         entry.GetNode<CheckBox>("Ready").SetPressedNoSignal(player.IsReady);
         AddChild(entry,true);
-        // Sync the name field
-        if (Multiplayer.GetUniqueId() == player.PeerID)
-        {
-            playerNameEdit.Text = player.PlayerName;
-        }
     }
 
     private void ClearsList()

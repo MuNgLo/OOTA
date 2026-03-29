@@ -75,13 +75,10 @@ public static class Settings
         // Clamp FLOATS
         FieldInfo field = _settings[key].GetType().GetField(fieldName);
 
-        // Check if it is normalized volume
-        if (field.GetCustomAttribute<NormalizedVolumeAttribute>() is not null)
+        // Check if it is volume
+        if (field.GetCustomAttribute<VolumeAttribute>() is not null)
         {
-            //double db = -Mathf.Pow(8.0 - value * 100.0f, 1.8); // Godot normalized to DB?
-            //float value2 = Mathf.Clamp((float)db, field.GetCustomAttribute<NormalizedVolumeAttribute>().Min, field.GetCustomAttribute<NormalizedVolumeAttribute>().Max);
-            value = Mathf.Clamp(value, 0, 1);
-
+            value = Mathf.Clamp(value, -80.0f, 6.0f);
         }
         else
         {

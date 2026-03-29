@@ -1,0 +1,15 @@
+{
+  "voipEnabled": true,
+  "voipMicEnabled": true,
+  "voipMode": false,
+  "voipDeNoise": true,
+  "volumeVoices": 5.999998,
+  "volumeMaster": 5.999998,
+  "volumeSoundEffects": 0.8,
+  "volumeMusic": 0.8,
+  "volumeUI": 0.8,
+  "muteOnFocusLoss": false,
+  "playerName": "Ryan",
+  "port": 27015,
+  "maxPlayers": 10
+}

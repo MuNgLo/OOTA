@@ -1,0 +1,261 @@
+[gd_scene format=3 uid="uid://ccka1uc6yid6x"]
+
+[ext_resource type="Script" uid="uid://cogrwl4clcgfd" path="res://Scripts/UI/UISettingsMenu.cs" id="1_6fypy"]
+[ext_resource type="Texture2D" uid="uid://v6ej08nhwykc" path="res://Images/Icons/SettingsCog.png" id="2_vud7b"]
+[ext_resource type="PackedScene" uid="uid://5j0qj1judqde" path="res://Scenes/UI/UISettingsEntry.tscn" id="3_vud7b"]
+[ext_resource type="Script" uid="uid://bgs88xs8x7g7q" path="res://Scripts/UI/UIEnableVIOPButton.cs" id="4_2nwgb"]
+[ext_resource type="Script" uid="uid://cnejboegjbss1" path="res://Scripts/VOIP/VOIPInputDevice.gd" id="4_35e2u"]
+[ext_resource type="Script" uid="uid://dl0oriex44ktq" path="res://Scripts/UI/UIEnableVIOPMic.cs" id="5_2nwgb"]
+[ext_resource type="Shader" uid="uid://dfvbi0dqypsjy" path="res://Scripts/VOIP/VOIPLevelShader.gdshader" id="5_u8bf6"]
+[ext_resource type="Script" uid="uid://dfwu10s2jbst5" path="res://Scripts/VOIP/VOIPMicLevel.gd" id="6_2nwgb"]
+[ext_resource type="Script" uid="uid://chd82p0yclk32" path="res://Scripts/UI/UIVOIPMicMode.cs" id="6_6xw2y"]
+[ext_resource type="Script" uid="uid://xoy7qvoyoimb" path="res://Scripts/UI/UIVOIPDeNoise.cs" id="10_mir53"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_mir53"]
+frequency = 0.0048
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_rva6f"]
+noise = SubResource("FastNoiseLite_mir53")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6xw2y"]
+resource_local_to_scene = true
+shader = ExtResource("5_u8bf6")
+shader_parameter/backgroundcolor = Color(0.011812927, 0.03721476, 0.06579243, 1)
+shader_parameter/voxThresholdColor = Color(0.341516, 0.16567895, 0.030229433, 1)
+shader_parameter/voxchunkmaxcolor = Color(0.25490198, 0.7254902, 0.18431373, 0.2509804)
+shader_parameter/voxwavecolor = Color(0.12941177, 0.68235296, 0.8784314, 1)
+shader_parameter/voxThresHold = 0.2
+shader_parameter/chunkmax = 0.0
+shader_parameter/chunkMaxPersist = 0.0
+shader_parameter/speechNoiseProbability = 0.0
+shader_parameter/chunkTextEnabled = true
+shader_parameter/chunkTexture = SubResource("NoiseTexture2D_rva6f")
+
+[node name="SettingsMenu" type="Control" unique_id=917039662 node_paths=PackedStringArray("playerName")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -852.0
+offset_bottom = -348.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6fypy")
+playerName = NodePath("GridContainer/TabContainer/General/MarginContainer/GridContainer/playerName/FlowContainer/LineEdit")
+
+[node name="GridContainer" type="GridContainer" parent="." unique_id=1585783909]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 4.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TabContainer" type="TabContainer" parent="GridContainer" unique_id=188420119]
+custom_minimum_size = Vector2(0, 280)
+layout_mode = 2
+size_flags_vertical = 2
+current_tab = 0
+tab_0/icon = ExtResource("2_vud7b")
+tab_1/icon = ExtResource("2_vud7b")
+tab_2/icon = ExtResource("2_vud7b")
+tab_3/icon = ExtResource("2_vud7b")
+
+[node name="General" type="PanelContainer" parent="GridContainer/TabContainer" unique_id=63486007]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+metadata/_tab_index = 0
+
+[node name="MarginContainer" type="MarginContainer" parent="GridContainer/TabContainer/General" unique_id=774542359]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 4
+
+[node name="GridContainer" type="GridContainer" parent="GridContainer/TabContainer/General/MarginContainer" unique_id=576207573]
+layout_mode = 2
+
+[node name="playerName" parent="GridContainer/TabContainer/General/MarginContainer/GridContainer" unique_id=2032833789 instance=ExtResource("3_vud7b")]
+layout_mode = 2
+settingsName = "GameConfigSettings"
+fieldTarget = "playerName"
+
+[node name="Sound" type="PanelContainer" parent="GridContainer/TabContainer" unique_id=1561918601]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+metadata/_tab_index = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="GridContainer/TabContainer/Sound" unique_id=1658477650]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 4
+
+[node name="GridContainer" type="GridContainer" parent="GridContainer/TabContainer/Sound/MarginContainer" unique_id=1514463285]
+layout_mode = 2
+
+[node name="volumeMaster" parent="GridContainer/TabContainer/Sound/MarginContainer/GridContainer" unique_id=2111209313 instance=ExtResource("3_vud7b")]
+layout_mode = 2
+settingsName = "GameConfigSettings"
+fieldTarget = "volumeMaster"
+
+[node name="voipVolumeVoices" parent="GridContainer/TabContainer/Sound/MarginContainer/GridContainer" unique_id=1149195653 instance=ExtResource("3_vud7b")]
+layout_mode = 2
+settingsName = "GameConfigSettings"
+fieldTarget = "volumeVoices"
+
+[node name="muteOnFocusLoss" parent="GridContainer/TabContainer/Sound/MarginContainer/GridContainer" unique_id=2061070054 instance=ExtResource("3_vud7b")]
+layout_mode = 2
+settingsName = "GameConfigSettings"
+fieldTarget = "muteOnFocusLoss"
+
+[node name="VOIP" type="PanelContainer" parent="GridContainer/TabContainer" unique_id=1923725207]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+metadata/_tab_index = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="GridContainer/TabContainer/VOIP" unique_id=852489457]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="GridContainer" type="GridContainer" parent="GridContainer/TabContainer/VOIP/MarginContainer" unique_id=1428795277]
+layout_mode = 2
+
+[node name="EnableVoip" type="HFlowContainer" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer" unique_id=150960558]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer/EnableVoip" unique_id=1039389725]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Enable VOIP: "
+
+[node name="btnEnableVOIP" type="CheckButton" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer/EnableVoip" unique_id=564228633]
+layout_mode = 2
+size_flags_horizontal = 8
+script = ExtResource("4_2nwgb")
+
+[node name="EnableMic" type="HFlowContainer" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer" unique_id=695993367]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer/EnableMic" unique_id=1415610994]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Enable Mic: "
+
+[node name="btnEnableMIC" type="CheckButton" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer/EnableMic" unique_id=324843350]
+layout_mode = 2
+size_flags_horizontal = 8
+script = ExtResource("5_2nwgb")
+
+[node name="MicMode" type="HFlowContainer" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer" unique_id=1666171036 node_paths=PackedStringArray("btnPTT", "btnVoice")]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+script = ExtResource("6_6xw2y")
+btnPTT = NodePath("btnPushToTalk")
+btnVoice = NodePath("btnVoiceActivated")
+
+[node name="btnPushToTalk" type="Button" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer/MicMode" unique_id=1730191328]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Push To Talk"
+
+[node name="btnVoiceActivated" type="Button" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer/MicMode" unique_id=2091034893]
+layout_mode = 2
+size_flags_horizontal = 3
+toggle_mode = true
+text = "Voice Activated"
+
+[node name="MicLevel" type="ColorRect" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer" unique_id=1679853023]
+material = SubResource("ShaderMaterial_6xw2y")
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("6_2nwgb")
+
+[node name="InputOptions" type="HFlowContainer" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer" unique_id=679918557]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer/InputOptions" unique_id=817109238]
+layout_mode = 2
+text = "Mic: "
+
+[node name="VOIPInputDevice" type="OptionButton" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer/InputOptions" unique_id=1434315819]
+layout_mode = 2
+size_flags_horizontal = 3
+clip_text = true
+fit_to_longest_item = false
+script = ExtResource("4_35e2u")
+
+[node name="DeNoiseFilter" type="HFlowContainer" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer" unique_id=2073379822]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer/DeNoiseFilter" unique_id=825587769]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Use denoise filter: "
+
+[node name="btnDeNoise" type="CheckButton" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer/DeNoiseFilter" unique_id=1083324711]
+layout_mode = 2
+size_flags_horizontal = 8
+script = ExtResource("10_mir53")
+
+[node name="Label" type="Label" parent="GridContainer/TabContainer/VOIP/MarginContainer/GridContainer" unique_id=2120978402]
+custom_minimum_size = Vector2(0, 73.55)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TooltipLabel"
+theme_override_font_sizes/font_size = 13
+text = "...."
+autowrap_mode = 2
+clip_text = true
+
+[node name="HOST" type="PanelContainer" parent="GridContainer/TabContainer" unique_id=1699439757]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+metadata/_tab_index = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="GridContainer/TabContainer/HOST" unique_id=544325068]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="GridContainer" type="GridContainer" parent="GridContainer/TabContainer/HOST/MarginContainer" unique_id=513533462]
+layout_mode = 2
+
+[node name="maxPlayers" parent="GridContainer/TabContainer/HOST/MarginContainer/GridContainer" unique_id=1207391284 instance=ExtResource("3_vud7b")]
+layout_mode = 2
+settingsName = "GameConfigSettings"
+fieldTarget = "maxPlayers"
+
+[node name="port" parent="GridContainer/TabContainer/HOST/MarginContainer/GridContainer" unique_id=129545506 instance=ExtResource("3_vud7b")]
+layout_mode = 2
+settingsName = "GameConfigSettings"
+fieldTarget = "port"
+
+[node name="Control2" type="Control" parent="GridContainer" unique_id=239139579]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[editable path="GridContainer/TabContainer/General/MarginContainer/GridContainer/playerName"]

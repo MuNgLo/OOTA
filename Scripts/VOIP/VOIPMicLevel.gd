@@ -15,6 +15,7 @@ var chunkMaxPersist = 0.0
 
 
 func _ready() -> void:
+	VOIPInput.micLevel = self
 	var frameData : PackedVector2Array = PackedVector2Array()
 	frameData.resize(audioChunkSize)
 	for j in range(audioChunkSize):

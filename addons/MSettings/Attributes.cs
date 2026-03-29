@@ -3,14 +3,14 @@
 namespace MSettings;
 
 [AttributeUsage(AttributeTargets.Field, AllowMultiple = false)]
-public class NormalizedVolumeAttribute : Attribute
+public class VolumeAttribute : Attribute
 {
     public float Max;
     public float Min;
 
     public float Range;
 
-    public NormalizedVolumeAttribute(float max = 6.0f, float min = -72.0f)
+    public VolumeAttribute(float max = 6.0f, float min = -80.0f)
     {
         Max = max; Min = min;
         Range = max - min;

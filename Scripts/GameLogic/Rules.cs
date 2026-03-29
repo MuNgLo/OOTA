@@ -265,7 +265,6 @@ public partial class Rules : Node
     {
         long peerID = Multiplayer.GetRemoteSenderId() == 0 ? 1 : Multiplayer.GetRemoteSenderId();
         Core.Players.SetNameOnPlayer(peerID, newName);
-
     }
 
     internal void UnitReachedGoal(UnitBaseClass unit)

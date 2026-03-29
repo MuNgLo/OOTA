@@ -1,18 +1,19 @@
-[gd_scene format=3 uid="uid://b2moetunvrqoh"]
+[gd_scene format=3 uid="uid://5j0qj1judqde"]
 
-[ext_resource type="Script" uid="uid://cnae05yc6umo8" path="res://addons/MSettings/UISettingsEntry.cs" id="1_sitll"]
-[ext_resource type="Texture2D" uid="uid://cpximxgjtx3gq" path="res://addons/MSettings/Assets/ResetArrow.png" id="2_hitre"]
+[ext_resource type="Script" uid="uid://cnae05yc6umo8" path="res://addons/MSettings/UISettingsEntry.cs" id="1_6bu1i"]
+[ext_resource type="Texture2D" uid="uid://cpximxgjtx3gq" path="res://addons/MSettings/Assets/ResetArrow.png" id="2_nhlnf"]
 
 [node name="SettingsEntry" type="Panel" unique_id=2032833789 node_paths=PackedStringArray("elementParent")]
 custom_minimum_size = Vector2(0, 30)
 anchors_preset = 10
 anchor_right = 1.0
+offset_bottom = 30.0
 grow_horizontal = 2
 size_flags_horizontal = 3
-script = ExtResource("1_sitll")
+script = ExtResource("1_6bu1i")
 elementParent = NodePath("FlowContainer")
 
-[node name="FlowContainer" type="FlowContainer" parent="." unique_id=31775586]
+[node name="FlowContainer" type="HFlowContainer" parent="." unique_id=123208876]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -27,61 +28,75 @@ layout_mode = 2
 [node name="FieldName" type="Label" parent="FlowContainer" unique_id=1994587476]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"TooltipLabel"
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "UnNamed"
 vertical_alignment = 1
 
 [node name="HSlider" type="HSlider" parent="FlowContainer" unique_id=772528776]
+visible = false
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 1
 step = 0.01
-value = 100.0
+value = 48.31
 
 [node name="LineEdit" type="LineEdit" parent="FlowContainer" unique_id=1413417371]
+visible = false
 layout_mode = 2
 alignment = 2
 
 [node name="Value" type="Label" parent="FlowContainer" unique_id=1783729032]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 0
 text = "999"
 
 [node name="ColorPickerButton" type="ColorPickerButton" parent="FlowContainer" unique_id=786634743]
+visible = false
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 
 [node name="CheckBox" type="CheckBox" parent="FlowContainer" unique_id=1604593626]
+visible = false
 custom_minimum_size = Vector2(24, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 
 [node name="CheckButton" type="CheckButton" parent="FlowContainer" unique_id=515338145]
+visible = false
 custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 
 [node name="KeyBind" type="Button" parent="FlowContainer" unique_id=1804360578]
+visible = false
 custom_minimum_size = Vector2(24, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 text = "W"
 
 [node name="KeyBindAlt" type="Button" parent="FlowContainer" unique_id=1925410765]
+visible = false
 custom_minimum_size = Vector2(24, 0)
 layout_mode = 2
 size_flags_horizontal = 0
 text = "W"
 
 [node name="OptionButton" type="OptionButton" parent="FlowContainer" unique_id=623650077]
+visible = false
 layout_mode = 2
 
 [node name="btnReset" type="TextureButton" parent="FlowContainer" unique_id=682456511]
+visible = false
+modulate = Color(0.8117647, 0.5372549, 0.18431373, 1)
 custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
-texture_normal = ExtResource("2_hitre")
+tooltip_text = "Reset to default value"
+texture_normal = ExtResource("2_nhlnf")
 ignore_texture_size = true
 stretch_mode = 0

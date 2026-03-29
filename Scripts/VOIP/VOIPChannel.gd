@@ -13,7 +13,7 @@ func _ready() -> void:
 	if(peerID != multiplayer.get_unique_id()):
 		print("inputDevice skipped")
 		return
-	input = get_tree().root.get_node("Main/MicIn")
+	input = get_tree().root.get_node("Main/Core/MicIn")
 	input.transmitAudioJsonPacket.connect(on_json_header)
 	input.transmitAudioPacket.connect(on_audio_packet)
 

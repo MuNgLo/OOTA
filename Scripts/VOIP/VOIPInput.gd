@@ -9,8 +9,7 @@ class_name VOIPInput
 @export var voiceThreshold: float = 0.07
 @export var opusFrameDurationMS: int = 20
 
-@export_group("Refs")
-@export var micLevel: VOIPMicLevel
+static var micLevel: VOIPMicLevel
 
 var opusEncoder: TwovoipOpusEncoder = TwovoipOpusEncoder.new()
 var chunkPrefix: PackedByteArray = PackedByteArray([0, 0])

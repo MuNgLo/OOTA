@@ -15,6 +15,7 @@ public partial class EarlyInitThings : Node
 	{
 		// Initialize the game event system
 		//Events.SetupEvents(GetParent().GetNode<NetworkEvents>("NetworkEvents"));
+		MSettings.Settings.GetSettings<GameConfigSettings>("Configs");
 	}
 	public override void _Ready()
 	{

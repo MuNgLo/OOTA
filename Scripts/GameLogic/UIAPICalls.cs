@@ -1,12 +1,14 @@
 using Godot;
 using System;
 using System.Net;
-
+using MSettings;
 namespace OOTA.GameLogic;
 [GlobalClass]
 public partial class UIAPICalls : Node
 {
     private static UIAPICalls instance;
+	static GameConfigSettings Config => Settings.GetCachedSettings("GameConfigSettings") as GameConfigSettings;
+
     public override void _EnterTree()
     {
         instance = this;
@@ -17,7 +19,7 @@ public partial class UIAPICalls : Node
     /// </summary>
     internal static void HostStart()
     {
-        Core.Lobby.StartHost(27015, 5);
+        Core.Lobby.StartHost(Config.port, Config.maxPlayers);
     }
     /// <summary>
     /// Stops a currently running host
