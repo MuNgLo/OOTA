@@ -43,7 +43,7 @@ public partial class Core : Node
         groundPlane = new Plane(Vector3.Up);
     }
 
-    public static bool PlotMouseWorldPosition(out Vector3 worldPosition)
+    public static bool PlotMouseWorldPosition(float worldY, out Vector3 worldPosition)
     {
         Vector2 mPos = ins.GetViewport().GetMousePosition();
         Vector3 origin = Camera.ProjectRayOrigin(mPos);
@@ -55,6 +55,7 @@ public partial class Core : Node
         if (result is not null && result.ContainsKey("position"))
         {
             worldPosition = result["position"].AsVector3();
+			worldPosition.Y = worldY;
             return true;
         }
         worldPosition = Vector3.Zero;

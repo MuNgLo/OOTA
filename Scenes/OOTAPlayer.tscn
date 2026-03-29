@@ -59,9 +59,8 @@ script = ExtResource("3_t6kih")
 [node name="PublicSynchronizer" type="MultiplayerSynchronizer" parent="PublicData" unique_id=1574362466]
 replication_config = SubResource("SceneReplicationConfig_7s4cc")
 
-[node name="Voip" type="Node" parent="." unique_id=331999162 node_paths=PackedStringArray("input", "output")]
+[node name="Voip" type="Node" parent="." unique_id=331999162 node_paths=PackedStringArray("output")]
 script = ExtResource("4_vor40")
-input = NodePath("")
 output = NodePath("MicOut")
 
 [node name="MicOut" type="Node" parent="Voip" unique_id=221068109 node_paths=PackedStringArray("audioPlayer")]

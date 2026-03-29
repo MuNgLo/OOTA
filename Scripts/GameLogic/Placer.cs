@@ -52,7 +52,7 @@ public partial class Placer : Node
         Vector2I tileCoord = Core.Grid.WorldToCoord(Avatar.GlobalPosition);
         RightStickInputVector();
         // If inRightStick is 0 we lean on cursor pos
-        if (inRightStick == Vector3.Zero && Core.PlotMouseWorldPosition(out cursorWorldPosition))
+        if (inRightStick == Vector3.Zero && Core.PlotMouseWorldPosition(Avatar.GlobalPosition.Y, out cursorWorldPosition))
         {
             Vector2I mouseTileCoord = Core.Grid.WorldToCoord(cursorWorldPosition);
             if (Core.Grid.Distance(tileCoord, mouseTileCoord) < 2)
@@ -154,9 +154,9 @@ public partial class Placer : Node
 
         if (Core.Grid.GetFreeNeighbors(coord).Count >= 7)
         {
-            GD.Print($"Cant be blocked!! neighborCount[{Core.Grid.GetFreeNeighbors(coord).Count}]");
+            //GD.Print($"Cant be blocked!! neighborCount[{Core.Grid.GetFreeNeighbors(coord).Count}]");
             isBlocked = false;
-            return;
+            return; 
         }
 
         //GD.Print($"Placer::IsPathBlocked() Updating block check for coord[{coord}]");

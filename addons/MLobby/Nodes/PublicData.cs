@@ -23,7 +23,7 @@ public partial class PublicData : MLobbyBaseNode
         {
             GameConfigSettings config = MSettings.Settings.GetCachedSettings("GameConfigSettings") as GameConfigSettings;
 			config.playerName = playerName;
-			MSettings.Settings.SaveSettings(config, "Configs");
+			MSettings.Settings.SaveSettings(config, "Configs", true);
         }
     }
 }// EOF CLASS

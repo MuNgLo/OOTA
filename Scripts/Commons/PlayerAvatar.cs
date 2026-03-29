@@ -37,7 +37,7 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
 
 	[ExportGroup("Combat Related")]
 	[Export] Node3D weaponPivot;
-	[Export] Node3D weaponMuzzle;
+	[Export] ShapeCast3D weaponMuzzle;
 	[Export] int damage = 10;
 	[Export] ulong attackCoolDownMS = 300;
 	[Export] PackedScene projectilePrefab;
@@ -50,6 +50,9 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
 	private Vector3 inLeftStick;
 	private Vector3 inRightStick;
 	private Vector3 cursorWorldPosition;
+	private Vector3 targetPosition;
+	private Vector3 targetPositionOffset = Vector3.Up * 0.3f;
+
 
 	public TEAM Team { get => team; set => SetTeam(value); }
 
@@ -83,6 +86,8 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
 		GetNode<MeshInstance3D>("MeshInstance3D").SetSurfaceOverrideMaterial(0, Core.TeamMaterial(value));
 		CollisionLayer = value == TEAM.LEFT ? Core.Rules.leftTeamCollision : Core.Rules.rightTeamCollision;
 		team = value;
+
+		weaponMuzzle.CollisionMask = Team != TEAM.RIGHT ? Core.Rules.rightTeamCollision : Core.Rules.leftTeamCollision;
 	}
 
 	private void WhenPlayerModeChanged(object sender, PLAYERMODE mode)
@@ -118,27 +123,30 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
 		// Mode dependent Controller
 		if (inRightStick != Vector3.Zero)
 		{
+			targetPosition = GlobalPosition + inRightStick.Normalized() * 10.0f;
 			// Rotate player
-			weaponPivot.LookAt(GlobalPosition + inRightStick.Normalized() * 10.0f, Vector3.Up);
+			weaponPivot.LookAt(targetPosition, Vector3.Up);
 			if (player.Mode == PLAYERMODE.ATTACKING)
 			{
-				if (!Multiplayer.IsServer()) { RpcId(1, nameof(RPCRunAttack)); } else { RPCRunAttack(); }
+				RpcId(1, nameof(RPCRunAttack), AimAssist());
 			}
 		}
-		else if (inRightStick == Vector3.Zero && Core.PlotMouseWorldPosition(out cursorWorldPosition))
+		else if (inRightStick == Vector3.Zero && Core.PlotMouseWorldPosition(GlobalPosition.Y, out cursorWorldPosition))
 		// Mode dependent Mouse
 		{
 			// Rotate player
-			cursorWorldPosition.Y = GlobalPosition.Y;
-			weaponPivot.LookAt(cursorWorldPosition, Vector3.Up);
+			targetPosition = GlobalPosition + GlobalPosition.DirectionTo(cursorWorldPosition) * 10.0f;
+			weaponPivot.LookAt(targetPosition, Vector3.Up);
+			
 			if (player.Mode == PLAYERMODE.ATTACKING)
 			{
 				if (Input.IsActionPressed("Attack"))
 				{
-					RpcId(1, nameof(RPCRunAttack));
+					RpcId(1, nameof(RPCRunAttack), AimAssist());
 				}
 			}
 		}
+		/*
 		else if (inRightStick != Vector3.Zero)
 		{
 			// Rotate player
@@ -148,6 +156,7 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
 				if (!Multiplayer.IsServer()) { RpcId(1, nameof(RPCRunAttack)); } else { RPCRunAttack(); }
 			}
 		}
+		*/
 
 
 		if (inLeftStick != Vector3.Zero)
@@ -168,6 +177,24 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
 			tsLastJumpMS = Time.GetTicksMsec();
 			ApplyImpulse(Vector3.Up * jumpForce * Mass);
 		}
+	}
+
+	private Vector3 AimAssist()
+	{
+		weaponMuzzle.ForceShapecastUpdate();
+		if (weaponMuzzle.IsColliding())
+		{
+			//for (int i = 0; i < weaponMuzzle.GetCollisionCount(); i++)
+			//{
+				//if(i == 0)
+				//{
+				//GD.Print($"AimAssist() Hit[{(weaponMuzzle.GetCollider(0) as Node).Name}]");
+					CollisionObject3D coll = weaponMuzzle.GetCollider(0) as CollisionObject3D;
+					return coll.GlobalPosition + coll.GetNode<CollisionShape3D>("CollisionShape3D").Position;
+				//}
+			//}
+		}
+		return targetPosition;
 	}
 
 	private float GetAcceleration()
@@ -242,8 +269,9 @@ public partial class PlayerAvatar : RigidBody3D, ITargetable
 	}
 
 	[Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
-	private void RPCRunAttack()
+	private void RPCRunAttack(Vector3 targetLocation)
 	{
+		weaponMuzzle.LookAt(targetLocation, Vector3.Up);
 		if (Time.GetTicksMsec() > TSLastAttackMS + attackCoolDownMS)
 		{
 			TSLastAttackMS = Time.GetTicksMsec();

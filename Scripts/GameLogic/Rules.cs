@@ -85,7 +85,7 @@ public partial class Rules : Node
 
     public void BuildingDied(BuildingBaseClass building)
     {
-        GD.Print($"Core::BuildingDied() path[{building.GetPath()}]");
+        //GD.Print($"Rules::BuildingDied() path[{building.GetPath()}]");
         RollForPickup(building.GlobalPosition);
         Core.Grid.RemoveStructure(building);
         building.QueueFree();

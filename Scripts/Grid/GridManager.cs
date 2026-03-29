@@ -135,7 +135,7 @@ public partial class GridManager : Node
             GetGridLocation(coord + Vector2I.Left),
             GetGridLocation(coord + Vector2I.Left + Vector2I.Up),
         ];
-        return result.FindAll(p => p.IsFree);
+        return result.FindAll(p => p is not null && p.IsFree);
     }
 
 

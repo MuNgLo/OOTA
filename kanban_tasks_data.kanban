@@ -4,6 +4,21 @@
 			"uuid": "650d186a-7fd6-4501-8918-6071c592f186",
 			"title": "Task",
 			"color": "569eff"
+		},
+		{
+			"uuid": "acd64401-de16-4200-a107-8bf39c9c838f",
+			"title": "Potentially fixed",
+			"color": "f9e32f"
+		},
+		{
+			"uuid": "c677c704-d8c7-456b-870d-d7d80cfec30d",
+			"title": "Bug",
+			"color": "f81f1f"
+		},
+		{
+			"uuid": "8b1c088c-7e0f-43e6-8a2e-3542cdc3c36a",
+			"title": "Done",
+			"color": "1aff00"
 		}
 	],
 	"stages": [
@@ -14,7 +29,6 @@
 				"5b4ff7d2-f5d1-4ef8-9ee7-ea45fa327b08",
 				"209b7577-0ea0-4cdc-b4b1-3dd2962399a8",
 				"aef5b1c8-45bf-472e-be33-9ced8458820c",
-				"e2b0a25a-20cf-48b5-83fa-4d35ad6a61ef",
 				"e6a5aac5-8fc9-4880-9513-4449a0675ed6",
 				"90fd554e-aa18-4dd6-a491-4998b1de9cb6"
 			]
@@ -24,18 +38,21 @@
 			"title": "Doing",
 			"tasks": [
 				"f580d453-a707-4ebe-bbea-96575bdd8f65",
-				"98a0fcdf-4655-4e8d-8480-11caa43a691b",
-				"5203c135-8432-4087-8ebf-223a8bd3a1c9",
-				"ef95ff8c-b736-499a-80a3-29cc6899aa4a",
-				"233e9c12-94de-4c82-b8a1-ae36decd2350",
+				"ed438e6f-2643-4128-941a-d9c4c879eabf",
 				"9f17a435-396e-4d43-8f07-fb52539d1947",
-				"ed438e6f-2643-4128-941a-d9c4c879eabf"
+				"233e9c12-94de-4c82-b8a1-ae36decd2350",
+				"4eb5c2ce-4968-4f21-a884-12a606088da1"
 			]
 		},
 		{
 			"uuid": "9e405e4f-f1b5-4694-b496-a478fdc96a82",
 			"title": "0.9.1",
-			"tasks": []
+			"tasks": [
+				"98a0fcdf-4655-4e8d-8480-11caa43a691b",
+				"5203c135-8432-4087-8ebf-223a8bd3a1c9",
+				"ef95ff8c-b736-499a-80a3-29cc6899aa4a",
+				"e2b0a25a-20cf-48b5-83fa-4d35ad6a61ef"
+			]
 		}
 	],
 	"tasks": [
@@ -64,7 +81,7 @@
 			"uuid": "e2b0a25a-20cf-48b5-83fa-4d35ad6a61ef",
 			"title": "new models for pickups",
 			"description": "",
-			"category": "650d186a-7fd6-4501-8918-6071c592f186",
+			"category": "8b1c088c-7e0f-43e6-8a2e-3542cdc3c36a",
 			"steps": []
 		},
 		{
@@ -85,28 +102,28 @@
 			"uuid": "f580d453-a707-4ebe-bbea-96575bdd8f65",
 			"title": "Client namechange loops",
 			"description": "",
-			"category": "650d186a-7fd6-4501-8918-6071c592f186",
+			"category": "acd64401-de16-4200-a107-8bf39c9c838f",
 			"steps": []
 		},
 		{
 			"uuid": "98a0fcdf-4655-4e8d-8480-11caa43a691b",
 			"title": "grid neighboiur error",
 			"description": "",
-			"category": "650d186a-7fd6-4501-8918-6071c592f186",
+			"category": "8b1c088c-7e0f-43e6-8a2e-3542cdc3c36a",
 			"steps": []
 		},
 		{
 			"uuid": "5203c135-8432-4087-8ebf-223a8bd3a1c9",
 			"title": "player fire targetting",
 			"description": "",
-			"category": "650d186a-7fd6-4501-8918-6071c592f186",
+			"category": "8b1c088c-7e0f-43e6-8a2e-3542cdc3c36a",
 			"steps": []
 		},
 		{
 			"uuid": "ef95ff8c-b736-499a-80a3-29cc6899aa4a",
 			"title": "unit default should attack non foundation towers",
-			"description": "if they have staright site line\n",
-			"category": "650d186a-7fd6-4501-8918-6071c592f186",
+			"description": "\n",
+			"category": "8b1c088c-7e0f-43e6-8a2e-3542cdc3c36a",
 			"steps": []
 		},
 		{
@@ -118,7 +135,7 @@
 		},
 		{
 			"uuid": "9f17a435-396e-4d43-8f07-fb52539d1947",
-			"title": "current avatar positrion tile highlight",
+			"title": "current avatar position tile highlight",
 			"description": "",
 			"category": "650d186a-7fd6-4501-8918-6071c592f186",
 			"steps": []
@@ -126,6 +143,13 @@
 		{
 			"uuid": "ed438e6f-2643-4128-941a-d9c4c879eabf",
 			"title": "Build selection UI",
+			"description": "",
+			"category": "650d186a-7fd6-4501-8918-6071c592f186",
+			"steps": []
+		},
+		{
+			"uuid": "4eb5c2ce-4968-4f21-a884-12a606088da1",
+			"title": "Melle unit shirt to team colour",
 			"description": "",
 			"category": "650d186a-7fd6-4501-8918-6071c592f186",
 			"steps": []

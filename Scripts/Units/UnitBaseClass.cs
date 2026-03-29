@@ -123,7 +123,13 @@ public partial class UnitBaseClass : RigidBody3D, ITargetable, IMind
     {
         if (body is ITargetable t && t.Team != team)
         {
-            if (body is BuildingBaseClass && !canAttackBuildings) { return; }
+            if (body is BuildingBaseClass)
+			{
+				if(Core.Grid.GetGridLocation(body.GlobalPosition).Foundation is not null)
+				{
+					if(!canAttackBuildings) { return; }
+				}	
+			} 
             if (!targets.Contains(t))
             {
                 targets.Add(t);

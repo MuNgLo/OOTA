@@ -8,7 +8,7 @@ class_name VOIPChannel
 @export var output : VOIPOutput
 
 func _ready() -> void:
-	print("peerid", get_parent().PeerID)
+	##print("peerid", get_parent().PeerID)
 	var peerID : int = int(get_parent().PeerID)
 	if(peerID != multiplayer.get_unique_id()):
 		print("inputDevice skipped")

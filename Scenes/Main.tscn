@@ -1028,6 +1028,7 @@ playerPrefab = ExtResource("12_6ehlx")
 
 [node name="GameLogic" type="Node" parent="Core" unique_id=1852553460 node_paths=PackedStringArray("gameStats", "towers", "arenaBuilder")]
 script = ExtResource("11_yisvs")
+startGold = 1000
 gameStats = NodePath("GameStats")
 towers = NodePath("Towers")
 towerPrefab = SubResource("PackedScene_5gwyn")
@@ -1270,7 +1271,7 @@ physics_interpolation_mode = 2
 avatarsContainer = NodePath("../PlayerAvatars")
 baseSpeed = 12.0
 topMargin = 3.925
-bottomMargin = 5.33
+bottomMargin = 5.0
 
 [node name="PlayerAvatars" type="Node3D" parent="." unique_id=628736147]
 
